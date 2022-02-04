@@ -83,7 +83,10 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+		SmartDashboard.putNumber("Left Position",  leftEncoder.getPosition());
+		SmartDashboard.putNumber("Right Position",  rightEncoder.getPosition());
   }
+  
   public void climberSwivel() {
     climbLeft.set(Value.kForward);
     climbRight.set(Value.kForward);
@@ -93,10 +96,6 @@ public class Climber extends SubsystemBase {
     climbLeft.set(Value.kReverse);
     climbRight.set(Value.kReverse);
   }
-
-  // public SparkMaxPIDController getLeftPID() {
-	// 	return climbPIDController;
-	// }
 
   public boolean atTarget(){
     return Math.abs(setPoint - leftEncoder.getPosition()) <= ClimberConstants.kDistanceTolerance;

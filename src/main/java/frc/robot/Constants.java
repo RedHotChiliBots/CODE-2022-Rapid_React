@@ -58,6 +58,9 @@ public final class Constants {
 		public static final double kMaxRPM = 4540.8; //2800 rpm when prototype tested 1-18-22
 
 		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
+
+		public static final int kPlungerExtend = 0;
+		public static final int kPlungerRetract = 1;
     }
 
 	public static final class ChassisConstants {
@@ -89,6 +92,8 @@ public final class Constants {
 		public static final double kDistD = 0.0;
 
 		public static final double kDistanceTolerance = 0.5;//inches 
+
+		public static final double kAngleRungAttached = 15;//degrees
 	}
 	
 	public static final class ClimberConstants {
@@ -112,6 +117,7 @@ public final class Constants {
 		public static final double kClearLowRung = 53.75;//inches
 		public static final double kFullExtendPerpendicular = 66.0;//inches
 		public static final double kFullExtendSwivel = 72.92;//inches
+		public static final double kStow = 0.0;
 		
 		public static final double kDistanceTolerance = 0.5;//inches 
 

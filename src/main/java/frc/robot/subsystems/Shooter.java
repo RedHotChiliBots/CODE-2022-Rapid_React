@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,9 +17,9 @@ import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -28,6 +31,8 @@ public class Shooter extends SubsystemBase {
 
   private SparkMaxPIDController shootPIDController;
   private RelativeEncoder shootEncoder;
+
+  public DoubleSolenoid plunger = null;
 
   private double shootSetPoint = 0.0;
 
@@ -76,6 +81,8 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Max Output", ShooterConstants.kMaxOutput);
     SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
+
+    plunger = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ShooterConstants.kPlungerExtend, ShooterConstants.kPlungerRetract);
   }
 
   @Override
@@ -88,7 +95,6 @@ public class Shooter extends SubsystemBase {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double rotations = SmartDashboard.getNumber("Set Rotations", 0);
  
     // if PID coefficients on SmartDashboard have changed, write new values to controller
     if((p != ShooterConstants.kP)) { shootPIDController.setP(p); ShooterConstants.kP = p; }
@@ -106,16 +112,24 @@ public class Shooter extends SubsystemBase {
   }
 
 
-    public double getShootVelocity() {
-      return shootEncoder.getVelocity();
-    }
+  public double getShootVelocity() {
+    return shootEncoder.getVelocity();
+  }
   
-    public void setShootVelocity(double rpm) {
-      this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxRPM, ShooterConstants.kMinRPM);
-      shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
-    }
+  public void setShootVelocity(double rpm) {
+    this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxRPM, ShooterConstants.kMinRPM);
+    shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
+  }
 
-    public void stopShoot() {
-      shootLeadMotor.set(0);
-    }
+  public void stopShoot() {
+    shootLeadMotor.set(0);
+  }
+
+  public void plungerExtend() {
+    plunger.set(Value.kForward);
+  }
+
+  public void plungerRetract() {
+    plunger.set(Value.kReverse);
+  }
 }

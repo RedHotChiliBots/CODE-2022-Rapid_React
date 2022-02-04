@@ -11,13 +11,16 @@ import frc.robot.subsystems.Climber;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimberLowRungClimb extends SequentialCommandGroup {
-  /** Creates a new ClimberLowRungClimb. */
-  public ClimberLowRungClimb(Climber climber) {
+public class ClimberHighTravClimb extends SequentialCommandGroup {
+  /** Creates a new ClimberHighTravClimb. */
+  public ClimberHighTravClimb(Climber climber) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ClimberGoTo(climber, ClimberConstants.kClearLowRung), 
-    new ClimberGoTo(climber, ClimberConstants.kLowRung), 
+    addCommands(new ClimberGoTo(climber, ClimberConstants.kLowRung),
+    new ClimberSwivel(climber),
+    new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel),
+    new ClimberPerpendicular(climber),
+    new ClimberGoTo(climber, ClimberConstants.kFullExtendPerpendicular),
     new ClimberGoTo(climber, ClimberConstants.kPullUp));
   }
 }

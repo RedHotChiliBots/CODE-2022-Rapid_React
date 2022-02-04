@@ -11,9 +11,13 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ClimberGoTo;
+import frc.robot.commands.ClimberPerpendicular;
+import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
 import frc.robot.subsystems.Chassis;
@@ -21,8 +25,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,9 +34,9 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Chassis m_chassis = new Chassis();
-  private final Shooter m_shooter = new Shooter();
-  private final Climber m_climber = new Climber();
+  private final Chassis chassis = new Chassis();
+  private final Shooter shooter = new Shooter();
+  private final Climber climber = new Climber();
 
   // =============================================================
 	// Define Joysticks
@@ -47,7 +49,19 @@ public class RobotContainer {
 	// Define Commands here to avoid multiple instantiations
 	// If commands use Shuffleboard and are instantiated multiple time, an error
 	// is thrown on the second instantiation becuase the "title" already exists.
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_chassis);
+  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis, () -> m_driver.getLeftY(), () -> m_driver.getRightY());
+  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis, () -> m_driver.getLeftY(), () -> m_driver.getRightY());
+
+  private final ShooterShoot shoot = new ShooterShoot(shooter);
+  private final ShooterStop stopShoot = new ShooterStop(shooter);
+
+  private final ClimberSwivel swivel = new ClimberSwivel(climber);
+  private final ClimberPerpendicular perpendicular = new ClimberPerpendicular(climber);
+  private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
+  private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
+  private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,ClimberConstants.kFullExtendPerpendicular);
+  private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel);
+  private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
 
   //Creating tabs on shuffleboard for each subsystem
   ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
@@ -59,14 +73,14 @@ public class RobotContainer {
 
     //==============================================================================
     //Add Subsystems to Dashboard
-    SmartDashboard.putData("Chassis", m_chassis);
-    SmartDashboard.putData("Shooter", m_shooter);
-    SmartDashboard.putData("Climber", m_climber);
+    SmartDashboard.putData("Chassis", chassis);
+    SmartDashboard.putData("Shooter", shooter);
+    SmartDashboard.putData("Climber", climber);
 
     // =============================================================
 		// Configure default commands for each subsystem
-    m_shooter.setDefaultCommand(new ShooterStop(m_shooter));
-    m_chassis.setDefaultCommand(new ChassisTankDrive(m_chassis, () -> m_driver.getLeftY(), () -> m_driver.getRightY()));
+    shooter.setDefaultCommand(new ShooterStop(shooter));
+    chassis.setDefaultCommand(chassisTankDrive);
   }
 
   /**
@@ -76,10 +90,21 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(m_driver, Button.kA.value).whenPressed(chassisTankDrive);
+    new JoystickButton(m_driver, Button.kB.value).whenPressed(chassisArcadeDrive);
 
-    new JoystickButton(m_operator, Button.kA.value).whenPressed(new ShooterShoot(m_shooter));
-    new JoystickButton(m_operator, Button.kB.value).whenPressed(new ShooterStop(m_shooter));
+    new JoystickButton(m_operator, Button.kRightBumper.value).whenPressed(shoot);
+    new JoystickButton(m_operator, Button.kLeftBumper.value).whenPressed(stopShoot);
+
+    new JoystickButton(m_operator, Button.kStart.value).whenPressed(swivel);
+    new JoystickButton(m_operator, Button.kBack.value).whenPressed(perpendicular);
     
+    new JoystickButton(m_operator, Button.kY.value).whenPressed(toClearMidRung);
+    new JoystickButton(m_operator, Button.kB.value).whenPressed(toMidRung);
+    new JoystickButton(m_operator, Button.kX.value).whenPressed(toFullExtendPerp);
+    new JoystickButton(m_operator, Button.kA.value).whenPressed(toFullExtendSwivel);
+    //Will need a stow at soem point but will add in when rest is auto command because not enough buttons for testing
+    //new JoystickButton(m_operator, Button..value).whenPressed(toStow);
   }
 
   public void setDriverRumble(GenericHID.RumbleType t) {

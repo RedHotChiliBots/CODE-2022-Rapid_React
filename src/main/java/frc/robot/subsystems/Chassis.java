@@ -200,7 +200,7 @@ public class Chassis extends SubsystemBase {
 
 		lineToRendezvousTrajectory = TrajectoryGenerator.generateTrajectory(
 			new Pose2d(0, 1.7, new Rotation2d(0)),
-			List.of(),
+			List.of(new Translation2d(1, 1)),
 			new Pose2d(2.9, 3.9, new Rotation2d(0)),
 			// Pass config
 			config);
@@ -344,7 +344,7 @@ public class Chassis extends SubsystemBase {
 		// SDS 2/12/29 - testing with inverted group rather than inverting encoder here
 		// m_odometry.update(getAngle(), m_leftEncoder.getPosition(),
 		// -m_rightEncoder.getPosition());
-		m_odometry.update(getAngle(), leftMaster.getEncoder().getPosition(), rightMaster.getEncoder().getPosition());
+		m_odometry.update(getAngle(), leftEncoder.getPosition(), rightEncoder.getPosition());
 	}
 
 	public void driveTrajectory(double left, double right) {
