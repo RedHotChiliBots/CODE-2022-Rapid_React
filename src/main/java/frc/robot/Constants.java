@@ -54,9 +54,10 @@ public final class Constants {
 		public static double kMaxOutput = .5;
 
         public static final double kStopRPMs = 0.0;
-		public static final double kMinRPM = -4540.0;
-		public static final double kMaxRPM = 4540.8; //2800 rpm when prototype tested 1-18-22
+		public static final double kMinRPM = -5676.0 * 0.8;	// Use 80% of Neo max free spin as estimate under load
+		public static final double kMaxRPM = 5676.0 * 0.8;	// Use 80% of Neo max free spin as estimate under load
 
+			//2800 rpm when prototype tested 1-18-22
 		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
 
 		public static final int kPlungerExtend = 0;
