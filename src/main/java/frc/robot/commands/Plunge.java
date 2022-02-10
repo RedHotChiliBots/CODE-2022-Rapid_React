@@ -12,6 +12,7 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class Plunge extends SequentialCommandGroup {
   /** Creates a new Plunge. */
+  
   public Plunge(Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());

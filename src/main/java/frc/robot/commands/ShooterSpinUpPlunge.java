@@ -13,6 +13,7 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ShooterSpinUpPlunge extends SequentialCommandGroup {
   /** Creates a new Shoot. */
+  
   public ShooterSpinUpPlunge(Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -20,4 +21,5 @@ public class ShooterSpinUpPlunge extends SequentialCommandGroup {
     new Plunge(shooter),
     new WaitCommand(3.0));
   }
+  
 }

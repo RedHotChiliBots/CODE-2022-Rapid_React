@@ -23,7 +23,6 @@ import frc.robot.commands.ShooterStop;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -49,8 +48,8 @@ public class RobotContainer {
 	// Define Commands here to avoid multiple instantiations
 	// If commands use Shuffleboard and are instantiated multiple time, an error
 	// is thrown on the second instantiation becuase the "title" already exists.
-  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis, () -> m_driver.getLeftY(), () -> m_driver.getRightY());
-  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis, () -> m_driver.getLeftY(), () -> m_driver.getRightY());
+  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis, () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis, () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
 
   private final ShooterShoot shoot = new ShooterShoot(shooter);
   private final ShooterStop stopShoot = new ShooterStop(shooter);
@@ -79,7 +78,7 @@ public class RobotContainer {
 
     // =============================================================
 		// Configure default commands for each subsystem
-    shooter.setDefaultCommand(new ShooterStop(shooter));
+    //shooter.setDefaultCommand(new ShooterStop(shooter));
     chassis.setDefaultCommand(chassisTankDrive);
   }
 
@@ -104,7 +103,11 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kX.value).whenPressed(toFullExtendPerp);
     new JoystickButton(m_operator, Button.kA.value).whenPressed(toFullExtendSwivel);
     //Will need a stow at soem point but will add in when rest is auto command because not enough buttons for testing
-    //new JoystickButton(m_operator, Button..value).whenPressed(toStow);
+    // new JoystickButton(m_operator, Button..value).whenPressed(toStow);
+  }
+
+  public double getJoystick(double js) {
+    return Math.abs(js) < DEADZONE ? 0.0 : js;
   }
 
   public void setDriverRumble(GenericHID.RumbleType t) {
@@ -123,13 +126,14 @@ public class RobotContainer {
 		m_operator.setRumble(t, 0);
 	}
   
+  //UNCOMMENT THIS
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
+  // public Command getAutonomousCommand() {
+  //   // An ExampleCommand will run in autonomous
+  //   return m_autoCommand;
+  // }
 }

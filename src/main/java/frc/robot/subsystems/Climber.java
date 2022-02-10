@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.PneumaticChannelConstants;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,11 +39,11 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
     
-    System.out.println("Climber init");
+    System.out.println("Climber Constructor Starting");
 
     // Initialize climb solenoids
-    climbLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.kClimbLeftExtend, ClimberConstants.kClimbLeftRetract);
-    climbRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ClimberConstants.kClimbRightExtend, ClimberConstants.kClimbRightRetract);
+    climbLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbLeftExtend, PneumaticChannelConstants.kClimbLeftRetract);
+    climbRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbRightExtend, PneumaticChannelConstants.kClimbRightRetract);
     
 		// ==============================================================
 		// Identify left and right Motors
@@ -78,6 +79,8 @@ public class Climber extends SubsystemBase {
     // climbPIDController.setIZone(ClimberConstants.kIz);
     // climbPIDController.setFF(ClimberConstants.kFF);
     // climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
+
+    System.out.println("Climber Constructor Finished");
   }
 
   @Override

@@ -9,6 +9,7 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterStop extends CommandBase {
   /** Creates a new ShooterStop. */
+  
   private final Shooter shooter;
 
   public ShooterStop(Shooter shooter) {
