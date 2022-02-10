@@ -10,6 +10,7 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterShoot extends CommandBase {
   /** Creates a new ShooterShoot. */
+  
   private final Shooter shooter; 
 
   public ShooterShoot(Shooter shooter) {

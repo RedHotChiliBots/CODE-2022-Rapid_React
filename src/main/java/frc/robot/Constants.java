@@ -20,17 +20,34 @@ public final class Constants {
 		public static final int kPDP = 0;
 		public static final int kCompressor = 0;
 
-		public static final int kRightMasterMotor = 3;
-		public static final int kRightFollowerMotor = 4;
-		public static final int kLeftMasterMotor = 5;
-		public static final int kLeftFollowerMotor = 6;
+		public static final int kRightMasterMotor = 10;
+		public static final int kRightFollowerMotor = 11;
+		public static final int kLeftMasterMotor = 12;
+		public static final int kLeftFollowerMotor = 13;
 
-        public static final int kShooterLeadMotor = 1;
-        public static final int kShooterFollowerMotor = 2;
+		public static final int kClimbRightMotor = 20;
+		public static final int kClimbLeftMotor = 21;
 
-		public static final int kClimbRightMotor = 7;
-		public static final int kClimbLeftMotor = 8;
-    }
+        public static final int kShooterLeadMotor = 30;
+        public static final int kShooterFollowerMotor = 31;
+		
+        public static final int kIntakeMotor = 40;
+		
+        public static final int kHopperMotor = 50;
+	}
+
+    public static final class PneumaticChannelConstants {
+		public static final int kClimbLeftExtend = 0;
+		public static final int kClimbLeftRetract = 1;
+		public static final int kClimbRightExtend = 2;
+		public static final int kClimbRightRetract = 3;
+		
+		public static final int kPlungerExtend = 4;
+		public static final int kPlungerRetract = 5;
+		
+		public static final int kIntakeExtend = 6;
+		public static final int kIntakeRetract = 7;
+	}
 
     public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
@@ -44,25 +61,6 @@ public final class Constants {
 		public static final double kInputVoltage = 5.0;
 	}
 
-    public static final class ShooterConstants {
-        public static double kP = 0.00008;
-		public static double kI = 0.0000004;
-		public static double kD = 0;
-		public static double kIz = 0;
-		public static double kFF = 0;
-		public static double kMinOutput = -.5;
-		public static double kMaxOutput = .5;
-
-        public static final double kStopRPMs = 0.0;
-		public static final double kMinRPM = -4540.0;
-		public static final double kMaxRPM = 4540.8; //2800 rpm when prototype tested 1-18-22
-
-		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
-
-		public static final int kPlungerExtend = 0;
-		public static final int kPlungerRetract = 1;
-    }
-
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
 		public static final double kP = 0.5;
@@ -73,12 +71,12 @@ public final class Constants {
 		public static final double kWheelCirc = Units.inchesToMeters(Math.PI * 8.0); // meters
 		public static final int kEncoderResolution = 42; // not used, NEO's native units are rotations
 		public static final double kGearBoxRatio = 10.71;
-		public static final double kPosFactor = kWheelCirc / kGearBoxRatio; // Meters per Revolution Revolution
+		public static final double kPosFactor = kWheelCirc / kGearBoxRatio; // Meters per Revolution
 		public static final double kVelFactor = kWheelCirc / kGearBoxRatio / 60.0; // Meters per Second
 		public static final double kCountsPerRevGearbox = kEncoderResolution * kGearBoxRatio;
 
-		public static final double kPosFactorIPC = kWheelCirc / kCountsPerRevGearbox; // Meters per Revolution Revolution
-		public static final double kPosFactorCPI = kCountsPerRevGearbox / kWheelCirc; // Meters per Revolution Revolution
+		public static final double kPosFactorIPC = kWheelCirc / kCountsPerRevGearbox; // Meters per Revolution
+		public static final double kPosFactorCPI = kCountsPerRevGearbox / kWheelCirc; // Meters per Revolution
 
 		public static final double ksVolts = 0.22;
 		public static final double kvVoltSecondsPerMeter = 0.3;
@@ -97,11 +95,6 @@ public final class Constants {
 	}
 	
 	public static final class ClimberConstants {
-		public static final int kClimbLeftExtend = 0;
-		public static final int kClimbLeftRetract = 1;
-		public static final int kClimbRightExtend = 0;
-		public static final int kClimbRightRetract = 1;
-
 		public static final double kP = 0.2;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0; 
@@ -110,8 +103,8 @@ public final class Constants {
 		public static final int kEncoderResolution = 42; // not used, NEO's native units are rotations
 		public static final double kGearBoxRatio = 12;
 		public static final double kCountsPerRevGearbox = kEncoderResolution * kGearBoxRatio;
-		public static final double kPosFactorIPC = kPulleyCirc / kCountsPerRevGearbox; // Meters per Revolution Revolution
-		public static final double kPosFactorCPI = kCountsPerRevGearbox / kPulleyCirc; // Meters per Revolution Revolution
+		public static final double kPosFactorIPC = kPulleyCirc / kCountsPerRevGearbox; // Meters per Revolution
+		public static final double kPosFactorCPI = kCountsPerRevGearbox / kPulleyCirc; // Meters per Revolution
 
 		public static final double kLowRung = 47.0;//inches
 		public static final double kClearLowRung = 53.75;//inches
@@ -124,5 +117,21 @@ public final class Constants {
 		public static final double kPullUp = 0;//inches
 	}
 
+    public static final class ShooterConstants {
+        public static double kP = 0.00008;
+		public static double kI = 0.0000004;
+		public static double kD = 0;
+		public static double kIz = 0;
+		public static double kFF = 0;
+		public static double kMinOutput = -.5;
+		public static double kMaxOutput = .5;
 
+        public static final double kStopRPMs = 0.0;
+		public static final double kMinRPM = -4540.0;
+		public static final double kMaxRPM = 4540.8; //2800 rpm when prototype tested 1-18-22
+
+		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
+
+		public static final double kVelocityTolerance = 100.0; 	// rpms
+    }
 }

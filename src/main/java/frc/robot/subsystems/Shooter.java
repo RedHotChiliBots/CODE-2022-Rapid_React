@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
+import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.ShooterConstants;
 
 import com.revrobotics.CANSparkMax;
@@ -22,6 +23,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -45,6 +47,8 @@ public class Shooter extends SubsystemBase {
   public boolean running = false;
 
   public Shooter() {
+
+    System.out.println("Shooter Constructor Starting");
     //Define motors
     shootLeadMotor = new CANSparkMax(CANidConstants.kShooterLeadMotor, MotorType.kBrushless);
     shootFollowMotor = new CANSparkMax(CANidConstants.kShooterFollowerMotor, MotorType.kBrushless);
@@ -82,7 +86,9 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
-    plunger = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ShooterConstants.kPlungerExtend, ShooterConstants.kPlungerRetract);
+    plunger = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kPlungerExtend, PneumaticChannelConstants.kPlungerRetract);
+
+    System.out.println("Shooter Constructer Finished");
   }
 
   @Override
@@ -111,7 +117,6 @@ public class Shooter extends SubsystemBase {
     sbShootSetPoint.setDouble(shootSetPoint);
   }
 
-
   public double getShootVelocity() {
     return shootEncoder.getVelocity();
   }
@@ -125,6 +130,10 @@ public class Shooter extends SubsystemBase {
     shootLeadMotor.set(0);
   }
 
+	public boolean atTarget(){
+    	return Math.abs(shootSetPoint - getShootVelocity()) <= ShooterConstants.kVelocityTolerance;
+  }
+
   public void plungerExtend() {
     plunger.set(Value.kForward);
   }
@@ -132,4 +141,6 @@ public class Shooter extends SubsystemBase {
   public void plungerRetract() {
     plunger.set(Value.kReverse);
   }
+
 }
+

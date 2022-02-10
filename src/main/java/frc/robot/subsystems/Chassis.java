@@ -88,7 +88,7 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Identify PDP and PCM
 	private final PowerDistribution pdp = new PowerDistribution();
-	private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+	//private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
 	// Identify compressor hi and lo sensors
 	private final AnalogInput hiPressureSensor = new AnalogInput(AnalogIOConstants.kHiPressureChannel);
@@ -170,6 +170,9 @@ public class Chassis extends SubsystemBase {
 
 		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
 		rightEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
+		
+		leftEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
+		rightEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
 
 		// ==============================================================
 		// Define autonomous support functions
@@ -203,22 +206,16 @@ public class Chassis extends SubsystemBase {
 			List.of(new Translation2d(1, 1)),
 			new Pose2d(2.9, 3.9, new Rotation2d(0)),
 			// Pass config
-			config);
-
-		leftMaster.getEncoder().setPositionConversionFactor(ChassisConstants.kPosFactor);
-		rightMaster.getEncoder().setPositionConversionFactor(ChassisConstants.kPosFactor);
+			config);	
 	
-		leftMaster.getEncoder().setVelocityConversionFactor(ChassisConstants.kVelFactor);
-		rightMaster.getEncoder().setVelocityConversionFactor(ChassisConstants.kVelFactor);
-	
-		chassisTab.addPersistent("ML Pos Factor", leftMaster.getEncoder().getPositionConversionFactor());
-		chassisTab.addPersistent("MR Pos Factor", rightMaster.getEncoder().getPositionConversionFactor());
-		chassisTab.addPersistent("ML Vel Factor", leftMaster.getEncoder().getVelocityConversionFactor());
-		chassisTab.addPersistent("MR Vel Factor", rightMaster.getEncoder().getVelocityConversionFactor());
+		chassisTab.addPersistent("ML Pos Factor", leftEncoder.getPositionConversionFactor());
+		chassisTab.addPersistent("MR Pos Factor", rightEncoder.getPositionConversionFactor());
+		chassisTab.addPersistent("ML Vel Factor", leftEncoder.getVelocityConversionFactor());
+		chassisTab.addPersistent("MR Vel Factor", rightEncoder.getVelocityConversionFactor());
 			
 		// Reset the current encoder positions to zero
-		leftMaster.getEncoder().setPosition(0.0);
-		rightMaster.getEncoder().setPosition(0.0);
+		leftEncoder.setPosition(0.0);
+		rightEncoder.setPosition(0.0);
 	
 		resetFieldPosition(0.0, 0.0);
 	
@@ -228,10 +225,10 @@ public class Chassis extends SubsystemBase {
   	@Override
   	public void periodic() {
 		sbRobotAngle.setDouble(getAngle().getDegrees());
-		sbLeftPos.setDouble(leftMaster.getEncoder().getPosition());
-		sbLeftVel.setDouble(leftMaster.getEncoder().getVelocity());
-		sbRightPos.setDouble(rightMaster.getEncoder().getPosition());
-		sbRightVel.setDouble(rightMaster.getEncoder().getVelocity());
+		sbLeftPos.setDouble(leftEncoder.getPosition());
+		sbLeftVel.setDouble(leftEncoder.getVelocity());
+		sbRightPos.setDouble(rightEncoder.getPosition());
+		sbRightVel.setDouble(rightEncoder.getVelocity());
 		sbLeftPow.setDouble(leftMaster.get());
 		sbRightPow.setDouble(rightMaster.get());
 
@@ -267,7 +264,7 @@ public class Chassis extends SubsystemBase {
 	}
 
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-		return new DifferentialDriveWheelSpeeds(leftMaster.getEncoder().getVelocity(), rightMaster.getEncoder().getVelocity());
+		return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
 	}
 
 	public double getDuration(Trajectory t) {
@@ -292,8 +289,8 @@ public class Chassis extends SubsystemBase {
 
 	public void resetFieldPosition(double x, double y) {
 		ahrs.zeroYaw();
-		leftMaster.getEncoder().setPosition(0.0);
-		rightMaster.getEncoder().setPosition(0.0);
+		leftEncoder.setPosition(0.0);
+		rightEncoder.setPosition(0.0);
 		m_odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
 	}
 
