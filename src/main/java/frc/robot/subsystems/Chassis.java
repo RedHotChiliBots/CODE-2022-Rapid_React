@@ -40,9 +40,8 @@ import frc.robot.Constants.ChassisConstants;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
-
 public class Chassis extends SubsystemBase {
-  
+
 	// ==============================================================
 	// Define the left side motors, master and follower
 	private CANSparkMax leftMaster;
@@ -56,19 +55,19 @@ public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Identify encoders and PID controllers
-  	private RelativeEncoder leftEncoder;
-  	private RelativeEncoder rightEncoder;
-	
+	private RelativeEncoder leftEncoder;
+	private RelativeEncoder rightEncoder;
+
 	private SparkMaxPIDController leftPIDController;
 	private SparkMaxPIDController rightPIDController;
 
-  	private double setPoint = 0;
+	private double setPoint = 0;
 
 	// ==============================================================
 	// Define autonomous support functions
-	public DifferentialDriveKinematics m_kinematics;
+	private DifferentialDriveKinematics m_kinematics;
 
-	public DifferentialDriveOdometry m_odometry;
+	private DifferentialDriveOdometry m_odometry;
 
 	// Create a voltage constraint to ensure we don't accelerate too fast
 	private DifferentialDriveVoltageConstraint autoVoltageConstraint;
@@ -78,7 +77,7 @@ public class Chassis extends SubsystemBase {
 	private TrajectoryConfig configReversed;
 
 	// An example trajectory to follow. All units in meters.
-	public Trajectory lineToRendezvousTrajectory;
+	private Trajectory lineToRendezvousTrajectory;
 
 	// ==============================================================
 	// Initialize NavX AHRS board
@@ -88,7 +87,8 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Identify PDP and PCM
 	private final PowerDistribution pdp = new PowerDistribution();
-	//private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+	// private final Compressor compressor = new
+	// Compressor(PneumaticsModuleType.CTREPCM);
 
 	// Identify compressor hi and lo sensors
 	private final AnalogInput hiPressureSensor = new AnalogInput(AnalogIOConstants.kHiPressureChannel);
@@ -109,7 +109,7 @@ public class Chassis extends SubsystemBase {
 	private NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
 	private NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
 
-  	public Chassis() {
+	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting ...");
 
 		pdp.clearStickyFaults();
@@ -120,48 +120,50 @@ public class Chassis extends SubsystemBase {
 		leftFollower = new CANSparkMax(CANidConstants.kLeftFollowerMotor, MotorType.kBrushless);
 
 		leftMaster.restoreFactoryDefaults();
-    	leftFollower.restoreFactoryDefaults();
+		leftFollower.restoreFactoryDefaults();
 
-    	leftMaster.setIdleMode(IdleMode.kBrake);
-    	leftFollower.setIdleMode(IdleMode.kBrake);
+		leftMaster.setIdleMode(IdleMode.kBrake);
+		leftFollower.setIdleMode(IdleMode.kBrake);
 
 		// Define the right side motors, master and follower
 		rightMaster = new CANSparkMax(CANidConstants.kRightMasterMotor, MotorType.kBrushless);
 		rightFollower = new CANSparkMax(CANidConstants.kRightFollowerMotor, MotorType.kBrushless);
 
 		rightMaster.restoreFactoryDefaults();
-    	rightFollower.restoreFactoryDefaults();
+		rightFollower.restoreFactoryDefaults();
 
 		rightMaster.setIdleMode(IdleMode.kBrake);
-    	rightFollower.setIdleMode(IdleMode.kBrake);
+		rightFollower.setIdleMode(IdleMode.kBrake);
 
 		rightMaster.setInverted(true);
 		rightFollower.setInverted(true);
-	
-    	// Group the left and right motors
+
+		// Group the left and right motors
 		leftFollower.follow(leftMaster);
 		rightFollower.follow(rightMaster);
 
 		m_diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
-    	// ==============================================================
+		// ==============================================================
 		// Identify PID controller
 		leftPIDController = leftMaster.getPIDController();
 		rightPIDController = rightMaster.getPIDController();
-		
-    	leftPIDController.setP(ChassisConstants.kP);
-    	leftPIDController.setI(ChassisConstants.kI);
-    	leftPIDController.setD(ChassisConstants.kD);
-    	// leftPIDController.setIZone(ClimberConstants.kIz);
-    	// leftPIDController.setFF(ClimberConstants.kFF);
-    	// leftPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
-		
-    	rightPIDController.setP(ChassisConstants.kP);
-    	rightPIDController.setI(ChassisConstants.kI);
-    	rightPIDController.setD(ChassisConstants.kD);
-    	// rightPIDController.setIZone(ClimberConstants.kIz);
-    	// rightPIDController.setFF(ClimberConstants.kFF);
-    	// rightPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
+
+		leftPIDController.setP(ChassisConstants.kP);
+		leftPIDController.setI(ChassisConstants.kI);
+		leftPIDController.setD(ChassisConstants.kD);
+		// leftPIDController.setIZone(ClimberConstants.kIz);
+		// leftPIDController.setFF(ClimberConstants.kFF);
+		// leftPIDController.setOutputRange(ClimberConstants.kMinOutput,
+		// ClimberConstants.kMaxOutput);
+
+		rightPIDController.setP(ChassisConstants.kP);
+		rightPIDController.setI(ChassisConstants.kI);
+		rightPIDController.setD(ChassisConstants.kD);
+		// rightPIDController.setIZone(ClimberConstants.kIz);
+		// rightPIDController.setFF(ClimberConstants.kFF);
+		// rightPIDController.setOutputRange(ClimberConstants.kMinOutput,
+		// ClimberConstants.kMaxOutput);
 
 		// ==============================================================
 		// Identify encoders and PID controllers
@@ -170,7 +172,7 @@ public class Chassis extends SubsystemBase {
 
 		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
 		rightEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
-		
+
 		leftEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
 		rightEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
 
@@ -181,49 +183,51 @@ public class Chassis extends SubsystemBase {
 		m_odometry = new DifferentialDriveOdometry(getAngle());
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
-		autoVoltageConstraint = new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(ChassisConstants.ksVolts, ChassisConstants.kvVoltSecondsPerMeter, ChassisConstants.kaVoltSecondsSquaredPerMeter), m_kinematics, 10);
+		autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+				new SimpleMotorFeedforward(ChassisConstants.ksVolts, ChassisConstants.kvVoltSecondsPerMeter,
+						ChassisConstants.kaVoltSecondsSquaredPerMeter),
+				m_kinematics, 10);
 
 		// Create config for trajectory
 		config = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
-			ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-			// Add kinematics to ensure max speed is actually obeyed
-			.setKinematics(m_kinematics)
-			// Apply the voltage constraint
-			.addConstraint(autoVoltageConstraint)
-			.setReversed(false);
-						
-		
+				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
+						// Add kinematics to ensure max speed is actually obeyed
+						.setKinematics(m_kinematics)
+						// Apply the voltage constraint
+						.addConstraint(autoVoltageConstraint)
+						.setReversed(false);
+
 		configReversed = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
-			ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-			// Add kinematics to ensure max speed is actually obeyed
-			.setKinematics(m_kinematics)
-			// Apply the voltage constraint
-			.addConstraint(autoVoltageConstraint)
-			.setReversed(true);
+				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
+						// Add kinematics to ensure max speed is actually obeyed
+						.setKinematics(m_kinematics)
+						// Apply the voltage constraint
+						.addConstraint(autoVoltageConstraint)
+						.setReversed(true);
 
 		lineToRendezvousTrajectory = TrajectoryGenerator.generateTrajectory(
-			new Pose2d(0, 1.7, new Rotation2d(0)),
-			List.of(new Translation2d(1, 1)),
-			new Pose2d(2.9, 3.9, new Rotation2d(0)),
-			// Pass config
-			config);	
-	
+				new Pose2d(0, 1.7, new Rotation2d(0)),
+				List.of(new Translation2d(1, 1)),
+				new Pose2d(2.9, 3.9, new Rotation2d(0)),
+				// Pass config
+				config);
+
 		chassisTab.addPersistent("ML Pos Factor", leftEncoder.getPositionConversionFactor());
 		chassisTab.addPersistent("MR Pos Factor", rightEncoder.getPositionConversionFactor());
 		chassisTab.addPersistent("ML Vel Factor", leftEncoder.getVelocityConversionFactor());
 		chassisTab.addPersistent("MR Vel Factor", rightEncoder.getVelocityConversionFactor());
-			
+
 		// Reset the current encoder positions to zero
 		leftEncoder.setPosition(0.0);
 		rightEncoder.setPosition(0.0);
-	
-		resetFieldPosition(0.0, 0.0);
-	
-		System.out.println("----- Chassis Constructor finished ...");
-  	}
 
-  	@Override
-  	public void periodic() {
+		resetFieldPosition(0.0, 0.0);
+
+		System.out.println("----- Chassis Constructor finished ...");
+	}
+
+	@Override
+	public void periodic() {
 		sbRobotAngle.setDouble(getAngle().getDegrees());
 		sbLeftPos.setDouble(leftEncoder.getPosition());
 		sbLeftVel.setDouble(leftEncoder.getVelocity());
@@ -241,9 +245,9 @@ public class Chassis extends SubsystemBase {
 		Pose2d pose = m_odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
 		Rotation2d rot = pose.getRotation();
-  	}
+	}
 
-  	public DifferentialDriveOdometry getOdometry() {
+	public DifferentialDriveOdometry getOdometry() {
 		return m_odometry;
 	}
 
@@ -310,14 +314,20 @@ public class Chassis extends SubsystemBase {
 	 * @param speeds The desired wheel speeds.
 	 */
 	// public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-	// 	double leftFeedforward = 0.0;// m_Feedforward.calculate(speeds.leftMetersPerSecond);
-	// 	double rightFeedforward = 0.0; // m_Feedforward.calculate(speeds.rightMetersPerSecond);
+	// double leftFeedforward = 0.0;//
+	// m_Feedforward.calculate(speeds.leftMetersPerSecond);
+	// double rightFeedforward = 0.0; //
+	// m_Feedforward.calculate(speeds.rightMetersPerSecond);
 
-	// 	double leftOutput = leftPIDController.calculate(leftMaster.getEncoder().getVelocity(), speeds.leftMetersPerSecond);
-	// 	double rightOutput = rightPIDController.calculate(rightMaster.getEncoder().getVelocity(), speeds.rightMetersPerSecond);
+	// double leftOutput =
+	// leftPIDController.calculate(leftMaster.getEncoder().getVelocity(),
+	// speeds.leftMetersPerSecond);
+	// double rightOutput =
+	// rightPIDController.calculate(rightMaster.getEncoder().getVelocity(),
+	// speeds.rightMetersPerSecond);
 
-	// 	leftMaster.set(leftOutput + leftFeedforward);
-	// 	rightMaster.set(rightOutput + rightFeedforward);
+	// leftMaster.set(leftOutput + leftFeedforward);
+	// rightMaster.set(rightOutput + rightFeedforward);
 	// }
 
 	/**
@@ -330,7 +340,7 @@ public class Chassis extends SubsystemBase {
 	public void drive(double xSpeed, double xRot) {
 		var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, -xRot));
 		leftMaster.set(wheelSpeeds.leftMetersPerSecond);
-	 	rightMaster.set(wheelSpeeds.rightMetersPerSecond);
+		rightMaster.set(wheelSpeeds.rightMetersPerSecond);
 	}
 
 	/**
@@ -351,16 +361,16 @@ public class Chassis extends SubsystemBase {
 
 	public void drivePosition(double setPoint) {
 		// m_distPIDController.setSetpoint(distance * ChassisConstants.kPosFactor);
-    	this.setPoint = setPoint;
-		SmartDashboard.putNumber("PIDSetpoint",  setPoint);
+		this.setPoint = setPoint;
+		SmartDashboard.putNumber("PIDSetpoint", setPoint);
 		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 		rightPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 	}
 
-	public boolean atTarget(){
-    	return Math.abs(setPoint - leftEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance &&
-		Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
-  	}
+	public boolean atTarget() {
+		return Math.abs(setPoint - leftEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance &&
+				Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
+	}
 
 	public double getLoPressure() {
 		return 250.0 * (loPressureSensor.getVoltage() / AnalogIOConstants.kInputVoltage) - 25.0;

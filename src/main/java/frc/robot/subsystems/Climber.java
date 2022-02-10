@@ -24,11 +24,11 @@ import frc.robot.Constants.CANidConstants;
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
   // Front & Back Climb Solenoids
-  public DoubleSolenoid climbRight = null;
-  public DoubleSolenoid climbLeft = null;
+  private DoubleSolenoid climbRight = null;
+  private DoubleSolenoid climbLeft = null;
 
-  public CANSparkMax climbRightMotor = null;
-  public CANSparkMax climbLeftMotor = null;
+  private CANSparkMax climbRightMotor = null;
+  private CANSparkMax climbLeftMotor = null;
 
   // ==============================================================
   // Identify encoders and PID controllers

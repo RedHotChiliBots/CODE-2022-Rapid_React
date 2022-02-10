@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
   private SparkMaxPIDController shootPIDController;
   private RelativeEncoder shootEncoder;
 
-  public DoubleSolenoid plunger = null;
+  private DoubleSolenoid plunger = null;
 
   private double shootSetPoint = 0.0;
 
