@@ -86,10 +86,9 @@ public class Climber extends SubsystemBase {
     climbPIDController.setP(ClimberConstants.kP);
     climbPIDController.setI(ClimberConstants.kI);
     climbPIDController.setD(ClimberConstants.kD);
-    // climbPIDController.setIZone(ClimberConstants.kIz);
-    // climbPIDController.setFF(ClimberConstants.kFF);
-    // climbPIDController.setOutputRange(ClimberConstants.kMinOutput,
-    // ClimberConstants.kMaxOutput);
+    climbPIDController.setIZone(ClimberConstants.kIz);
+    climbPIDController.setFF(ClimberConstants.kFF);
+    climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
 
     System.out.println("Climber Constructor Finished");
   }
@@ -117,7 +116,6 @@ public class Climber extends SubsystemBase {
   }
 
   public void climbPosition(double setPoint) {
-    // m_distPIDController.setSetpoint(distance * ChassisConstants.kPosFactor);
     this.setPoint = setPoint;
     cbSetPoint.setDouble(setPoint);
     climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);

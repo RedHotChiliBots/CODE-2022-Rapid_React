@@ -44,7 +44,7 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
   private NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
 
-  public boolean running = false;
+  private boolean running = false;
 
   public Shooter() {
 
@@ -61,8 +61,6 @@ public class Shooter extends SubsystemBase {
     shootFollowMotor.setIdleMode(IdleMode.kBrake);
 
     shootFollowMotor.follow(shootLeadMotor, true);
-
-    // shootFollowMotor.setInverted(false);
 
     shootPIDController = shootLeadMotor.getPIDController();
 
@@ -147,6 +145,14 @@ public class Shooter extends SubsystemBase {
 
   public void stopShoot() {
     shootLeadMotor.set(0);
+  }
+
+  public void setRunning(boolean r) {
+    this.running = r;
+  }
+
+  public boolean isRunning() {
+    return running;
   }
 
   public boolean atTarget() {

@@ -10,8 +10,8 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterShoot extends CommandBase {
   /** Creates a new ShooterShoot. */
-  
-  private final Shooter shooter; 
+
+  private final Shooter shooter;
 
   public ShooterShoot(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,25 +23,25 @@ public class ShooterShoot extends CommandBase {
   @Override
   public void initialize() {
     shooter.setShootVelocity(ShooterConstants.kShooterShootRPMs);
-    shooter.running = true;
+    shooter.setRunning(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     shooter.stopShoot();
-    shooter.running = false;
+    shooter.setRunning(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !shooter.running;
+    return !shooter.isRunning();
   }
 }

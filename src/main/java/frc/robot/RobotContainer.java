@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-//import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -26,9 +25,12 @@ import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
@@ -38,18 +40,20 @@ public class RobotContainer {
   private final Climber climber = new Climber();
 
   // =============================================================
-	// Define Joysticks
-	XboxController m_driver = new XboxController(OIConstants.kDriverControllerPort);
-	XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+  // Define Joysticks
+  XboxController m_driver = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   private static final double DEADZONE = 0.3;
 
   // =============================================================
-	// Define Commands here to avoid multiple instantiations
-	// If commands use Shuffleboard and are instantiated multiple time, an error
-	// is thrown on the second instantiation becuase the "title" already exists.
-  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis, () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
-  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis, () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+  // Define Commands here to avoid multiple instantiations
+  // If commands use Shuffleboard and are instantiated multiple time, an error
+  // is thrown on the second instantiation becuase the "title" already exists.
+  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
+      () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
+      () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
 
   private final ShooterShoot shoot = new ShooterShoot(shooter);
   private final ShooterStop stopShoot = new ShooterStop(shooter);
@@ -58,34 +62,38 @@ public class RobotContainer {
   private final ClimberPerpendicular perpendicular = new ClimberPerpendicular(climber);
   private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
   private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
-  private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,ClimberConstants.kFullExtendPerpendicular);
+  private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber, ClimberConstants.kFullExtendPerpendicular);
   private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel);
   private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
 
-  //Creating tabs on shuffleboard for each subsystem
+  // Creating tabs on shuffleboard for each subsystem
   ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    //==============================================================================
-    //Add Subsystems to Dashboard
+    // ==============================================================================
+    // Add Subsystems to Dashboard
     SmartDashboard.putData("Chassis", chassis);
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("Climber", climber);
 
     // =============================================================
-		// Configure default commands for each subsystem
-    //shooter.setDefaultCommand(new ShooterStop(shooter));
+    // Configure default commands for each subsystem
+    // shooter.setDefaultCommand(new ShooterStop(shooter));
     chassis.setDefaultCommand(chassisTankDrive);
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+   * it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -97,12 +105,13 @@ public class RobotContainer {
 
     new JoystickButton(m_operator, Button.kStart.value).whenPressed(swivel);
     new JoystickButton(m_operator, Button.kBack.value).whenPressed(perpendicular);
-    
+
     new JoystickButton(m_operator, Button.kY.value).whenPressed(toClearMidRung);
     new JoystickButton(m_operator, Button.kB.value).whenPressed(toMidRung);
     new JoystickButton(m_operator, Button.kX.value).whenPressed(toFullExtendPerp);
     new JoystickButton(m_operator, Button.kA.value).whenPressed(toFullExtendSwivel);
-    //Will need a stow at soem point but will add in when rest is auto command because not enough buttons for testing
+    // Will need a stow at soem point but will add in when rest is auto command
+    // because not enough buttons for testing
     // new JoystickButton(m_operator, Button..value).whenPressed(toStow);
   }
 
@@ -111,29 +120,29 @@ public class RobotContainer {
   }
 
   public void setDriverRumble(GenericHID.RumbleType t) {
-		m_driver.setRumble(t, 1);
-	}
+    m_driver.setRumble(t, 1);
+  }
 
-	public void resetDriverRumble(GenericHID.RumbleType t) {
-		m_driver.setRumble(t, 0);
-	}
+  public void resetDriverRumble(GenericHID.RumbleType t) {
+    m_driver.setRumble(t, 0);
+  }
 
-	public void setOperatorRumble(GenericHID.RumbleType t) {
-		m_operator.setRumble(t, 1);
-	}
+  public void setOperatorRumble(GenericHID.RumbleType t) {
+    m_operator.setRumble(t, 1);
+  }
 
-	public void resetOperatorRumble(GenericHID.RumbleType t) {
-		m_operator.setRumble(t, 0);
-	}
-  
-  //UNCOMMENT THIS
+  public void resetOperatorRumble(GenericHID.RumbleType t) {
+    m_operator.setRumble(t, 0);
+  }
+
+  // UNCOMMENT THIS
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return m_autoCommand;
+  // // An ExampleCommand will run in autonomous
+  // return m_autoCommand;
   // }
 }

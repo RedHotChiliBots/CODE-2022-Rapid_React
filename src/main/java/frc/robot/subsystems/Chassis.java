@@ -152,18 +152,16 @@ public class Chassis extends SubsystemBase {
 		leftPIDController.setP(ChassisConstants.kP);
 		leftPIDController.setI(ChassisConstants.kI);
 		leftPIDController.setD(ChassisConstants.kD);
-		// leftPIDController.setIZone(ClimberConstants.kIz);
-		// leftPIDController.setFF(ClimberConstants.kFF);
-		// leftPIDController.setOutputRange(ClimberConstants.kMinOutput,
-		// ClimberConstants.kMaxOutput);
+		leftPIDController.setIZone(ChassisConstants.kIz);
+		leftPIDController.setFF(ChassisConstants.kFF);
+		leftPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
 		rightPIDController.setP(ChassisConstants.kP);
 		rightPIDController.setI(ChassisConstants.kI);
 		rightPIDController.setD(ChassisConstants.kD);
-		// rightPIDController.setIZone(ClimberConstants.kIz);
-		// rightPIDController.setFF(ClimberConstants.kFF);
-		// rightPIDController.setOutputRange(ClimberConstants.kMinOutput,
-		// ClimberConstants.kMaxOutput);
+		rightPIDController.setIZone(ChassisConstants.kIz);
+		rightPIDController.setFF(ChassisConstants.kFF);
+		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
 		// ==============================================================
 		// Identify encoders and PID controllers
@@ -348,9 +346,6 @@ public class Chassis extends SubsystemBase {
 	 */
 
 	public void updateOdometry() {
-		// SDS 2/12/29 - testing with inverted group rather than inverting encoder here
-		// m_odometry.update(getAngle(), m_leftEncoder.getPosition(),
-		// -m_rightEncoder.getPosition());
 		m_odometry.update(getAngle(), leftEncoder.getPosition(), rightEncoder.getPosition());
 	}
 
@@ -360,7 +355,6 @@ public class Chassis extends SubsystemBase {
 	}
 
 	public void drivePosition(double setPoint) {
-		// m_distPIDController.setSetpoint(distance * ChassisConstants.kPosFactor);
 		this.setPoint = setPoint;
 		SmartDashboard.putNumber("PIDSetpoint", setPoint);
 		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);

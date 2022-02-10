@@ -9,7 +9,7 @@ import frc.robot.subsystems.Shooter;
 
 public class ShooterStop extends CommandBase {
   /** Creates a new ShooterStop. */
-  
+
   private final Shooter shooter;
 
   public ShooterStop(Shooter shooter) {
@@ -21,19 +21,20 @@ public class ShooterStop extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     shooter.stopShoot();
-    shooter.running = false;
+    shooter.setRunning(false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
