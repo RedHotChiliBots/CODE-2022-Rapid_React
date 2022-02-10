@@ -41,6 +41,7 @@ public class Climber extends SubsystemBase {
   private NetworkTableEntry cbLeftPos = climberTab.addPersistent("Left Position", 0.0).getEntry();
   private NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
   private NetworkTableEntry cbSetPoint = climberTab.addPersistent("PIDSetpoint", 0.0).getEntry();
+  private NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
 
   private double setPoint = 0;
 
@@ -98,6 +99,7 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
     cbLeftPos.setDouble(leftEncoder.getPosition());
     cbRightPos.setDouble(rightEncoder.getPosition());
+    cbAtTarget.setBoolean(atTarget());
   }
 
   public void climberSwivel() {
