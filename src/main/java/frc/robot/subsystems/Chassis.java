@@ -51,7 +51,7 @@ public class Chassis extends SubsystemBase {
 	private CANSparkMax rightMaster;
 	private CANSparkMax rightFollower;
 
-	private DifferentialDrive m_diffDrive;
+	private DifferentialDrive diffDrive;
 
 	// ==============================================================
 	// Identify encoders and PID controllers
@@ -65,9 +65,9 @@ public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define autonomous support functions
-	private DifferentialDriveKinematics m_kinematics;
+	private DifferentialDriveKinematics kinematics;
 
-	private DifferentialDriveOdometry m_odometry;
+	private DifferentialDriveOdometry odometry;
 
 	// Create a voltage constraint to ensure we don't accelerate too fast
 	private DifferentialDriveVoltageConstraint autoVoltageConstraint;
@@ -142,7 +142,7 @@ public class Chassis extends SubsystemBase {
 		leftFollower.follow(leftMaster);
 		rightFollower.follow(rightMaster);
 
-		m_diffDrive = new DifferentialDrive(leftMaster, rightMaster);
+		diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
 		// ==============================================================
 		// Identify PID controller
@@ -176,21 +176,21 @@ public class Chassis extends SubsystemBase {
 
 		// ==============================================================
 		// Define autonomous support functions
-		m_kinematics = new DifferentialDriveKinematics(ChassisConstants.kTrackWidth);
+		kinematics = new DifferentialDriveKinematics(ChassisConstants.kTrackWidth);
 
-		m_odometry = new DifferentialDriveOdometry(getAngle());
+		odometry = new DifferentialDriveOdometry(getAngle());
 
 		// Create a voltage constraint to ensure we don't accelerate too fast
 		autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
 				new SimpleMotorFeedforward(ChassisConstants.ksVolts, ChassisConstants.kvVoltSecondsPerMeter,
 						ChassisConstants.kaVoltSecondsSquaredPerMeter),
-				m_kinematics, 10);
+				kinematics, 10);
 
 		// Create config for trajectory
 		config = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
 						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(m_kinematics)
+						.setKinematics(kinematics)
 						// Apply the voltage constraint
 						.addConstraint(autoVoltageConstraint)
 						.setReversed(false);
@@ -198,7 +198,7 @@ public class Chassis extends SubsystemBase {
 		configReversed = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
 						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(m_kinematics)
+						.setKinematics(kinematics)
 						// Apply the voltage constraint
 						.addConstraint(autoVoltageConstraint)
 						.setReversed(true);
@@ -240,21 +240,21 @@ public class Chassis extends SubsystemBase {
 		// Update field position - for autonomous
 		updateOdometry();
 
-		Pose2d pose = m_odometry.getPoseMeters();
+		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
 		Rotation2d rot = pose.getRotation();
 	}
 
 	public DifferentialDriveOdometry getOdometry() {
-		return m_odometry;
+		return odometry;
 	}
 
 	public Pose2d getPose() {
-		return m_odometry.getPoseMeters();
+		return odometry.getPoseMeters();
 	}
 
 	public DifferentialDriveKinematics getKinematics() {
-		return m_kinematics;
+		return kinematics;
 	}
 
 	public SparkMaxPIDController getLeftPID() {
@@ -278,22 +278,22 @@ public class Chassis extends SubsystemBase {
 	}
 
 	public void driveTankVolts(double left, double right) {
-		m_diffDrive.tankDrive(left, right);
+		diffDrive.tankDrive(left, right);
 	}
 
 	public void driveTank(double left, double right) {
-		m_diffDrive.tankDrive(-left, -right);
+		diffDrive.tankDrive(-left, -right);
 	}
 
 	public void driveArcade(double spd, double rot) {
-		m_diffDrive.arcadeDrive(-spd, rot);
+		diffDrive.arcadeDrive(-spd, rot);
 	}
 
 	public void resetFieldPosition(double x, double y) {
 		ahrs.zeroYaw();
 		leftEncoder.setPosition(0.0);
 		rightEncoder.setPosition(0.0);
-		m_odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
+		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
 	}
 
 	/**
@@ -336,7 +336,7 @@ public class Chassis extends SubsystemBase {
 	 */
 	// @SuppressWarnings("ParameterName")
 	public void drive(double xSpeed, double xRot) {
-		var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, -xRot));
+		var wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, -xRot));
 		leftMaster.set(wheelSpeeds.leftMetersPerSecond);
 		rightMaster.set(wheelSpeeds.rightMetersPerSecond);
 	}
@@ -346,7 +346,7 @@ public class Chassis extends SubsystemBase {
 	 */
 
 	public void updateOdometry() {
-		m_odometry.update(getAngle(), leftEncoder.getPosition(), rightEncoder.getPosition());
+		odometry.update(getAngle(), leftEncoder.getPosition(), rightEncoder.getPosition());
 	}
 
 	public void driveTrajectory(double left, double right) {
