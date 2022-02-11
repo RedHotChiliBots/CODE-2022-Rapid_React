@@ -52,6 +52,8 @@ public class RobotContainer {
   // is thrown on the second instantiation becuase the "title" already exists.
   private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
       () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+  private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
+      () -> 0.4, () -> 0.4);
   private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
       () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
 
@@ -99,6 +101,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new JoystickButton(m_driver, Button.kA.value).whenPressed(chassisTankDrive);
     new JoystickButton(m_driver, Button.kB.value).whenPressed(chassisArcadeDrive);
+    new JoystickButton(m_driver, Button.kX.value).whenPressed(modifiedTankDrive);
 
     new JoystickButton(m_operator, Button.kRightBumper.value).whenPressed(shoot);
     new JoystickButton(m_operator, Button.kLeftBumper.value).whenPressed(stopShoot);
