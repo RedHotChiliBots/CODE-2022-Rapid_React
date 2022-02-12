@@ -57,10 +57,13 @@ public class RobotContainer {
 
   // =============================================================
   // Define Joysticks
-  XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
+  private final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   private static final double DEADZONE = 0.3;
+
+  // Define a chooser for autonomous commands
+  private final SendableChooser<Command> chooser = new SendableChooser<>();
 
   // =============================================================
   // Define Commands here to avoid multiple instantiations
@@ -93,9 +96,6 @@ public class RobotContainer {
   private final IntakeArmExtend intakeArmExtend = new IntakeArmExtend(intake);
   private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
   private final IntakeStop intakeStop = new IntakeStop(intake);
-
-  // Define a chooser for autonomous commands
-  private final SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

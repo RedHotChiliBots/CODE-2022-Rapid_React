@@ -44,14 +44,14 @@ public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define the left side motors, master and follower
-	private CANSparkMax leftMaster;
-	private CANSparkMax leftFollower;
+	private final CANSparkMax leftMaster = new CANSparkMax(CANidConstants.kLeftMasterMotor, MotorType.kBrushless);
+	private final CANSparkMax leftFollower = new CANSparkMax(CANidConstants.kLeftFollowerMotor, MotorType.kBrushless);
 
 	// Define the right side motors, master and follower
-	private CANSparkMax rightMaster;
-	private CANSparkMax rightFollower;
+	private final CANSparkMax rightMaster = new CANSparkMax(CANidConstants.kRightMasterMotor, MotorType.kBrushless);
+	private final CANSparkMax rightFollower = new CANSparkMax(CANidConstants.kRightFollowerMotor, MotorType.kBrushless);
 
-	private DifferentialDrive diffDrive;
+	private final DifferentialDrive diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
 	// ==============================================================
 	// Identify encoders and PID controllers
@@ -96,13 +96,14 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Define Shuffleboard data
 	private final ShuffleboardTab chassisTab = Shuffleboard.getTab("Chassis");
-	private NetworkTableEntry sbRobotAngle = chassisTab.addPersistent("Robot Angle", 0).getEntry();
+	private NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
 	private NetworkTableEntry sbLeftPos = chassisTab.addPersistent("ML Position", 0).getEntry();
 	private NetworkTableEntry sbLeftVel = chassisTab.addPersistent("ML Velocity", 0).getEntry();
 	private NetworkTableEntry sbRightPos = chassisTab.addPersistent("MR Position", 0).getEntry();
 	private NetworkTableEntry sbRightVel = chassisTab.addPersistent("MR Velocity", 0).getEntry();
 	private NetworkTableEntry sbLeftPow = chassisTab.addPersistent("ML Power", 0).getEntry();
 	private NetworkTableEntry sbRightPow = chassisTab.addPersistent("MR Power", 0).getEntry();
+	private NetworkTableEntry sbPitch = chassisTab.addPersistent("Pitch", 0).getEntry();
 
 	private final ShuffleboardTab pneumaticsTab = Shuffleboard.getTab("Pneumatics");
 	private NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
@@ -114,20 +115,14 @@ public class Chassis extends SubsystemBase {
 		pdp.clearStickyFaults();
 
 		// ==============================================================
-		// Define the left side motors, master and follower
-		leftMaster = new CANSparkMax(CANidConstants.kLeftMasterMotor, MotorType.kBrushless);
-		leftFollower = new CANSparkMax(CANidConstants.kLeftFollowerMotor, MotorType.kBrushless);
-
+		// Configure the left side motors, master and follower
 		leftMaster.restoreFactoryDefaults();
 		leftFollower.restoreFactoryDefaults();
 
 		leftMaster.setIdleMode(IdleMode.kBrake);
 		leftFollower.setIdleMode(IdleMode.kBrake);
 
-		// Define the right side motors, master and follower
-		rightMaster = new CANSparkMax(CANidConstants.kRightMasterMotor, MotorType.kBrushless);
-		rightFollower = new CANSparkMax(CANidConstants.kRightFollowerMotor, MotorType.kBrushless);
-
+		// Configure the right side motors, master and follower
 		rightMaster.restoreFactoryDefaults();
 		rightFollower.restoreFactoryDefaults();
 
@@ -140,8 +135,6 @@ public class Chassis extends SubsystemBase {
 		// Group the left and right motors
 		leftFollower.follow(leftMaster);
 		rightFollower.follow(rightMaster);
-
-		diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
 		// ==============================================================
 		// Identify PID controller
@@ -214,10 +207,7 @@ public class Chassis extends SubsystemBase {
 		chassisTab.addPersistent("ML Vel Factor", leftEncoder.getVelocityConversionFactor());
 		chassisTab.addPersistent("MR Vel Factor", rightEncoder.getVelocityConversionFactor());
 
-		// Reset the current encoder positions to zero
-		leftEncoder.setPosition(0.0);
-		rightEncoder.setPosition(0.0);
-
+		// Reset the field and encoder positions to zero
 		resetFieldPosition(0.0, 0.0);
 
 		System.out.println("----- Chassis Constructor finished ...");
@@ -225,13 +215,15 @@ public class Chassis extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		sbRobotAngle.setDouble(getAngle().getDegrees());
+		sbHeading.setDouble(getAngle().getDegrees());
 		sbLeftPos.setDouble(leftEncoder.getPosition());
 		sbLeftVel.setDouble(leftEncoder.getVelocity());
 		sbRightPos.setDouble(rightEncoder.getPosition());
 		sbRightVel.setDouble(rightEncoder.getVelocity());
 		sbLeftPow.setDouble(leftMaster.get());
 		sbRightPow.setDouble(rightMaster.get());
+
+		sbPitch.setDouble(getPitch());
 
 		sbHiPressure.setDouble(getHiPressure());
 		sbLoPressure.setDouble(getLoPressure());
