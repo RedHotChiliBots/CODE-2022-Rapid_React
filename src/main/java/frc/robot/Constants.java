@@ -147,7 +147,7 @@ public final class Constants {
 		public static final double kVelocityTolerance = 100.0; // rpms
 	}
 
-	public static final class CollectorConstants {
+	public static final class IntakeConstants {
 		public static double kP = 0.00008;
 		public static double kI = 0.0000004;
 		public static double kD = 0;

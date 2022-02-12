@@ -5,20 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Intake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class COLLECT extends SequentialCommandGroup {
+public class INTAKE extends SequentialCommandGroup {
   /** Creates a new COLLECT. */
-  public COLLECT(Collector collector) {
+  public INTAKE(Intake collector) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new CollectorArmExtend(collector),
-    new CollectorCollect(collector),
+    addCommands(new IntakeArmExtend(collector),
+    new IntakeCollect(collector),
     //Hopper 
-    new CollectorStop(collector),
-    new CollectorArmRetract(collector));
+    new IntakeStop(collector),
+    new IntakeArmRetract(collector));
   }
 }

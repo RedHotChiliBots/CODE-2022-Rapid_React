@@ -5,41 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.CollectorConstants;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Intake;
 
-public class CollectorCollect extends CommandBase {
-  /** Creates a new CollectorCollect. */
+public class IntakeStop extends CommandBase {
+  /** Creates a new CollectorStop. */
 
-  Collector collector;
-  
-  public CollectorCollect(Collector collector) {
+  Intake intake;
+
+  public IntakeStop(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.collector = collector;
-    addRequirements(collector);
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    collector.setCollectorVelocity(CollectorConstants.kCollectorCollectRPMs);
-    collector.setRunning(true);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    intake.stopIntake();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    collector.stopCollect();
-    collector.setRunning(false);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !collector.isRunning();
+    return false;
   }
 }

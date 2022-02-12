@@ -5,23 +5,25 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Collector;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Intake;
 
-public class CollectorArmExtend extends CommandBase {
-  /** Creates a new CollectorArmExtend. */
+public class IntakeCollect extends CommandBase {
+  /** Creates a new CollectorCollect. */
 
-  Collector collector;
+  Intake intake;
   
-  public CollectorArmExtend(Collector collector) {
+  public IntakeCollect(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.collector = collector;
-    addRequirements(collector);
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    collector.collectorArmExtend();
+    intake.setIntakeVelocity(IntakeConstants.kCollectorCollectRPMs);
+    intake.setRunning(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,11 +32,14 @@ public class CollectorArmExtend extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.stopIntake();
+    intake.setRunning(false);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return !intake.isRunning();
   }
 }

@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Intake;
 
-public class CollectorArmRetract extends CommandBase {
-  /** Creates a new CollectorArmRetract. */
+public class IntakeArmExtend extends CommandBase {
+  /** Creates a new CollectorArmExtend. */
 
-  Collector collector;
+  Intake collector;
   
-  public CollectorArmRetract(Collector collector) {
+  public IntakeArmExtend(Intake collector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.collector = collector;
     addRequirements(collector);
@@ -21,7 +21,7 @@ public class CollectorArmRetract extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    collector.collectorArmRetract();
+    collector.collectorArmExtend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

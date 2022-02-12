@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Intake;
 
-public class CollectorStop extends CommandBase {
-  /** Creates a new CollectorStop. */
+public class IntakeArmRetract extends CommandBase {
+  /** Creates a new CollectorArmRetract. */
 
-  Collector collector;
-
-  public CollectorStop(Collector collector) {
+  Intake collector;
+  
+  public IntakeArmRetract(Intake collector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.collector = collector;
     addRequirements(collector);
@@ -20,13 +20,13 @@ public class CollectorStop extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    collector.collectorArmRetract();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    collector.stopCollect();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -35,6 +35,6 @@ public class CollectorStop extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

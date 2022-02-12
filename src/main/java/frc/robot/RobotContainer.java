@@ -20,9 +20,9 @@ import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberPerpendicular;
 import frc.robot.commands.ClimberSwivel;
-import frc.robot.commands.CollectorArmExtend;
-import frc.robot.commands.CollectorArmRetract;
-import frc.robot.commands.CollectorStop;
+import frc.robot.commands.IntakeArmExtend;
+import frc.robot.commands.IntakeArmRetract;
+import frc.robot.commands.IntakeStop;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterPlungerExtend;
@@ -31,7 +31,7 @@ import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,7 +51,7 @@ public class RobotContainer {
   private final Chassis chassis = new Chassis();
   private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
-  private final Collector collector = new Collector();
+  private final Intake intake = new Intake();
   private final Hopper hopper = new Hopper();
 
   // =============================================================
@@ -89,9 +89,9 @@ public class RobotContainer {
   private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
   private final CLIMB CLIMB = new CLIMB(climber, chassis);
 
-  private final CollectorArmExtend collectorArmExtend = new CollectorArmExtend(collector);
-  private final CollectorArmRetract collectorArmRetract = new CollectorArmRetract(collector);
-  private final CollectorStop collectorStop = new CollectorStop(collector);
+  private final IntakeArmExtend intakeArmExtend = new IntakeArmExtend(intake);
+  private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
+  private final IntakeStop intakeStop = new IntakeStop(intake);
 
 
   // Creating tabs on shuffleboard for each subsystem
@@ -109,12 +109,14 @@ public class RobotContainer {
     SmartDashboard.putData("Chassis", chassis);
     SmartDashboard.putData("Shooter", shooter);
     SmartDashboard.putData("Climber", climber);
+    SmartDashboard.putData("Intake", intake);
+    SmartDashboard.putData("Hopper", hopper);
 
     // =============================================================
     // Configure default commands for each subsystem
     shooter.setDefaultCommand(stopShoot);
-    chassis.setDefaultCommand(chassisArcadeDrive);
-    collector.setDefaultCommand(collectorStop);
+    chassis.setDefaultCommand(chassisTankDrive);
+    intake.setDefaultCommand(intakeStop);
   }
 
   /**
