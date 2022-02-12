@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase {
   private NetworkTableEntry sbAtTarget = intakeTab.addPersistent("At Target", false).getEntry();
 
   public Intake() {
-    System.out.println("Intake Constructor Starting");
+		System.out.println("+++++ Intake Constructor starting +++++");
 
     intakeMotor = new CANSparkMax(CANidConstants.kIntakeMotor, MotorType.kBrushless);
     
@@ -79,8 +79,8 @@ public class Intake extends SubsystemBase {
     intakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kIntakeExtend,
         PneumaticChannelConstants.kIntakeRetract);
 
-    System.out.println("Intake Constructer Finished");
-  }
+        System.out.println("----- Intake Constructor finished -----");
+      }
 
   @Override
   public void periodic() {

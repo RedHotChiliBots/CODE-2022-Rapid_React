@@ -58,7 +58,7 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
 
-    System.out.println("Climber Constructor Starting");
+		System.out.println("+++++ Climber Constructor starting +++++");
 
     // ==============================================================
     // Configure left and right Motors
@@ -85,7 +85,7 @@ public class Climber extends SubsystemBase {
     climbPIDController.setFF(ClimberConstants.kFF);
     climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
 
-    System.out.println("Climber Constructor Finished");
+		System.out.println("----- Climber Constructor finished -----");
   }
 
   @Override
