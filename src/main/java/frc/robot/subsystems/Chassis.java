@@ -87,8 +87,7 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Identify PDP and PCM
 	private final PowerDistribution pdp = new PowerDistribution();
-	// private final Compressor compressor = new
-	// Compressor(PneumaticsModuleType.CTREPCM);
+	private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
 	// Identify compressor hi and lo sensors
 	private final AnalogInput hiPressureSensor = new AnalogInput(AnalogIOConstants.kHiPressureChannel);
