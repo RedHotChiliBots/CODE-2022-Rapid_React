@@ -5,18 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Collector;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Plunge extends SequentialCommandGroup {
-  /** Creates a new Plunge. */
-  
-  public Plunge(Shooter shooter) {
+public class COLLECT extends SequentialCommandGroup {
+  /** Creates a new COLLECT. */
+  public COLLECT(Collector collector) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterPlungerExtend(shooter),
-    new ShooterPlungerRetract(shooter));
+    addCommands(new CollectorArmExtend(collector),
+    new CollectorCollect(collector),
+    //Hopper 
+    new CollectorStop(collector),
+    new CollectorArmRetract(collector));
   }
 }

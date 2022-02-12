@@ -146,4 +146,22 @@ public final class Constants {
 
 		public static final double kVelocityTolerance = 100.0; // rpms
 	}
+
+	public static final class CollectorConstants {
+		public static double kP = 0.00008;
+		public static double kI = 0.0000004;
+		public static double kD = 0;
+		public static double kIz = 0;
+		public static double kFF = 0;
+		public static double kMinOutput = -.5;
+		public static double kMaxOutput = .5;
+
+		public static final double kStopRPMs = 0.0;
+		public static final double kMinRPM = -4540.0;
+		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+
+		public static final double kCollectorCollectRPMs = kMaxRPM * 0.45;
+
+		public static final double kVelocityTolerance = 100.0; // rpms
+	}
 }

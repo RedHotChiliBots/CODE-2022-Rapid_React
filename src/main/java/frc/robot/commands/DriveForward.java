@@ -5,27 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Chassis;
 
-public class ShooterPlungerExtend extends CommandBase {
-  /** Creates a new ShooterPlungerExtend. */
-  private Shooter shooter;
+public class DriveForward extends CommandBase {
+  /** Creates a new DriveForward. */
 
-  public ShooterPlungerExtend(Shooter shooter) {
+  Chassis chassis;
+  
+  public DriveForward(Chassis chassis) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
-    //addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    shooter.plungerExtend();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    chassis.drive(0.4, 0.0);;
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -34,6 +33,6 @@ public class ShooterPlungerExtend extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return chassis.atTarget();
   }
 }

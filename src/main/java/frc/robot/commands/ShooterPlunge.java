@@ -4,20 +4,21 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShooterSpinUpPlunge extends SequentialCommandGroup {
-  /** Creates a new Shoot. */
+public class ShooterPlunge extends SequentialCommandGroup {
+  /** Creates a new Plunge. */
   
-  public ShooterSpinUpPlunge(Shooter shooter) {
+  public ShooterPlunge(Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterAtSpeed(shooter),
-    new ShooterPlunge(shooter));
+    addCommands(new ShooterPlungerExtend(shooter),
+    new WaitCommand(2.0),
+    new ShooterPlungerRetract(shooter));
   }
-  
 }

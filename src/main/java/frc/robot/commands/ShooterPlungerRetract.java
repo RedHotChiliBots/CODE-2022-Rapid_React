@@ -14,7 +14,7 @@ public class ShooterPlungerRetract extends CommandBase {
   public ShooterPlungerRetract(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
-    addRequirements(shooter);
+    //addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.

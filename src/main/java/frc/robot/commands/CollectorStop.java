@@ -5,27 +5,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Collector;
 
-public class ShooterPlungerExtend extends CommandBase {
-  /** Creates a new ShooterPlungerExtend. */
-  private Shooter shooter;
+public class CollectorStop extends CommandBase {
+  /** Creates a new CollectorStop. */
 
-  public ShooterPlungerExtend(Shooter shooter) {
+  Collector collector;
+
+  public CollectorStop(Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
-    //addRequirements(shooter);
+    this.collector = collector;
+    addRequirements(collector);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    shooter.plungerExtend();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    collector.stopCollect();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -34,6 +35,6 @@ public class ShooterPlungerExtend extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

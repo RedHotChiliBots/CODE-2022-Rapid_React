@@ -12,16 +12,29 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.CLIMB;
 import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimberGoTo;
+import frc.robot.commands.ClimberHighTravClimb;
+import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberPerpendicular;
 import frc.robot.commands.ClimberSwivel;
+import frc.robot.commands.CollectorArmExtend;
+import frc.robot.commands.CollectorArmRetract;
+import frc.robot.commands.CollectorStop;
+import frc.robot.commands.DriveForward;
+import frc.robot.commands.SHOOT;
+import frc.robot.commands.ShooterPlungerExtend;
+import frc.robot.commands.ShooterPlungerRetract;
 import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -38,6 +51,8 @@ public class RobotContainer {
   private final Chassis chassis = new Chassis();
   private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
+  private final Collector collector = new Collector();
+  private final Hopper hopper = new Hopper();
 
   // =============================================================
   // Define Joysticks
@@ -53,12 +68,15 @@ public class RobotContainer {
   private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
       () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
   private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
-      () -> 0.4, () -> 0.4);
+      () -> -0.4, () -> -0.4);
   private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
       () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
 
   private final ShooterShoot shoot = new ShooterShoot(shooter);
   private final ShooterStop stopShoot = new ShooterStop(shooter);
+  private final ShooterPlungerExtend plungerExtend = new ShooterPlungerExtend(shooter);
+  private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
+  private final SHOOT SHOOT = new SHOOT(shooter);
 
   private final ClimberSwivel swivel = new ClimberSwivel(climber);
   private final ClimberPerpendicular perpendicular = new ClimberPerpendicular(climber);
@@ -67,6 +85,14 @@ public class RobotContainer {
   private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber, ClimberConstants.kFullExtendPerpendicular);
   private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel);
   private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
+  private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
+  private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
+  private final CLIMB CLIMB = new CLIMB(climber, chassis);
+
+  private final CollectorArmExtend collectorArmExtend = new CollectorArmExtend(collector);
+  private final CollectorArmRetract collectorArmRetract = new CollectorArmRetract(collector);
+  private final CollectorStop collectorStop = new CollectorStop(collector);
+
 
   // Creating tabs on shuffleboard for each subsystem
   ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
@@ -86,8 +112,9 @@ public class RobotContainer {
 
     // =============================================================
     // Configure default commands for each subsystem
-    // shooter.setDefaultCommand(new ShooterStop(shooter));
-    chassis.setDefaultCommand(chassisTankDrive);
+    shooter.setDefaultCommand(stopShoot);
+    chassis.setDefaultCommand(chassisArcadeDrive);
+    collector.setDefaultCommand(collectorStop);
   }
 
   /**
@@ -138,14 +165,14 @@ public class RobotContainer {
     m_operator.setRumble(t, 0);
   }
 
-  // UNCOMMENT THIS
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  // // An ExampleCommand will run in autonomous
-  // return m_autoCommand;
-  // }
+  public Command getAutonomousCommand() {
+  // An ExampleCommand will run in autonomous
+  return modifiedTankDrive;
+  }
 }

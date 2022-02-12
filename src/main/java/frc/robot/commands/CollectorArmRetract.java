@@ -5,22 +5,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Collector;
 
-public class ShooterPlungerExtend extends CommandBase {
-  /** Creates a new ShooterPlungerExtend. */
-  private Shooter shooter;
+public class CollectorArmRetract extends CommandBase {
+  /** Creates a new CollectorArmRetract. */
 
-  public ShooterPlungerExtend(Shooter shooter) {
+  Collector collector;
+  
+  public CollectorArmRetract(Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.shooter = shooter;
-    //addRequirements(shooter);
+    this.collector = collector;
+    addRequirements(collector);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.plungerExtend();
+    collector.collectorArmRetract();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
