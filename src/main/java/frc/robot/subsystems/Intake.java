@@ -26,51 +26,51 @@ import frc.robot.Constants.PneumaticChannelConstants;
 
 public class Intake extends SubsystemBase {
 
-	// ==============================================================
-	// Define Motor
+  // ==============================================================
+  // Define Motor
   private final CANSparkMax intakeMotor = new CANSparkMax(CANidConstants.kIntakeMotor, MotorType.kBrushless);
 
-	// ==============================================================
-	// Define PID Controller
+  // ==============================================================
+  // Define PID Controller
   private final SparkMaxPIDController intakePIDController = intakeMotor.getPIDController();
- 
-	// ==============================================================
-	// Define Encoder
+
+  // ==============================================================
+  // Define Encoder
   private final RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
 
-	// ==============================================================
-	// Define Solenoid
-  private final DoubleSolenoid intakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kIntakeExtend,
-  PneumaticChannelConstants.kIntakeRetract);
+  // ==============================================================
+  // Define Solenoid
+  private final DoubleSolenoid intakeArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+      PneumaticChannelConstants.kIntakeExtend,
+      PneumaticChannelConstants.kIntakeRetract);
 
-	// ==============================================================
-	// Define Library
+  // ==============================================================
+  // Define Library
   private final Library lib = new Library();
 
-	// ==============================================================
-	// Define Shuffleboard Tab
+  // ==============================================================
+  // Define Shuffleboard Tab
   private final ShuffleboardTab intakeTab = Shuffleboard.getTab("Intake");
   private final NetworkTableEntry sbIntakeVel = intakeTab.addPersistent("Intake Velocity", 0).getEntry();
   private final NetworkTableEntry sbSetPoint = intakeTab.addPersistent("Intake SetPoint", 0).getEntry();
   private final NetworkTableEntry sbAtTarget = intakeTab.addPersistent("At Target", false).getEntry();
 
-	// ==============================================================
-	// Define Local Variables
+  // ==============================================================
+  // Define Local Variables
   private double intakeSetPoint = 0.0;
   private boolean running = false;
-
 
   public Intake() {
     System.out.println("+++++ Intake Constructor starting +++++");
 
-  	// ==============================================================
-  	// Configure Motor
+    // ==============================================================
+    // Configure Motor
     intakeMotor.restoreFactoryDefaults();
     intakeMotor.clearFaults();
     intakeMotor.setIdleMode(IdleMode.kBrake);
 
     // ==============================================================
-  	// Configure PID Controller
+    // Configure PID Controller
     intakePIDController.setP(IntakeConstants.kP);
     intakePIDController.setI(IntakeConstants.kI);
     intakePIDController.setD(IntakeConstants.kD);
@@ -78,8 +78,8 @@ public class Intake extends SubsystemBase {
     intakePIDController.setFF(IntakeConstants.kFF);
     intakePIDController.setOutputRange(IntakeConstants.kMinOutput, IntakeConstants.kMaxOutput);
 
-  	// ==============================================================
-  	// Update Suffleboard Tab with static data
+    // ==============================================================
+    // Update Suffleboard Tab with static data
     SmartDashboard.putNumber("P Gain", IntakeConstants.kP);
     SmartDashboard.putNumber("I Gain", IntakeConstants.kI);
     SmartDashboard.putNumber("D Gain", IntakeConstants.kD);
@@ -94,7 +94,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-  	// ==============================================================
+    // ==============================================================
     // read PID coefficients from SmartDashboard
     double p = SmartDashboard.getNumber("P Gain", 0);
     double i = SmartDashboard.getNumber("I Gain", 0);
@@ -104,7 +104,7 @@ public class Intake extends SubsystemBase {
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
 
-  	// ==============================================================
+    // ==============================================================
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
     if (p != intakePIDController.getP()) {
@@ -126,8 +126,8 @@ public class Intake extends SubsystemBase {
       intakePIDController.setOutputRange(min, max);
     }
 
-  	// ==============================================================
-  	// Update Shuffleboard Tab with dynamic data
+    // ==============================================================
+    // Update Shuffleboard Tab with dynamic data
     sbIntakeVel.setDouble(getIntakeVelocity());
     sbSetPoint.setDouble(intakeSetPoint);
     sbAtTarget.setBoolean(atTarget());
