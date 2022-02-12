@@ -8,20 +8,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 public class IntakeArmRetract extends CommandBase {
-  /** Creates a new CollectorArmRetract. */
+  /** Creates a new IntakeArmRetract. */
 
-  Intake collector;
+  Intake intake;
   
-  public IntakeArmRetract(Intake collector) {
+  public IntakeArmRetract(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.collector = collector;
-    addRequirements(collector);
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    collector.collectorArmRetract();
+    intake.intakeArmRetract();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

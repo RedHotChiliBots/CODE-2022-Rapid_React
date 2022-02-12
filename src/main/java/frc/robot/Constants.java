@@ -160,7 +160,7 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kCollectorCollectRPMs = kMaxRPM * 0.45;
+		public static final double kIntakeRPMs = kMaxRPM * 0.45;
 
 		public static final double kVelocityTolerance = 100.0; // rpms
 	}

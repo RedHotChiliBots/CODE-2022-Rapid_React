@@ -9,7 +9,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Intake;
 
 public class IntakeCollect extends CommandBase {
-  /** Creates a new CollectorCollect. */
+  /** Creates a new IntakeCollect. */
 
   Intake intake;
   
@@ -22,7 +22,7 @@ public class IntakeCollect extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setIntakeVelocity(IntakeConstants.kCollectorCollectRPMs);
+    intake.setIntakeVelocity(IntakeConstants.kIntakeRPMs);
     intake.setRunning(true);
   }
 

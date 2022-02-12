@@ -11,14 +11,14 @@ import frc.robot.subsystems.Intake;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class INTAKE extends SequentialCommandGroup {
-  /** Creates a new COLLECT. */
-  public INTAKE(Intake collector) {
+  /** Creates a new INTAKE. */
+  public INTAKE(Intake intake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new IntakeArmExtend(collector),
-    new IntakeCollect(collector),
+    addCommands(new IntakeArmExtend(intake),
+    new IntakeCollect(intake),
     //Hopper 
-    new IntakeStop(collector),
-    new IntakeArmRetract(collector));
+    new IntakeStop(intake),
+    new IntakeArmRetract(intake));
   }
 }

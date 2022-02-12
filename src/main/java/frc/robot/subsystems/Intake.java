@@ -25,7 +25,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 
 public class Intake extends SubsystemBase {
-  /** Creates a new Collector. */
+  /** Creates a new Intake. */
 
   private CANSparkMax intakeMotor;
 
@@ -143,11 +143,11 @@ public class Intake extends SubsystemBase {
     return Math.abs(intakeSetPoint - getIntakeVelocity()) <= IntakeConstants.kVelocityTolerance;
   }
 
-  public void collectorArmExtend() {
+  public void intakeArmExtend() {
     intakeArm.set(Value.kForward);
   }
 
-  public void collectorArmRetract() {
+  public void intakeArmRetract() {
     intakeArm.set(Value.kReverse);
   }
 

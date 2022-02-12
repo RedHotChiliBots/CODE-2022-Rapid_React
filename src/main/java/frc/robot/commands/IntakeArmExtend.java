@@ -8,20 +8,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 public class IntakeArmExtend extends CommandBase {
-  /** Creates a new CollectorArmExtend. */
+  /** Creates a new IntakeArmExtend. */
 
-  Intake collector;
+  Intake intake;
   
-  public IntakeArmExtend(Intake collector) {
+  public IntakeArmExtend(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.collector = collector;
-    addRequirements(collector);
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    collector.collectorArmExtend();
+    intake.intakeArmExtend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
