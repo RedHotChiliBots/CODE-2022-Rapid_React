@@ -56,8 +56,8 @@ public class RobotContainer {
 
   // =============================================================
   // Define Joysticks
-  XboxController m_driver = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+  XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   private static final double DEADZONE = 0.3;
 
@@ -66,11 +66,11 @@ public class RobotContainer {
   // If commands use Shuffleboard and are instantiated multiple time, an error
   // is thrown on the second instantiation becuase the "title" already exists.
   private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
-      () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+      () -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
   private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
       () -> -0.4, () -> -0.4);
   private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
-      () -> getJoystick(m_driver.getLeftY()), () -> getJoystick(m_driver.getRightY()));
+      () -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
 
   private final ShooterShoot shoot = new ShooterShoot(shooter);
   private final ShooterStop stopShoot = new ShooterStop(shooter);
@@ -126,20 +126,20 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driver, Button.kA.value).whenPressed(chassisTankDrive);
-    new JoystickButton(m_driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-    new JoystickButton(m_driver, Button.kX.value).whenPressed(modifiedTankDrive);
+    new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
+    new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
+    new JoystickButton(driver, Button.kX.value).whenPressed(modifiedTankDrive);
 
-    new JoystickButton(m_operator, Button.kRightBumper.value).whenPressed(shoot);
-    new JoystickButton(m_operator, Button.kLeftBumper.value).whenPressed(stopShoot);
+    new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
+    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(stopShoot);
 
-    new JoystickButton(m_operator, Button.kStart.value).whenPressed(swivel);
-    new JoystickButton(m_operator, Button.kBack.value).whenPressed(perpendicular);
+    new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
+    new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
-    new JoystickButton(m_operator, Button.kY.value).whenPressed(toClearMidRung);
-    new JoystickButton(m_operator, Button.kB.value).whenPressed(toMidRung);
-    new JoystickButton(m_operator, Button.kX.value).whenPressed(toFullExtendPerp);
-    new JoystickButton(m_operator, Button.kA.value).whenPressed(toFullExtendSwivel);
+    new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+    new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
+    new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
+    new JoystickButton(operator, Button.kA.value).whenPressed(toFullExtendSwivel);
     // Will need a stow at soem point but will add in when rest is auto command
     // because not enough buttons for testing
     // new JoystickButton(m_operator, Button..value).whenPressed(toStow);
@@ -150,19 +150,19 @@ public class RobotContainer {
   }
 
   public void setDriverRumble(GenericHID.RumbleType t) {
-    m_driver.setRumble(t, 1);
+    driver.setRumble(t, 1);
   }
 
   public void resetDriverRumble(GenericHID.RumbleType t) {
-    m_driver.setRumble(t, 0);
+    driver.setRumble(t, 0);
   }
 
   public void setOperatorRumble(GenericHID.RumbleType t) {
-    m_operator.setRumble(t, 1);
+    operator.setRumble(t, 1);
   }
 
   public void resetOperatorRumble(GenericHID.RumbleType t) {
-    m_operator.setRumble(t, 0);
+    operator.setRumble(t, 0);
   }
 
   
