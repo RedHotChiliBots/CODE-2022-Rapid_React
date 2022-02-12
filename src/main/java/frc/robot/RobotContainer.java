@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
@@ -49,10 +50,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Chassis chassis = new Chassis();
-  private final Shooter shooter = new Shooter();
   private final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Hopper hopper = new Hopper();
+  private final Shooter shooter = new Shooter();
 
   // =============================================================
   // Define Joysticks
@@ -73,7 +74,7 @@ public class RobotContainer {
       () -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
 
   private final ShooterShoot shoot = new ShooterShoot(shooter);
-  private final ShooterStop stopShoot = new ShooterStop(shooter);
+  private final ShooterStop shooterStop = new ShooterStop(shooter);
   private final ShooterPlungerExtend plungerExtend = new ShooterPlungerExtend(shooter);
   private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
   private final SHOOT SHOOT = new SHOOT(shooter);
@@ -93,9 +94,8 @@ public class RobotContainer {
   private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
   private final IntakeStop intakeStop = new IntakeStop(intake);
 
-
-  // Creating tabs on shuffleboard for each subsystem
-  ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+  // Define a chooser for autonomous commands
+  private final SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -112,11 +112,20 @@ public class RobotContainer {
     SmartDashboard.putData("Intake", intake);
     SmartDashboard.putData("Hopper", hopper);
 
+    // ==============================================================================
+    // Add commands to the autonomous command chooser
+    chooser.setDefaultOption("Tank Drive", chassisTankDrive);
+    chooser.addOption("Arcade Drive", chassisArcadeDrive);
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(chooser);
+
     // =============================================================
     // Configure default commands for each subsystem
-    shooter.setDefaultCommand(stopShoot);
     chassis.setDefaultCommand(chassisTankDrive);
+    //climber.setDefaultCommand(climberStop);
     intake.setDefaultCommand(intakeStop);
+    //hopper.setDefaultCommand(hopperStop);
+    shooter.setDefaultCommand(shooterStop);
   }
 
   /**
@@ -133,7 +142,7 @@ public class RobotContainer {
     new JoystickButton(driver, Button.kX.value).whenPressed(modifiedTankDrive);
 
     new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
-    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(stopShoot);
+    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(shooterStop);
 
     new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
     new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
@@ -144,7 +153,7 @@ public class RobotContainer {
     new JoystickButton(operator, Button.kA.value).whenPressed(toFullExtendSwivel);
     // Will need a stow at soem point but will add in when rest is auto command
     // because not enough buttons for testing
-    // new JoystickButton(m_operator, Button..value).whenPressed(toStow);
+    // new JoystickButton(operator, Button..value).whenPressed(toStow);
   }
 
   public double getJoystick(double js) {
@@ -167,14 +176,12 @@ public class RobotContainer {
     operator.setRumble(t, 0);
   }
 
-  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-  // An ExampleCommand will run in autonomous
-  return modifiedTankDrive;
+    return chooser.getSelected();
   }
 }
