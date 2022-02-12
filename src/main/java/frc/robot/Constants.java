@@ -70,10 +70,10 @@ public final class Constants {
 		public static final double kP = 0.5;
 		public static final double kI = 0.0005;
 		public static final double kD = 0.0;
-		public static double kIz = 0;
-		public static double kFF = 0;
-		public static double kMinOutput = -1.0;
-		public static double kMaxOutput = 1.0;
+		public static final double kIz = 0;
+		public static final double kFF = 0;
+		public static final double kMinOutput = -1.0;
+		public static final double kMaxOutput = 1.0;
 
 		public static final double kTrackWidth = Units.inchesToMeters(26.341); // meters
 		public static final double kWheelCirc = Units.inchesToMeters(Math.PI * 8.0); // meters
@@ -106,10 +106,10 @@ public final class Constants {
 		public static final double kP = 0.2;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
-		public static double kIz = 0;
-		public static double kFF = 0;
-		public static double kMinOutput = -1.0;
-		public static double kMaxOutput = 1.0;
+		public static final double kIz = 0;
+		public static final double kFF = 0;
+		public static final double kMinOutput = -1.0;
+		public static final double kMaxOutput = 1.0;
 
 		public static final double kPulleyCirc = Math.PI * (20 / 25.4); // meters
 		public static final int kEncoderResolution = 42; // not used, NEO's native units are rotations
@@ -130,13 +130,13 @@ public final class Constants {
 	}
 
 	public static final class ShooterConstants {
-		public static double kP = 0.00008;
-		public static double kI = 0.0000004;
-		public static double kD = 0;
-		public static double kIz = 0;
-		public static double kFF = 0;
-		public static double kMinOutput = -.5;
-		public static double kMaxOutput = .5;
+		public static final double kP = 0.00008;
+		public static final double kI = 0.0000004;
+		public static final double kD = 0;
+		public static final double kIz = 0;
+		public static final double kFF = 0;
+		public static final double kMinOutput = -.5;
+		public static final double kMaxOutput = .5;
 
 		public static final double kStopRPMs = 0.0;
 		public static final double kMinRPM = -4540.0;
@@ -148,13 +148,13 @@ public final class Constants {
 	}
 
 	public static final class IntakeConstants {
-		public static double kP = 0.00008;
-		public static double kI = 0.0000004;
-		public static double kD = 0;
-		public static double kIz = 0;
-		public static double kFF = 0;
-		public static double kMinOutput = -.5;
-		public static double kMaxOutput = .5;
+		public static final double kP = 0.00008;
+		public static final double kI = 0.0000004;
+		public static final double kD = 0;
+		public static final double kIz = 0;
+		public static final double kFF = 0;
+		public static final double kMinOutput = -.5;
+		public static final double kMaxOutput = .5;
 
 		public static final double kStopRPMs = 0.0;
 		public static final double kMinRPM = -4540.0;

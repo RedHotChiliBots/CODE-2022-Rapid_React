@@ -25,48 +25,60 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Shooter extends SubsystemBase {
-  /** Creates a new Shooter. */
 
-  private CANSparkMax shootLeadMotor;
-  private CANSparkMax shootFollowMotor;
+  // ==============================================================
+  // Define Motors
+  private final CANSparkMax shootLeadMotor = new CANSparkMax(CANidConstants.kShooterLeadMotor, MotorType.kBrushless);
+  private final CANSparkMax shootFollowMotor= new CANSparkMax(CANidConstants.kShooterFollowerMotor, MotorType.kBrushless);
 
-  private SparkMaxPIDController shootPIDController;
-  private RelativeEncoder shootEncoder;
+  // ==============================================================
+  // Define PID Controller
+  private final SparkMaxPIDController shootPIDController = shootLeadMotor.getPIDController();
 
-  private DoubleSolenoid plunger = null;
+  // ==============================================================
+  // Define Encoder
+  private final RelativeEncoder shootEncoder = shootLeadMotor.getEncoder();
 
-  private double shootSetPoint = 0.0;
+  // ==============================================================
+  // Define Solenoid
+  private final DoubleSolenoid plunger =  new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kPlungerExtend,
+  PneumaticChannelConstants.kPlungerRetract);
 
-  private Library lib = new Library();
+  // ==============================================================
+  // Define Library
+  private final Library lib = new Library();
 
+  // ==============================================================
+  // Define Suffleboard Tab
   private final ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
-  private NetworkTableEntry sbShootVel = shooterTab.addPersistent("ShootVelocity", 0).getEntry();
-  private NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
-  private NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry sbShootVel = shooterTab.addPersistent("ShootVelocity", 0).getEntry();
+  private final NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
+  private final NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
 
+  // ==============================================================
+  // Define local variables
+  private double shootSetPoint = 0.0;
   private boolean running = false;
 
+
   public Shooter() {
-
     System.out.println("Shooter Constructor Starting");
-    // Define motors
-    shootLeadMotor = new CANSparkMax(CANidConstants.kShooterLeadMotor, MotorType.kBrushless);
-    shootFollowMotor = new CANSparkMax(CANidConstants.kShooterFollowerMotor, MotorType.kBrushless);
 
+    // ==============================================================
+    // Configure Motors
     shootLeadMotor.restoreFactoryDefaults();
     shootFollowMotor.restoreFactoryDefaults();
+
     shootLeadMotor.clearFaults();
     shootFollowMotor.clearFaults();
+
     shootLeadMotor.setIdleMode(IdleMode.kBrake);
     shootFollowMotor.setIdleMode(IdleMode.kBrake);
 
     shootFollowMotor.follow(shootLeadMotor, true);
 
-    shootPIDController = shootLeadMotor.getPIDController();
-
-    // Encoder object created to display position values
-    shootEncoder = shootLeadMotor.getEncoder();
-
+    // ==============================================================
+    // Configure PID Controller
     shootPIDController.setP(ShooterConstants.kP);
     shootPIDController.setI(ShooterConstants.kI);
     shootPIDController.setD(ShooterConstants.kD);
@@ -74,7 +86,8 @@ public class Shooter extends SubsystemBase {
     shootPIDController.setFF(ShooterConstants.kFF);
     shootPIDController.setOutputRange(ShooterConstants.kMinOutput, ShooterConstants.kMaxOutput);
 
-    // display PID coefficients on SmartDashboard
+    // ==============================================================
+    // Display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("P Gain", ShooterConstants.kP);
     SmartDashboard.putNumber("I Gain", ShooterConstants.kI);
     SmartDashboard.putNumber("D Gain", ShooterConstants.kD);
@@ -83,9 +96,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Max Output", ShooterConstants.kMaxOutput);
     SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
-
-    plunger = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kPlungerExtend,
-        PneumaticChannelConstants.kPlungerRetract);
 
     System.out.println("Shooter Constructer Finished");
   }
@@ -101,32 +111,25 @@ public class Shooter extends SubsystemBase {
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
 
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller
-    if ((p != ShooterConstants.kP)) {
+    // if PID coefficients on SmartDashboard have changed from PID setting, then
+    // write new values to PID controller
+    if (p != shootPIDController.getP()) {
       shootPIDController.setP(p);
-      ShooterConstants.kP = p;
     }
-    if ((i != ShooterConstants.kI)) {
+    if (i != shootPIDController.getI()) {
       shootPIDController.setI(i);
-      ShooterConstants.kI = i;
     }
-    if ((d != ShooterConstants.kD)) {
+    if (d != shootPIDController.getD()) {
       shootPIDController.setD(d);
-      ShooterConstants.kD = d;
     }
-    if ((iz != ShooterConstants.kIz)) {
+    if (iz != shootPIDController.getIZone()) {
       shootPIDController.setIZone(iz);
-      ShooterConstants.kIz = iz;
     }
-    if ((ff != ShooterConstants.kFF)) {
+    if (ff != shootPIDController.getFF()) {
       shootPIDController.setFF(ff);
-      ShooterConstants.kFF = ff;
     }
-    if ((max != ShooterConstants.kMaxOutput) || (min != ShooterConstants.kMinOutput)) {
+    if ((max != shootPIDController.getOutputMax()) || (min != shootPIDController.getOutputMin())) {
       shootPIDController.setOutputRange(min, max);
-      ShooterConstants.kMinOutput = min;
-      ShooterConstants.kMaxOutput = max;
     }
 
     sbShootVel.setDouble(getShootVelocity());

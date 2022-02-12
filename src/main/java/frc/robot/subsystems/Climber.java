@@ -13,54 +13,55 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.PneumaticChannelConstants;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.CANidConstants;
 
-public class Climber extends SubsystemBase {
-  /** Creates a new Climber. */
-  // Front & Back Climb Solenoids
-  private DoubleSolenoid climbRight = null;
-  private DoubleSolenoid climbLeft = null;
 
-  private CANSparkMax climbRightMotor = null;
-  private CANSparkMax climbLeftMotor = null;
+public class Climber extends SubsystemBase {
 
   // ==============================================================
-  // Identify encoders and PID controllers
-  private RelativeEncoder leftEncoder;
-  private RelativeEncoder rightEncoder;
+  // Define Solenoids
+  private final DoubleSolenoid climbRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbRightExtend,
+  PneumaticChannelConstants.kClimbRightRetract);
+  private final DoubleSolenoid climbLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbLeftExtend,
+  PneumaticChannelConstants.kClimbLeftRetract);
 
-  private SparkMaxPIDController climbPIDController;
+  // ==============================================================
+  // Define Motors
+  private final CANSparkMax climbRightMotor = new CANSparkMax(CANidConstants.kClimbLeftMotor, MotorType.kBrushless);
+  private final CANSparkMax climbLeftMotor = new CANSparkMax(CANidConstants.kClimbRightMotor, MotorType.kBrushless);
 
+  // ==============================================================
+  // Define encoders and PID controller
+  private final RelativeEncoder leftEncoder = climbLeftMotor.getEncoder();
+  private final RelativeEncoder rightEncoder = climbRightMotor.getEncoder();
+  private final SparkMaxPIDController climbPIDController = climbLeftMotor.getPIDController();
+
+  // ==============================================================
+  // Define Shuffleboard Tab
   private final ShuffleboardTab climberTab = Shuffleboard.getTab("Climber");
-  private NetworkTableEntry cbLeftPos = climberTab.addPersistent("Left Position", 0.0).getEntry();
-  private NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
-  private NetworkTableEntry cbSetPoint = climberTab.addPersistent("PIDSetpoint", 0.0).getEntry();
-  private NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry cbLeftPos = climberTab.addPersistent("Left Position", 0.0).getEntry();
+  private final NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
+  private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
+  private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
 
+  // ==============================================================
+  // Define local variables
   private double setPoint = 0;
+
 
   public Climber() {
 
     System.out.println("Climber Constructor Starting");
 
-    // Initialize climb solenoids
-    climbLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbLeftExtend,
-        PneumaticChannelConstants.kClimbLeftRetract);
-    climbRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbRightExtend,
-        PneumaticChannelConstants.kClimbRightRetract);
-
     // ==============================================================
-    // Identify left and right Motors
-
-    climbLeftMotor = new CANSparkMax(CANidConstants.kClimbLeftMotor, MotorType.kBrushless);
-    climbRightMotor = new CANSparkMax(CANidConstants.kClimbRightMotor, MotorType.kBrushless);
-
+    // Configure left and right Motors
     climbLeftMotor.restoreFactoryDefaults();
     climbRightMotor.restoreFactoryDefaults();
 
@@ -71,18 +72,12 @@ public class Climber extends SubsystemBase {
     climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
 
     // ==============================================================
-    // Identify left and right Encoders
-
-    leftEncoder = climbLeftMotor.getEncoder();
-    rightEncoder = climbRightMotor.getEncoder();
-
+    // Configure left and right Encoders
     leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
     rightEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 
     // ==============================================================
-    // Identify PID controller
-    climbPIDController = climbLeftMotor.getPIDController();
-
+    // Configure PID controller
     climbPIDController.setP(ClimberConstants.kP);
     climbPIDController.setI(ClimberConstants.kI);
     climbPIDController.setD(ClimberConstants.kD);

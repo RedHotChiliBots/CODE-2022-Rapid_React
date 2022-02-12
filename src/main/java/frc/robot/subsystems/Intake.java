@@ -95,30 +95,23 @@ public class Intake extends SubsystemBase {
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
-    if ((p != IntakeConstants.kP)) {
+    if (p != intakePIDController.getP()) {
       intakePIDController.setP(p);
-      IntakeConstants.kP = p;
     }
-    if ((i != IntakeConstants.kI)) {
+    if (i != intakePIDController.getI()) {
       intakePIDController.setI(i);
-      IntakeConstants.kI = i;
     }
-    if ((d != IntakeConstants.kD)) {
+    if (d != intakePIDController.getD()) {
       intakePIDController.setD(d);
-      IntakeConstants.kD = d;
     }
-    if ((iz != IntakeConstants.kIz)) {
+    if (iz != intakePIDController.getIZone()) {
       intakePIDController.setIZone(iz);
-      IntakeConstants.kIz = iz;
     }
-    if ((ff != IntakeConstants.kFF)) {
+    if (ff != intakePIDController.getFF()) {
       intakePIDController.setFF(ff);
-      IntakeConstants.kFF = ff;
     }
-    if ((max != IntakeConstants.kMaxOutput) || (min != IntakeConstants.kMinOutput)) {
+    if ((max != intakePIDController.getOutputMax()) || (min != intakePIDController.getOutputMin())) {
       intakePIDController.setOutputRange(min, max);
-      IntakeConstants.kMinOutput = min;
-      IntakeConstants.kMaxOutput = max;
     }
 
     sbIntakeVel.setDouble(getIntakeVelocity());

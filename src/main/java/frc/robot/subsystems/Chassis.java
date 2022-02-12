@@ -12,6 +12,8 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +26,10 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
+
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -34,11 +39,11 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.AnalogIOConstants;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ChassisConstants;
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SPI;
+
 
 public class Chassis extends SubsystemBase {
 
@@ -54,12 +59,12 @@ public class Chassis extends SubsystemBase {
 	private final DifferentialDrive diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
 	// ==============================================================
-	// Identify encoders and PID controllers
-	private RelativeEncoder leftEncoder;
-	private RelativeEncoder rightEncoder;
+	// Define encoders and PID controllers
+	private final RelativeEncoder leftEncoder = leftMaster.getEncoder();
+	private final RelativeEncoder rightEncoder = rightMaster.getEncoder();
 
-	private SparkMaxPIDController leftPIDController;
-	private SparkMaxPIDController rightPIDController;
+	private final SparkMaxPIDController leftPIDController = leftMaster.getPIDController();
+	private final SparkMaxPIDController rightPIDController = rightMaster.getPIDController();
 
 	private double setPoint = 0;
 
@@ -96,22 +101,24 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Define Shuffleboard data
 	private final ShuffleboardTab chassisTab = Shuffleboard.getTab("Chassis");
-	private NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
-	private NetworkTableEntry sbLeftPos = chassisTab.addPersistent("ML Position", 0).getEntry();
-	private NetworkTableEntry sbLeftVel = chassisTab.addPersistent("ML Velocity", 0).getEntry();
-	private NetworkTableEntry sbRightPos = chassisTab.addPersistent("MR Position", 0).getEntry();
-	private NetworkTableEntry sbRightVel = chassisTab.addPersistent("MR Velocity", 0).getEntry();
-	private NetworkTableEntry sbLeftPow = chassisTab.addPersistent("ML Power", 0).getEntry();
-	private NetworkTableEntry sbRightPow = chassisTab.addPersistent("MR Power", 0).getEntry();
-	private NetworkTableEntry sbPitch = chassisTab.addPersistent("Pitch", 0).getEntry();
+	private final NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
+	private final NetworkTableEntry sbLeftPos = chassisTab.addPersistent("ML Position", 0).getEntry();
+	private final NetworkTableEntry sbLeftVel = chassisTab.addPersistent("ML Velocity", 0).getEntry();
+	private final NetworkTableEntry sbRightPos = chassisTab.addPersistent("MR Position", 0).getEntry();
+	private final NetworkTableEntry sbRightVel = chassisTab.addPersistent("MR Velocity", 0).getEntry();
+	private final NetworkTableEntry sbLeftPow = chassisTab.addPersistent("ML Power", 0).getEntry();
+	private final NetworkTableEntry sbRightPow = chassisTab.addPersistent("MR Power", 0).getEntry();
+	private final NetworkTableEntry sbPitch = chassisTab.addPersistent("Pitch", 0).getEntry();
 
 	private final ShuffleboardTab pneumaticsTab = Shuffleboard.getTab("Pneumatics");
-	private NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
-	private NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
+	private final NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
+	private final NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
 
 	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting ...");
 
+		// ==============================================================
+		// Configure PDP
 		pdp.clearStickyFaults();
 
 		// ==============================================================
@@ -137,10 +144,7 @@ public class Chassis extends SubsystemBase {
 		rightFollower.follow(rightMaster);
 
 		// ==============================================================
-		// Identify PID controller
-		leftPIDController = leftMaster.getPIDController();
-		rightPIDController = rightMaster.getPIDController();
-
+		// Configure PID controllers
 		leftPIDController.setP(ChassisConstants.kP);
 		leftPIDController.setI(ChassisConstants.kI);
 		leftPIDController.setD(ChassisConstants.kD);
@@ -156,10 +160,7 @@ public class Chassis extends SubsystemBase {
 		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
 		// ==============================================================
-		// Identify encoders and PID controllers
-		leftEncoder = leftMaster.getEncoder();
-		rightEncoder = rightMaster.getEncoder();
-
+		// Configure encoders
 		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
 		rightEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
 
@@ -202,11 +203,14 @@ public class Chassis extends SubsystemBase {
 				// Pass config
 				config);
 
+		// ==============================================================
+		// Add static variables to Shuffleboard
 		chassisTab.addPersistent("ML Pos Factor", leftEncoder.getPositionConversionFactor());
 		chassisTab.addPersistent("MR Pos Factor", rightEncoder.getPositionConversionFactor());
 		chassisTab.addPersistent("ML Vel Factor", leftEncoder.getVelocityConversionFactor());
 		chassisTab.addPersistent("MR Vel Factor", rightEncoder.getVelocityConversionFactor());
 
+		// ==============================================================
 		// Reset the field and encoder positions to zero
 		resetFieldPosition(0.0, 0.0);
 
