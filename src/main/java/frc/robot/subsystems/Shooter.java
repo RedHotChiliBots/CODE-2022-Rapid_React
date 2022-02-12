@@ -29,7 +29,8 @@ public class Shooter extends SubsystemBase {
   // ==============================================================
   // Define Motors
   private final CANSparkMax shootLeadMotor = new CANSparkMax(CANidConstants.kShooterLeadMotor, MotorType.kBrushless);
-  private final CANSparkMax shootFollowMotor= new CANSparkMax(CANidConstants.kShooterFollowerMotor, MotorType.kBrushless);
+  private final CANSparkMax shootFollowMotor = new CANSparkMax(CANidConstants.kShooterFollowerMotor,
+      MotorType.kBrushless);
 
   // ==============================================================
   // Define PID Controller
@@ -41,8 +42,9 @@ public class Shooter extends SubsystemBase {
 
   // ==============================================================
   // Define Solenoid
-  private final DoubleSolenoid plunger =  new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kPlungerExtend,
-  PneumaticChannelConstants.kPlungerRetract);
+  private final DoubleSolenoid plunger = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,
+      PneumaticChannelConstants.kPlungerExtend,
+      PneumaticChannelConstants.kPlungerRetract);
 
   // ==============================================================
   // Define Library
@@ -60,9 +62,8 @@ public class Shooter extends SubsystemBase {
   private double shootSetPoint = 0.0;
   private boolean running = false;
 
-
   public Shooter() {
-    System.out.println("Shooter Constructor Starting");
+    System.out.println("+++++ Shooter Constructor starting +++++");
 
     // ==============================================================
     // Configure Motors
@@ -97,7 +98,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
-    System.out.println("Shooter Constructer Finished");
+    System.out.println("----- Shooter Constructor finished -----");
   }
 
   @Override

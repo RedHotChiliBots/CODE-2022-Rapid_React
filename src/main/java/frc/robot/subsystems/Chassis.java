@@ -115,7 +115,7 @@ public class Chassis extends SubsystemBase {
 	private final NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
 
 	public Chassis() {
-		System.out.println("+++++ Chassis Constructor starting ...");
+		System.out.println("+++++ Chassis Constructor starting +++++");
 
 		// ==============================================================
 		// Configure PDP
@@ -214,7 +214,7 @@ public class Chassis extends SubsystemBase {
 		// Reset the field and encoder positions to zero
 		resetFieldPosition(0.0, 0.0);
 
-		System.out.println("----- Chassis Constructor finished ...");
+		System.out.println("----- Chassis Constructor finished -----");
 	}
 
 	@Override
