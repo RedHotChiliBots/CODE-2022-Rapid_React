@@ -140,6 +140,15 @@ public class Hopper extends SubsystemBase {
     sbAtTarget.setBoolean(atTarget());
   }
 
+
+  public boolean isEntering() {
+    return hopperEntering.get();
+  }
+
+  public boolean isExiting() {
+    return hopperExiting.get();
+  }
+
   public void setHopperState(HopperState state) {
     hopperState = state;
   }

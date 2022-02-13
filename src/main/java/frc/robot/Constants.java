@@ -162,6 +162,7 @@ public final class Constants {
 		public static final double kServoLeftOpen = 10.0;	// degrees
 		public static final double kServoLeftClosed = 100.0;	// degrees
 		public static final double kServoRightOpen = 100.0;	// degrees
+		public static final double kServoRightClosed = 10.0;	// degrees
 
 		public static final double kServoDelay = 1.0;	// second
 	}

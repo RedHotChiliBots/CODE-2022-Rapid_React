@@ -92,7 +92,7 @@ public class Shooter extends SubsystemBase {
   }
   private GuardState guardState = GuardState.NA;
 
-  
+
   public Shooter() {
     System.out.println("+++++ Shooter Constructor starting +++++");
 
@@ -167,6 +167,14 @@ public class Shooter extends SubsystemBase {
     sbShootVel.setDouble(getShootVelocity());
     sbSetPoint.setDouble(shootSetPoint);
     sbAtTarget.setBoolean(atTarget());
+  }
+
+  public boolean isEntering() {
+    return shooterEntering.get();
+  }
+
+  public boolean isExiting() {
+    return shooterExiting.get();
   }
 
   public void setShooterState(ShooterState state) {
