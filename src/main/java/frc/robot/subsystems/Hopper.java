@@ -96,6 +96,10 @@ public class Hopper extends SubsystemBase {
     SmartDashboard.putNumber("Min Output", HopperConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
+    // ==============================================================
+		// Initialize devices before starting
+    setHopperVelocity(0.0);
+
     System.out.println("----- Hopper Constructor finished -----");
   }
 
@@ -139,7 +143,6 @@ public class Hopper extends SubsystemBase {
     sbSetPoint.setDouble(hopperSetPoint);
     sbAtTarget.setBoolean(atTarget());
   }
-
 
   public boolean isEntering() {
     return hopperEntering.get();

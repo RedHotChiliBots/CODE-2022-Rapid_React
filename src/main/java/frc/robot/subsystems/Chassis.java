@@ -218,8 +218,8 @@ public class Chassis extends SubsystemBase {
 		chassisTab.addPersistent("MR Vel Factor", rightEncoder.getVelocityConversionFactor());
 
 		// ==============================================================
-		// Reset the field and encoder positions to zero
-		resetFieldPosition(0.0, 0.0);
+		// Initialize devices before starting
+		resetFieldPosition(0.0, 0.0);	//Reset the field and encoder positions to zero
 
 		System.out.println("----- Chassis Constructor finished -----");
 	}

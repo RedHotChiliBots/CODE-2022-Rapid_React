@@ -129,6 +129,12 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
+    // ==============================================================
+		// Initialize devices before starting
+    setShootVelocity(0.0);
+    servoOpen();
+    plungerRetract();
+
     System.out.println("----- Shooter Constructor finished -----");
   }
 
@@ -203,7 +209,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stopShoot() {
-    shootLeadMotor.set(0);
+    setShootVelocity(0.0);
   }
 
   public void setRunning(boolean r) {

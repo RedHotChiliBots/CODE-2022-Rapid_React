@@ -65,7 +65,7 @@ public class Climber extends SubsystemBase {
     // Configure left and right Motors
     climbLeftMotor.restoreFactoryDefaults();
     climbRightMotor.restoreFactoryDefaults();
-    
+
     climbLeftMotor.clearFaults();
     climbRightMotor.clearFaults();
 
@@ -88,6 +88,12 @@ public class Climber extends SubsystemBase {
     climbPIDController.setIZone(ClimberConstants.kIz);
     climbPIDController.setFF(ClimberConstants.kFF);
     climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
+
+    // ==============================================================
+		// Initialize devices before starting
+    climberInit();
+    climberPerpendicular();
+
 
 		System.out.println("----- Climber Constructor finished -----");
   }
@@ -118,5 +124,31 @@ public class Climber extends SubsystemBase {
     this.setPoint = setPoint;
     cbSetPoint.setDouble(setPoint);
     climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void climberInit() {
+    boolean leftDone = false;
+    boolean rightDone = false;
+
+    climbLeftMotor.set(ClimberConstants.kInitSpeed);
+    climbRightMotor.set(ClimberConstants.kInitSpeed);
+
+    while (!leftDone && !rightDone) {
+      if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+        climbLeftMotor.set(0.0);
+        leftDone  = true;
+      }
+      if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+        climbRightMotor.set(0.0);
+        rightDone  = true;
+      }
+    }
+
+    climbRightMotor.set(0.0);
+    rightEncoder.setPosition(0.0);
+    climbLeftMotor.set(0.0);
+    leftEncoder.setPosition(0.0);
+    
+    setPoint = 0.0;
   }
 }
