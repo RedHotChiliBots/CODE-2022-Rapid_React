@@ -103,6 +103,11 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Min Output", IntakeConstants.kMinOutput);
     SmartDashboard.putNumber("Set Rotations", 0);
 
+    // ==============================================================
+		// Initialize devices before starting
+    setIntakeVelocity(0.0);
+    intakeArmRetract();
+
     System.out.println("----- Intake Constructor finished -----");
   }
 

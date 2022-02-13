@@ -140,6 +140,9 @@ public final class Constants {
 		public static final double kDistanceTolerance = 0.5;// inches
 
 		public static final double kPullUp = 0;// inches
+
+		public static final double kMaxAmps = 0;
+		public static final double kInitSpeed = 0;
 	}
 
 	public static final class ShooterConstants {
