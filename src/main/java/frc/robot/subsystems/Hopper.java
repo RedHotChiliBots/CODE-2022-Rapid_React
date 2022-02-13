@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
+import frc.robot.Constants.DIOChannelConstants;
 import frc.robot.Constants.HopperConstants;
 
 public class Hopper extends SubsystemBase {
@@ -37,7 +38,12 @@ public class Hopper extends SubsystemBase {
   // Define Encoder
   private final RelativeEncoder hopperEncoder = hopperMotor.getEncoder();
 
-   // ==============================================================
+  // ==============================================================
+  // Define Digital Inputs
+  private final DigitalInput hopperEntering = new DigitalInput(DIOChannelConstants.kHopperEntering);
+  private final DigitalInput hopperExiting = new DigitalInput(DIOChannelConstants.kHopperExiting);
+
+  // ==============================================================
   // Define Library
   private final Library lib = new Library();
 
@@ -52,6 +58,14 @@ public class Hopper extends SubsystemBase {
   // Define Local Variables
   private double hopperSetPoint = 0.0;
   private boolean running = false;
+  public enum HopperState {
+    NA,
+    EMPTY,
+    ENTERING,
+    CONTROLLED,
+    EXITING
+  }
+  private HopperState hopperState = HopperState.NA;
 
   public Hopper() {
     System.out.println("+++++ Hopper Constructor starting +++++");
@@ -124,6 +138,14 @@ public class Hopper extends SubsystemBase {
     sbHopperVel.setDouble(getHopperVelocity());
     sbSetPoint.setDouble(hopperSetPoint);
     sbAtTarget.setBoolean(atTarget());
+  }
+
+  public void setHopperState(HopperState state) {
+    hopperState = state;
+  }
+
+  public HopperState getHopperState() {
+    return hopperState;
   }
 
   public double getHopperVelocity() {
