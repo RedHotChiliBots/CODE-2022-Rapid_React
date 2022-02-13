@@ -35,8 +35,11 @@ public class Shooter extends SubsystemBase {
 
   // ==============================================================
   // Define Motors
-  private final CANSparkMax shootLeadMotor = new CANSparkMax(CANidConstants.kShooterLeadMotor, MotorType.kBrushless);
-  private final CANSparkMax shootFollowMotor = new CANSparkMax(CANidConstants.kShooterFollowerMotor,
+  private final CANSparkMax shootLeadMotor = new CANSparkMax(
+      CANidConstants.kShooterLeadMotor,
+      MotorType.kBrushless);
+  private final CANSparkMax shootFollowMotor = new CANSparkMax(
+      CANidConstants.kShooterFollowerMotor,
       MotorType.kBrushless);
 
   // ==============================================================
@@ -63,7 +66,7 @@ public class Shooter extends SubsystemBase {
   private final Servo leftServo = new Servo(PWMChannelConstants.kShooterLeftServo);
   private final Servo rightServo = new Servo(PWMChannelConstants.kShooterRightServo);
 
-// ==============================================================
+  // ==============================================================
   // Define Library
   private final Library lib = new Library();
 
@@ -78,20 +81,23 @@ public class Shooter extends SubsystemBase {
   // Define local variables
   private double shootSetPoint = 0.0;
   private boolean running = false;
+
   public enum ShooterState {
     NA,
     EMPTY,
     ENTERING,
     CONTROLLED
   }
+
   private ShooterState shooterState = ShooterState.NA;
+
   public enum GuardState {
     NA,
     OPEN,
     CLOSED
   }
-  private GuardState guardState = GuardState.NA;
 
+  private GuardState guardState = GuardState.NA;
 
   public Shooter() {
     System.out.println("+++++ Shooter Constructor starting +++++");
@@ -130,7 +136,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
-		// Initialize devices before starting
+    // Initialize devices before starting
     setShootVelocity(0.0);
     servoOpen();
     plungerRetract();

@@ -49,12 +49,20 @@ public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define the left side motors, master and follower
-	private final CANSparkMax leftMaster = new CANSparkMax(CANidConstants.kLeftMasterMotor, MotorType.kBrushless);
-	private final CANSparkMax leftFollower = new CANSparkMax(CANidConstants.kLeftFollowerMotor, MotorType.kBrushless);
+	private final CANSparkMax leftMaster = new CANSparkMax(
+		CANidConstants.kLeftMasterMotor, 
+		MotorType.kBrushless);
+	private final CANSparkMax leftFollower = new CANSparkMax(
+		CANidConstants.kLeftFollowerMotor, 
+		MotorType.kBrushless);
 
 	// Define the right side motors, master and follower
-	private final CANSparkMax rightMaster = new CANSparkMax(CANidConstants.kRightMasterMotor, MotorType.kBrushless);
-	private final CANSparkMax rightFollower = new CANSparkMax(CANidConstants.kRightFollowerMotor, MotorType.kBrushless);
+	private final CANSparkMax rightMaster = new CANSparkMax(
+		CANidConstants.kRightMasterMotor, 
+		MotorType.kBrushless);
+	private final CANSparkMax rightFollower = new CANSparkMax(
+		CANidConstants.kRightFollowerMotor, 
+		MotorType.kBrushless);
 
 	private final DifferentialDrive diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 

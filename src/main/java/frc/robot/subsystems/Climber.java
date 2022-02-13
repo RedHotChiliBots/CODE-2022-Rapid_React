@@ -23,20 +23,27 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.CANidConstants;
 
-
 public class Climber extends SubsystemBase {
 
   // ==============================================================
   // Define Solenoids
-  private final DoubleSolenoid climbRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbRightExtend,
-  PneumaticChannelConstants.kClimbRightRetract);
-  private final DoubleSolenoid climbLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, PneumaticChannelConstants.kClimbLeftExtend,
-  PneumaticChannelConstants.kClimbLeftRetract);
+  private final DoubleSolenoid climbRight = new DoubleSolenoid(
+      PneumaticsModuleType.CTREPCM,
+      PneumaticChannelConstants.kClimbRightExtend,
+      PneumaticChannelConstants.kClimbRightRetract);
+  private final DoubleSolenoid climbLeft = new DoubleSolenoid(
+      PneumaticsModuleType.CTREPCM,
+      PneumaticChannelConstants.kClimbLeftExtend,
+      PneumaticChannelConstants.kClimbLeftRetract);
 
   // ==============================================================
   // Define Motors
-  private final CANSparkMax climbRightMotor = new CANSparkMax(CANidConstants.kClimbLeftMotor, MotorType.kBrushless);
-  private final CANSparkMax climbLeftMotor = new CANSparkMax(CANidConstants.kClimbRightMotor, MotorType.kBrushless);
+  private final CANSparkMax climbRightMotor = new CANSparkMax(
+      CANidConstants.kClimbLeftMotor,
+      MotorType.kBrushless);
+  private final CANSparkMax climbLeftMotor = new CANSparkMax(
+      CANidConstants.kClimbRightMotor,
+      MotorType.kBrushless);
 
   // ==============================================================
   // Define encoders and PID controller
@@ -56,10 +63,9 @@ public class Climber extends SubsystemBase {
   // Define local variables
   private double setPoint = 0;
 
-
   public Climber() {
 
-		System.out.println("+++++ Climber Constructor starting +++++");
+    System.out.println("+++++ Climber Constructor starting +++++");
 
     // ==============================================================
     // Configure left and right Motors
@@ -90,12 +96,11 @@ public class Climber extends SubsystemBase {
     climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
 
     // ==============================================================
-		// Initialize devices before starting
+    // Initialize devices before starting
     climberInit();
     climberPerpendicular();
 
-
-		System.out.println("----- Climber Constructor finished -----");
+    System.out.println("----- Climber Constructor finished -----");
   }
 
   @Override
@@ -136,11 +141,11 @@ public class Climber extends SubsystemBase {
     while (!leftDone && !rightDone) {
       if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
         climbLeftMotor.set(0.0);
-        leftDone  = true;
+        leftDone = true;
       }
       if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
         climbRightMotor.set(0.0);
-        rightDone  = true;
+        rightDone = true;
       }
     }
 

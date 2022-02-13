@@ -28,7 +28,9 @@ public class Hopper extends SubsystemBase {
 
   // ==============================================================
   // Define Motor
-  private final CANSparkMax hopperMotor = new CANSparkMax(CANidConstants.kHopperMotor, MotorType.kBrushless);
+  private final CANSparkMax hopperMotor = new CANSparkMax(
+      CANidConstants.kHopperMotor,
+      MotorType.kBrushless);
 
   // ==============================================================
   // Define PID Controller
@@ -58,6 +60,7 @@ public class Hopper extends SubsystemBase {
   // Define Local Variables
   private double hopperSetPoint = 0.0;
   private boolean running = false;
+
   public enum HopperState {
     NA,
     EMPTY,
@@ -65,6 +68,7 @@ public class Hopper extends SubsystemBase {
     CONTROLLED,
     EXITING
   }
+
   private HopperState hopperState = HopperState.NA;
 
   public Hopper() {
@@ -97,7 +101,7 @@ public class Hopper extends SubsystemBase {
     SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
-		// Initialize devices before starting
+    // Initialize devices before starting
     setHopperVelocity(0.0);
 
     System.out.println("----- Hopper Constructor finished -----");

@@ -32,7 +32,9 @@ public class Intake extends SubsystemBase {
 
   // ==============================================================
   // Define Motor
-  private final CANSparkMax intakeMotor = new CANSparkMax(CANidConstants.kIntakeMotor, MotorType.kBrushless);
+  private final CANSparkMax intakeMotor = new CANSparkMax(
+      CANidConstants.kIntakeMotor,
+      MotorType.kBrushless);
 
   // ==============================================================
   // Define PID Controller
@@ -67,11 +69,13 @@ public class Intake extends SubsystemBase {
   // Define Local Variables
   private double intakeSetPoint = 0.0;
   private boolean running = false;
+
   public enum IntakeState {
     NA,
     EMPTY,
     ENTERING
   }
+
   private IntakeState intakeState = IntakeState.NA;
 
   public Intake() {
@@ -104,7 +108,7 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
-		// Initialize devices before starting
+    // Initialize devices before starting
     setIntakeVelocity(0.0);
     intakeArmRetract();
 
