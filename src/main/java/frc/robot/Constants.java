@@ -69,6 +69,8 @@ public final class Constants {
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
+
+		public static final double kRumbleDelay = 1.0;
 	}
 
 	public static final class AnalogIOConstants {
@@ -168,6 +170,7 @@ public final class Constants {
 		public static final double kServoRightClosed = 10.0;	// degrees
 
 		public static final double kServoDelay = 1.0;	// second
+		public static final double kPlungerDelay = 3.0;	// second
 	}
 
 	public static final class IntakeConstants {

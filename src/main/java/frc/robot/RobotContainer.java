@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -59,8 +60,8 @@ public class RobotContainer {
 
   // =============================================================
   // Define Joysticks
-  private final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
-  private final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
+  public final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
+  public final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   private static final double DEADZONE = 0.3;
 
@@ -99,6 +100,8 @@ public class RobotContainer {
   private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
   private final IntakeStop intakeStop = new IntakeStop(intake);
 
+  private Timer rumbleTimer = new Timer();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -124,10 +127,13 @@ public class RobotContainer {
     // =============================================================
     // Configure default commands for each subsystem
     chassis.setDefaultCommand(chassisTankDrive);
-    //climber.setDefaultCommand(climberStop);
+    // climber.setDefaultCommand(climberStop);
     intake.setDefaultCommand(intakeStop);
-    //hopper.setDefaultCommand(hopperStop);
+    // hopper.setDefaultCommand(hopperStop);
     shooter.setDefaultCommand(shooterStop);
+
+    rumbleTimer.reset();
+    rumbleTimer.start();
   }
 
   /**
@@ -176,6 +182,33 @@ public class RobotContainer {
 
   public void resetOperatorRumble(GenericHID.RumbleType t) {
     operator.setRumble(t, 0);
+  }
+
+  public void doRumble(XboxController c, GenericHID.RumbleType t) {
+    Thread thread = new Thread("Rumble") {
+      public void run() {
+        boolean waiting = false;
+        boolean complete = false;
+
+        while (!complete) {
+          if (!waiting) {
+            c.setRumble(t, 1);
+
+            rumbleTimer.reset();
+            waiting = true;
+
+          } else {
+            if (rumbleTimer.hasElapsed(OIConstants.kRumbleDelay)) {
+
+              c.setRumble(t, 0);
+              waiting = false;
+              complete = true;
+            }
+          }
+        }
+      }
+    };
+    thread.start();
   }
 
   /**

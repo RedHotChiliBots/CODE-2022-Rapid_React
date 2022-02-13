@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -78,6 +79,7 @@ public class Shooter extends SubsystemBase {
   private final NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
   private final NetworkTableEntry sbShooterState = shooterTab.addPersistent("Shooter State", "").getEntry();
   private final NetworkTableEntry sbGuardState = shooterTab.addPersistent("Guard State", "").getEntry();
+  private final NetworkTableEntry sbPlungerState = shooterTab.addPersistent("Plunger State", "").getEntry();
   private final NetworkTableEntry sbEntering = shooterTab.addPersistent("Entering", false).getEntry();
   private final NetworkTableEntry sbExiting = shooterTab.addPersistent("Exiting", false).getEntry();
 
@@ -86,22 +88,26 @@ public class Shooter extends SubsystemBase {
   private double shootSetPoint = 0.0;
   private boolean running = false;
 
+  Timer plungerTimer = new Timer();
+  Timer guardTimer = new Timer();
+
   public enum ShooterState {
-    NA,
-    EMPTY,
-    ENTERING,
-    CONTROLLED
+    NA, EMPTY, ENTERING, CONTROLLED
   }
 
-  private ShooterState shooterState = ShooterState.NA;
+  private volatile ShooterState shooterState = ShooterState.NA;
 
   public enum GuardState {
-    NA,
-    OPEN,
-    CLOSED
+    NA, OPEN, CLOSED
   }
 
-  private GuardState guardState = GuardState.NA;
+  private volatile GuardState guardState = GuardState.NA;
+
+  public enum PlungerState {
+    NA, READY, ACTIVE
+  }
+
+  private volatile PlungerState plungerState = PlungerState.NA;
 
   public Shooter() {
     System.out.println("+++++ Shooter Constructor starting +++++");
@@ -142,8 +148,12 @@ public class Shooter extends SubsystemBase {
     // ==============================================================
     // Initialize devices before starting
     setShootVelocity(0.0);
-    servoOpen();
+    guardOpen(true);
     plungerRetract();
+    plungerTimer.reset();
+    plungerTimer.start();
+    guardTimer.reset();
+    guardTimer.start();
 
     System.out.println("----- Shooter Constructor finished -----");
   }
@@ -185,6 +195,7 @@ public class Shooter extends SubsystemBase {
     sbAtTarget.setBoolean(atTarget());
     sbShooterState.setString(shooterState.toString());
     sbGuardState.setString(guardState.toString());
+    sbPlungerState.setString(plungerState.toString());
     sbEntering.setBoolean(isEntering());
     sbExiting.setBoolean(isExiting());
   }
@@ -211,6 +222,14 @@ public class Shooter extends SubsystemBase {
 
   public GuardState getGuardState() {
     return guardState;
+  }
+
+  public void setPlungerState(PlungerState state) {
+    plungerState = state;
+  }
+
+  public PlungerState getPlungerState() {
+    return plungerState;
   }
 
   public double getShootVelocity() {
@@ -240,21 +259,106 @@ public class Shooter extends SubsystemBase {
 
   public void plungerExtend() {
     plunger.set(Value.kForward);
+    plungerState = PlungerState.ACTIVE;
   }
 
   public void plungerRetract() {
     plunger.set(Value.kReverse);
+    plungerState = PlungerState.READY;
   }
 
-  public void servoOpen() {
-    leftServo.setAngle(ShooterConstants.kServoLeftOpen);
-    rightServo.setAngle(ShooterConstants.kServoRightOpen);
-    // set servoState to OPEN in Command after 1 sec delay
+  public void guardOpen() {
+    guardOpen(false);
   }
 
-  public void servoClose() {
-    leftServo.setAngle(ShooterConstants.kServoLeftClosed);
-    rightServo.setAngle(ShooterConstants.kServoRightClosed);
-    // set servoState to CLOSED in Command after 1 sec delay
+  public void guardOpen(boolean noWait) {
+    Thread thread = new Thread("ServoOpen") {
+      public void run() {
+        boolean waiting = false;
+        boolean complete = false;
+
+        while (!complete) {
+          if (!waiting) {
+            leftServo.setAngle(ShooterConstants.kServoLeftOpen);
+            rightServo.setAngle(ShooterConstants.kServoRightOpen);
+
+            guardTimer.reset();
+            waiting = true;
+
+          } else {
+            if (guardTimer.hasElapsed(ShooterConstants.kServoDelay) || noWait) {
+
+              guardState = GuardState.OPEN;
+              waiting = false;
+              complete = true;
+            }
+          }
+        }
+      }
+    };
+    thread.start();
+  }
+
+  public void guardClose() {
+    guardClose(false);
+  }
+
+  public void guardClose(boolean noWait) {
+    Thread thread = new Thread("ServoOpen") {
+      public void run() {
+        boolean waiting = false;
+        boolean complete = false;
+
+        while (!complete) {
+          if (!waiting) {
+            leftServo.setAngle(ShooterConstants.kServoLeftClosed);
+            rightServo.setAngle(ShooterConstants.kServoRightClosed);
+
+            guardTimer.reset();
+            waiting = true;
+
+          } else {
+            if (guardTimer.hasElapsed(ShooterConstants.kServoDelay) || noWait) {
+
+              guardState = GuardState.OPEN;
+              waiting = false;
+              complete = true;
+            }
+          }
+        }
+      }
+    };
+    thread.start();
+  }
+
+  public void plungerPlunge() {
+    plungerPlunge(false);
+  }
+
+  public void plungerPlunge(boolean noWait) {
+    Thread thread = new Thread("Punger") {
+      public void run() {
+        boolean waiting = false;
+        boolean complete = false;
+
+        while (!complete) {
+          if (!waiting) {
+            plungerExtend();
+
+            plungerTimer.reset();
+            waiting = true;
+
+          } else {
+            if (plungerTimer.hasElapsed(ShooterConstants.kPlungerDelay) || noWait) {
+
+              plungerRetract();
+              waiting = false;
+              complete = true;
+            }
+          }
+        }
+      }
+    };
+    thread.start();
   }
 }
