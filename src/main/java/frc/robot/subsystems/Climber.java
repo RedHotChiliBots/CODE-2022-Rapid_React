@@ -144,11 +144,10 @@ public class Climber extends SubsystemBase {
       }
     }
 
-    climbRightMotor.set(0.0);
     rightEncoder.setPosition(0.0);
-    climbLeftMotor.set(0.0);
     leftEncoder.setPosition(0.0);
-    
+
     setPoint = 0.0;
+    climbPosition(setPoint);
   }
 }
