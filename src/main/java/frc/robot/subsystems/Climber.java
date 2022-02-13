@@ -78,8 +78,8 @@ public class Climber extends SubsystemBase {
     climbLeftMotor.setIdleMode(IdleMode.kBrake);
     climbRightMotor.setIdleMode(IdleMode.kBrake);
 
-    // Group the left and right motors
-    climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+    // // Group the left and right motors
+    // climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
 
     // ==============================================================
     // Configure left and right Encoders
@@ -141,16 +141,18 @@ public class Climber extends SubsystemBase {
     while (!leftDone && !rightDone) {
       if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
         climbLeftMotor.set(0.0);
+        rightEncoder.setPosition(0.0);
         leftDone = true;
       }
       if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
         climbRightMotor.set(0.0);
+        leftEncoder.setPosition(0.0);
         rightDone = true;
       }
     }
 
-    rightEncoder.setPosition(0.0);
-    leftEncoder.setPosition(0.0);
+    // Group the left and right motors
+    climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
 
     setPoint = 0.0;
     climbPosition(setPoint);
