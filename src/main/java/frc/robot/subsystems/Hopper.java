@@ -55,6 +55,9 @@ public class Hopper extends SubsystemBase {
   private final NetworkTableEntry sbHopperVel = hopperTab.addPersistent("Hopper Velocity", 0).getEntry();
   private final NetworkTableEntry sbSetPoint = hopperTab.addPersistent("Hopper SetPoint", 0).getEntry();
   private final NetworkTableEntry sbAtTarget = hopperTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry sbHopperState = hopperTab.addPersistent("Hopper State", "").getEntry();
+  private final NetworkTableEntry sbEntering = hopperTab.addPersistent("Entering", false).getEntry();
+  private final NetworkTableEntry sbExiting = hopperTab.addPersistent("Exiting", false).getEntry();
 
   // ==============================================================
   // Define Local Variables
@@ -146,6 +149,9 @@ public class Hopper extends SubsystemBase {
     sbHopperVel.setDouble(getHopperVelocity());
     sbSetPoint.setDouble(hopperSetPoint);
     sbAtTarget.setBoolean(atTarget());
+    sbHopperState.setString(hopperState.toString());
+    sbEntering.setBoolean(isEntering());
+    sbExiting.setBoolean(isExiting());
   }
 
   public boolean isEntering() {

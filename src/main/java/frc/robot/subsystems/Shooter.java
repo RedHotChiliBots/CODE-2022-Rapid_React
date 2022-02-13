@@ -76,6 +76,10 @@ public class Shooter extends SubsystemBase {
   private final NetworkTableEntry sbShootVel = shooterTab.addPersistent("ShootVelocity", 0).getEntry();
   private final NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
   private final NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry sbShooterState = shooterTab.addPersistent("Shooter State", "").getEntry();
+  private final NetworkTableEntry sbGuardState = shooterTab.addPersistent("Guard State", "").getEntry();
+  private final NetworkTableEntry sbEntering = shooterTab.addPersistent("Entering", false).getEntry();
+  private final NetworkTableEntry sbExiting = shooterTab.addPersistent("Exiting", false).getEntry();
 
   // ==============================================================
   // Define local variables
@@ -179,6 +183,10 @@ public class Shooter extends SubsystemBase {
     sbShootVel.setDouble(getShootVelocity());
     sbSetPoint.setDouble(shootSetPoint);
     sbAtTarget.setBoolean(atTarget());
+    sbShooterState.setString(shooterState.toString());
+    sbGuardState.setString(guardState.toString());
+    sbEntering.setBoolean(isEntering());
+    sbExiting.setBoolean(isExiting());
   }
 
   public boolean isEntering() {

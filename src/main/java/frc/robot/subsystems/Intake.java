@@ -64,6 +64,8 @@ public class Intake extends SubsystemBase {
   private final NetworkTableEntry sbIntakeVel = intakeTab.addPersistent("Intake Velocity", 0).getEntry();
   private final NetworkTableEntry sbSetPoint = intakeTab.addPersistent("Intake SetPoint", 0).getEntry();
   private final NetworkTableEntry sbAtTarget = intakeTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry sbIntakeState = intakeTab.addPersistent("Intake State", "").getEntry();
+  private final NetworkTableEntry sbEntering = intakeTab.addPersistent("Entering", false).getEntry();
 
   // ==============================================================
   // Define Local Variables
@@ -154,6 +156,8 @@ public class Intake extends SubsystemBase {
     sbIntakeVel.setDouble(getIntakeVelocity());
     sbSetPoint.setDouble(intakeSetPoint);
     sbAtTarget.setBoolean(atTarget());
+    sbIntakeState.setString(intakeState.toString());
+    sbEntering.setBoolean(isEntering());
   }
 
   public boolean isEntering() {
