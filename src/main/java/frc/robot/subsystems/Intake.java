@@ -147,7 +147,6 @@ public class Intake extends SubsystemBase {
     sbAtTarget.setBoolean(atTarget());
   }
 
-
   public boolean isEntering() {
     return intakeEntering.get();
   }
