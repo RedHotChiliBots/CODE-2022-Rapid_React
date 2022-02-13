@@ -58,10 +58,19 @@ public class Climber extends SubsystemBase {
   private final NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
   private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
   private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
+  private final NetworkTableEntry cbSwivel = climberTab.addPersistent("Swivel State", "").getEntry();
 
   // ==============================================================
   // Define local variables
   private double setPoint = 0;
+
+  public enum SwivelState {
+    NA,
+    PERPENDICULAR,
+    SWIVEL
+  }
+
+  private SwivelState swivelState = SwivelState.NA;
 
   public Climber() {
 
@@ -79,7 +88,8 @@ public class Climber extends SubsystemBase {
     climbRightMotor.setIdleMode(IdleMode.kBrake);
 
     // // Group the left and right motors
-    // climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+    // climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
+    // motor
 
     // ==============================================================
     // Configure left and right Encoders
@@ -108,17 +118,25 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
     cbLeftPos.setDouble(leftEncoder.getPosition());
     cbRightPos.setDouble(rightEncoder.getPosition());
+    cbSetPoint.setDouble(setPoint);
     cbAtTarget.setBoolean(atTarget());
+    cbSwivel.setString(swivelState.toString());
   }
 
   public void climberSwivel() {
     climbLeft.set(Value.kForward);
     climbRight.set(Value.kForward);
+    swivelState = SwivelState.SWIVEL;
   }
 
   public void climberPerpendicular() {
     climbLeft.set(Value.kReverse);
     climbRight.set(Value.kReverse);
+    swivelState = SwivelState.PERPENDICULAR;
+  }
+
+  public SwivelState getSwivelState() {
+    return swivelState;
   }
 
   public boolean atTarget() {
