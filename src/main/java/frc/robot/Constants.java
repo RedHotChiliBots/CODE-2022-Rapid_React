@@ -53,6 +53,19 @@ public final class Constants {
 		public static final int kIntakeRetract = 7;
 	}
 
+	public static final class DIOChannelConstants {
+		public static final int kIntakeEntering = 0;
+		public static final int kHopperEntering = 1;
+		public static final int kHopperExiting = 2;
+		public static final int kShooterEntering = 3;
+		public static final int kShooterExiting = 4;
+	}
+
+	public static final class PWMChannelConstants {
+		public static final int kShooterLeftServo = 0;
+		public static final int kShooterRightServo = 1;
+	}
+
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
@@ -145,6 +158,12 @@ public final class Constants {
 		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
 
 		public static final double kVelocityTolerance = 100.0; // rpms
+
+		public static final double kServoLeftOpen = 10.0;	// degrees
+		public static final double kServoLeftClosed = 100.0;	// degrees
+		public static final double kServoRightOpen = 100.0;	// degrees
+
+		public static final double kServoDelay = 1.0;	// second
 	}
 
 	public static final class IntakeConstants {

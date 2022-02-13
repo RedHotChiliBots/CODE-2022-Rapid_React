@@ -11,8 +11,10 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,6 +26,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
+import frc.robot.Constants.DIOChannelConstants;
+import frc.robot.Constants.PWMChannelConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.ShooterConstants;
 
@@ -50,6 +54,16 @@ public class Shooter extends SubsystemBase {
       PneumaticChannelConstants.kPlungerRetract);
 
   // ==============================================================
+  // Define Digital Inputs
+  private final DigitalInput shooterEntering = new DigitalInput(DIOChannelConstants.kShooterEntering);
+  private final DigitalInput shooterExiting = new DigitalInput(DIOChannelConstants.kShooterExiting);
+
+  // ==============================================================
+  // Define PWM Connections (Servos)
+  private final Servo leftServo = new Servo(PWMChannelConstants.kShooterLeftServo);
+  private final Servo rightServo = new Servo(PWMChannelConstants.kShooterRightServo);
+
+// ==============================================================
   // Define Library
   private final Library lib = new Library();
 
@@ -64,7 +78,21 @@ public class Shooter extends SubsystemBase {
   // Define local variables
   private double shootSetPoint = 0.0;
   private boolean running = false;
+  public enum ShooterState {
+    NA,
+    EMPTY,
+    ENTERING,
+    CONTROLLED
+  }
+  private ShooterState shooterState = ShooterState.NA;
+  public enum GuardState {
+    NA,
+    OPEN,
+    CLOSED
+  }
+  private GuardState guardState = GuardState.NA;
 
+  
   public Shooter() {
     System.out.println("+++++ Shooter Constructor starting +++++");
 
@@ -141,6 +169,22 @@ public class Shooter extends SubsystemBase {
     sbAtTarget.setBoolean(atTarget());
   }
 
+  public void setShooterState(ShooterState state) {
+    shooterState = state;
+  }
+
+  public ShooterState getShooterState() {
+    return shooterState;
+  }
+
+  public void setGuardState(GuardState state) {
+    guardState = state;
+  }
+
+  public GuardState getGuardState() {
+    return guardState;
+  }
+
   public double getShootVelocity() {
     return shootEncoder.getVelocity();
   }
@@ -172,5 +216,17 @@ public class Shooter extends SubsystemBase {
 
   public void plungerRetract() {
     plunger.set(Value.kReverse);
+  }
+
+  public void servoOpen() {
+    leftServo.setAngle(ShooterConstants.kServoLeftOpen);
+    rightServo.setAngle(ShooterConstants.kServoRightOpen);
+    // set servoState to OPEN in Command after 1 sec delay
+  }
+
+  public void servoClose() {
+    leftServo.setAngle(ShooterConstants.kServoLeftClosed);
+    rightServo.setAngle(ShooterConstants.kServoRightClosed);
+    // set servoState to CLOSED in Command after 1 sec delay
   }
 }

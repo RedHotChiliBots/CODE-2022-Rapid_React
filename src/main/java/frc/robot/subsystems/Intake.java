@@ -12,7 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
+import frc.robot.Constants.DIOChannelConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 
@@ -48,6 +49,10 @@ public class Intake extends SubsystemBase {
       PneumaticChannelConstants.kIntakeRetract);
 
   // ==============================================================
+  // Define Digital Inputs
+  private final DigitalInput intakeEntering = new DigitalInput(DIOChannelConstants.kIntakeEntering);
+
+  // ==============================================================
   // Define Library
   private final Library lib = new Library();
 
@@ -62,6 +67,12 @@ public class Intake extends SubsystemBase {
   // Define Local Variables
   private double intakeSetPoint = 0.0;
   private boolean running = false;
+  public enum IntakeState {
+    NA,
+    EMPTY,
+    ENTERING
+  }
+  private IntakeState intakeState = IntakeState.NA;
 
   public Intake() {
     System.out.println("+++++ Intake Constructor starting +++++");
@@ -134,6 +145,14 @@ public class Intake extends SubsystemBase {
     sbIntakeVel.setDouble(getIntakeVelocity());
     sbSetPoint.setDouble(intakeSetPoint);
     sbAtTarget.setBoolean(atTarget());
+  }
+
+  public void setIntakeState(IntakeState state) {
+    intakeState = state;
+  }
+
+  public IntakeState getState() {
+    return intakeState;
   }
 
   public double getIntakeVelocity() {
