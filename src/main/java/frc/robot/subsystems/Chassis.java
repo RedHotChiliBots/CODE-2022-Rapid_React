@@ -101,7 +101,6 @@ public class Chassis extends SubsystemBase {
 	// ==============================================================
 	// Define Shuffleboard data
 	private final ShuffleboardTab chassisTab = Shuffleboard.getTab("Chassis");
-	private final NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
 	private final NetworkTableEntry sbLeftPos = chassisTab.addPersistent("ML Position", 0).getEntry();
 	private final NetworkTableEntry sbLeftVel = chassisTab.addPersistent("ML Velocity", 0).getEntry();
 	private final NetworkTableEntry sbRightPos = chassisTab.addPersistent("MR Position", 0).getEntry();
@@ -109,6 +108,8 @@ public class Chassis extends SubsystemBase {
 	private final NetworkTableEntry sbLeftPow = chassisTab.addPersistent("ML Power", 0).getEntry();
 	private final NetworkTableEntry sbRightPow = chassisTab.addPersistent("MR Power", 0).getEntry();
 	private final NetworkTableEntry sbPitch = chassisTab.addPersistent("Pitch", 0).getEntry();
+	private final NetworkTableEntry sbAngle = chassisTab.addPersistent("Angle", 0).getEntry();
+	private final NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
 
 	private final ShuffleboardTab pneumaticsTab = Shuffleboard.getTab("Pneumatics");
 	private final NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
@@ -126,12 +127,18 @@ public class Chassis extends SubsystemBase {
 		leftMaster.restoreFactoryDefaults();
 		leftFollower.restoreFactoryDefaults();
 
+		leftMaster.clearFaults();
+		leftFollower.clearFaults();
+
 		leftMaster.setIdleMode(IdleMode.kBrake);
 		leftFollower.setIdleMode(IdleMode.kBrake);
 
 		// Configure the right side motors, master and follower
 		rightMaster.restoreFactoryDefaults();
 		rightFollower.restoreFactoryDefaults();
+		
+		rightMaster.clearFaults();
+		rightFollower.clearFaults();
 
 		rightMaster.setIdleMode(IdleMode.kBrake);
 		rightFollower.setIdleMode(IdleMode.kBrake);
@@ -219,7 +226,6 @@ public class Chassis extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		sbHeading.setDouble(getAngle().getDegrees());
 		sbLeftPos.setDouble(leftEncoder.getPosition());
 		sbLeftVel.setDouble(leftEncoder.getVelocity());
 		sbRightPos.setDouble(rightEncoder.getPosition());
@@ -228,7 +234,9 @@ public class Chassis extends SubsystemBase {
 		sbRightPow.setDouble(rightMaster.get());
 
 		sbPitch.setDouble(getPitch());
-
+		sbAngle.setDouble(getAngle().getDegrees());
+		sbHeading.setDouble(getHeading());
+	
 		sbHiPressure.setDouble(getHiPressure());
 		sbLoPressure.setDouble(getLoPressure());
 
@@ -289,6 +297,10 @@ public class Chassis extends SubsystemBase {
 		leftEncoder.setPosition(0.0);
 		rightEncoder.setPosition(0.0);
 		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
+	}
+
+	public double getHeading() {
+		return ahrs.getFusedHeading();
 	}
 
 	/**

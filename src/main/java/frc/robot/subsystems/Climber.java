@@ -65,6 +65,9 @@ public class Climber extends SubsystemBase {
     // Configure left and right Motors
     climbLeftMotor.restoreFactoryDefaults();
     climbRightMotor.restoreFactoryDefaults();
+    
+    climbLeftMotor.clearFaults();
+    climbRightMotor.clearFaults();
 
     climbLeftMotor.setIdleMode(IdleMode.kBrake);
     climbRightMotor.setIdleMode(IdleMode.kBrake);
