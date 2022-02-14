@@ -124,6 +124,7 @@ public class RobotContainer {
     // Add commands to the autonomous command chooser
     chooser.setDefaultOption("Tank Drive", chassisTankDrive);
     chooser.addOption("Arcade Drive", chassisArcadeDrive);
+    chooser.addOption("Modified Tank Drive", modifiedTankDrive);
     // Put the chooser on the dashboard
     SmartDashboard.putData(chooser);
 
