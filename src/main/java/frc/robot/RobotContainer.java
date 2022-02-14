@@ -31,6 +31,7 @@ import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberPerpendicular;
 import frc.robot.commands.ClimberSwivel;
+import frc.robot.commands.DoRumble;
 import frc.robot.commands.IntakeArmExtend;
 import frc.robot.commands.IntakeArmRetract;
 import frc.robot.commands.IntakeStop;
@@ -100,6 +101,8 @@ public class RobotContainer {
   private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
   private final IntakeStop intakeStop = new IntakeStop(intake);
 
+  private final DoRumble doRumble = new DoRumble(this);
+
   private Timer rumbleTimer = new Timer();
 
   /**
@@ -155,7 +158,8 @@ public class RobotContainer {
     new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
     new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
-    new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+    new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
+//    new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
     new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
     new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
     new JoystickButton(operator, Button.kA.value).whenPressed(toFullExtendSwivel);
