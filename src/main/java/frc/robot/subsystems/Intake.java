@@ -100,14 +100,14 @@ public class Intake extends SubsystemBase {
 
     // ==============================================================
     // Update Suffleboard Tab with static data
-    SmartDashboard.putNumber("P Gain", IntakeConstants.kP);
-    SmartDashboard.putNumber("I Gain", IntakeConstants.kI);
-    SmartDashboard.putNumber("D Gain", IntakeConstants.kD);
-    SmartDashboard.putNumber("I Zone", IntakeConstants.kIz);
-    SmartDashboard.putNumber("Feed Forward", IntakeConstants.kFF);
-    SmartDashboard.putNumber("Max Output", IntakeConstants.kMaxOutput);
-    SmartDashboard.putNumber("Min Output", IntakeConstants.kMinOutput);
-    SmartDashboard.putNumber("Set Rotations", 0);
+    // SmartDashboard.putNumber("P Gain", IntakeConstants.kP);
+    // SmartDashboard.putNumber("I Gain", IntakeConstants.kI);
+    // SmartDashboard.putNumber("D Gain", IntakeConstants.kD);
+    // SmartDashboard.putNumber("I Zone", IntakeConstants.kIz);
+    // SmartDashboard.putNumber("Feed Forward", IntakeConstants.kFF);
+    // SmartDashboard.putNumber("Max Output", IntakeConstants.kMaxOutput);
+    // SmartDashboard.putNumber("Min Output", IntakeConstants.kMinOutput);
+    // SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
     // Initialize devices before starting
@@ -119,37 +119,37 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // ==============================================================
-    // read PID coefficients from SmartDashboard
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
+    // // ==============================================================
+    // // read PID coefficients from SmartDashboard
+    // double p = SmartDashboard.getNumber("P Gain", 0);
+    // double i = SmartDashboard.getNumber("I Gain", 0);
+    // double d = SmartDashboard.getNumber("D Gain", 0);
+    // double iz = SmartDashboard.getNumber("I Zone", 0);
+    // double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    // double max = SmartDashboard.getNumber("Max Output", 0);
+    // double min = SmartDashboard.getNumber("Min Output", 0);
 
-    // ==============================================================
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller
-    if (p != intakePIDController.getP()) {
-      intakePIDController.setP(p);
-    }
-    if (i != intakePIDController.getI()) {
-      intakePIDController.setI(i);
-    }
-    if (d != intakePIDController.getD()) {
-      intakePIDController.setD(d);
-    }
-    if (iz != intakePIDController.getIZone()) {
-      intakePIDController.setIZone(iz);
-    }
-    if (ff != intakePIDController.getFF()) {
-      intakePIDController.setFF(ff);
-    }
-    if ((max != intakePIDController.getOutputMax()) || (min != intakePIDController.getOutputMin())) {
-      intakePIDController.setOutputRange(min, max);
-    }
+    // // ==============================================================
+    // // if PID coefficients on SmartDashboard have changed, write new values to
+    // // controller
+    // if (p != intakePIDController.getP()) {
+    //   intakePIDController.setP(p);
+    // }
+    // if (i != intakePIDController.getI()) {
+    //   intakePIDController.setI(i);
+    // }
+    // if (d != intakePIDController.getD()) {
+    //   intakePIDController.setD(d);
+    // }
+    // if (iz != intakePIDController.getIZone()) {
+    //   intakePIDController.setIZone(iz);
+    // }
+    // if (ff != intakePIDController.getFF()) {
+    //   intakePIDController.setFF(ff);
+    // }
+    // if ((max != intakePIDController.getOutputMax()) || (min != intakePIDController.getOutputMin())) {
+    //   intakePIDController.setOutputRange(min, max);
+    // }
 
     // ==============================================================
     // Update Shuffleboard Tab with dynamic data

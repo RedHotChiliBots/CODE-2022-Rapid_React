@@ -94,14 +94,14 @@ public class Hopper extends SubsystemBase {
 
     // ==============================================================
     // Update Suffleboard Tab with static data
-    SmartDashboard.putNumber("P Gain", HopperConstants.kP);
-    SmartDashboard.putNumber("I Gain", HopperConstants.kI);
-    SmartDashboard.putNumber("D Gain", HopperConstants.kD);
-    SmartDashboard.putNumber("I Zone", HopperConstants.kIz);
-    SmartDashboard.putNumber("Feed Forward", HopperConstants.kFF);
-    SmartDashboard.putNumber("Max Output", HopperConstants.kMaxOutput);
-    SmartDashboard.putNumber("Min Output", HopperConstants.kMinOutput);
-    SmartDashboard.putNumber("Set Rotations", 0);
+    // SmartDashboard.putNumber("P Gain", HopperConstants.kP);
+    // SmartDashboard.putNumber("I Gain", HopperConstants.kI);
+    // SmartDashboard.putNumber("D Gain", HopperConstants.kD);
+    // SmartDashboard.putNumber("I Zone", HopperConstants.kIz);
+    // SmartDashboard.putNumber("Feed Forward", HopperConstants.kFF);
+    // SmartDashboard.putNumber("Max Output", HopperConstants.kMaxOutput);
+    // SmartDashboard.putNumber("Min Output", HopperConstants.kMinOutput);
+    // SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
     // Initialize devices before starting
@@ -114,35 +114,35 @@ public class Hopper extends SubsystemBase {
   public void periodic() {
     // ==============================================================
     // read PID coefficients from SmartDashboard
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
+    // double p = SmartDashboard.getNumber("P Gain", 0);
+    // double i = SmartDashboard.getNumber("I Gain", 0);
+    // double d = SmartDashboard.getNumber("D Gain", 0);
+    // double iz = SmartDashboard.getNumber("I Zone", 0);
+    // double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    // double max = SmartDashboard.getNumber("Max Output", 0);
+    // double min = SmartDashboard.getNumber("Min Output", 0);
 
-    // ==============================================================
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller
-    if (p != hopperPIDController.getP()) {
-      hopperPIDController.setP(p);
-    }
-    if (i != hopperPIDController.getI()) {
-      hopperPIDController.setI(i);
-    }
-    if (d != hopperPIDController.getD()) {
-      hopperPIDController.setD(d);
-    }
-    if (iz != hopperPIDController.getIZone()) {
-      hopperPIDController.setIZone(iz);
-    }
-    if (ff != hopperPIDController.getFF()) {
-      hopperPIDController.setFF(ff);
-    }
-    if ((max != hopperPIDController.getOutputMax()) || (min != hopperPIDController.getOutputMin())) {
-      hopperPIDController.setOutputRange(min, max);
-    }
+    // // ==============================================================
+    // // if PID coefficients on SmartDashboard have changed, write new values to
+    // // controller
+    // if (p != hopperPIDController.getP()) {
+    //   hopperPIDController.setP(p);
+    // }
+    // if (i != hopperPIDController.getI()) {
+    //   hopperPIDController.setI(i);
+    // }
+    // if (d != hopperPIDController.getD()) {
+    //   hopperPIDController.setD(d);
+    // }
+    // if (iz != hopperPIDController.getIZone()) {
+    //   hopperPIDController.setIZone(iz);
+    // }
+    // if (ff != hopperPIDController.getFF()) {
+    //   hopperPIDController.setFF(ff);
+    // }
+    // if ((max != hopperPIDController.getOutputMax()) || (min != hopperPIDController.getOutputMin())) {
+    //   hopperPIDController.setOutputRange(min, max);
+    // }
 
     // ==============================================================
     // Update Shuffleboard Tab with dynamic data

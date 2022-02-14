@@ -4,6 +4,13 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +29,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
+  String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
+  Trajectory BlueRungSideCargoToHub = new Trajectory();
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -32,6 +42,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
+    try {
+      Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath().resolve(BlueRungSideCargoToHubJSON);
+      BlueRungSideCargoToHub = TrajectoryUtil.fromPathweaverJson(BlueRungSideCargoToHubPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
+    }
+
     robotContainer = new RobotContainer();
   }
 

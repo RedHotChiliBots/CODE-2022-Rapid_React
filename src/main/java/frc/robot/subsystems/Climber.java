@@ -107,7 +107,7 @@ public class Climber extends SubsystemBase {
 
     // ==============================================================
     // Initialize devices before starting
-    climberInit();
+//    climberInit();
     climberPerpendicular();
 
     System.out.println("----- Climber Constructor finished -----");

@@ -136,14 +136,14 @@ public class Shooter extends SubsystemBase {
 
     // ==============================================================
     // Display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", ShooterConstants.kP);
-    SmartDashboard.putNumber("I Gain", ShooterConstants.kI);
-    SmartDashboard.putNumber("D Gain", ShooterConstants.kD);
-    SmartDashboard.putNumber("I Zone", ShooterConstants.kIz);
-    SmartDashboard.putNumber("Feed Forward", ShooterConstants.kFF);
-    SmartDashboard.putNumber("Max Output", ShooterConstants.kMaxOutput);
-    SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
-    SmartDashboard.putNumber("Set Rotations", 0);
+    // SmartDashboard.putNumber("P Gain", ShooterConstants.kP);
+    // SmartDashboard.putNumber("I Gain", ShooterConstants.kI);
+    // SmartDashboard.putNumber("D Gain", ShooterConstants.kD);
+    // SmartDashboard.putNumber("I Zone", ShooterConstants.kIz);
+    // SmartDashboard.putNumber("Feed Forward", ShooterConstants.kFF);
+    // SmartDashboard.putNumber("Max Output", ShooterConstants.kMaxOutput);
+    // SmartDashboard.putNumber("Min Output", ShooterConstants.kMinOutput);
+    // SmartDashboard.putNumber("Set Rotations", 0);
 
     // ==============================================================
     // Initialize devices before starting
@@ -160,35 +160,35 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // read PID coefficients from SmartDashboard
-    double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
+    // // read PID coefficients from SmartDashboard
+    // double p = SmartDashboard.getNumber("P Gain", 0);
+    // double i = SmartDashboard.getNumber("I Gain", 0);
+    // double d = SmartDashboard.getNumber("D Gain", 0);
+    // double iz = SmartDashboard.getNumber("I Zone", 0);
+    // double ff = SmartDashboard.getNumber("Feed Forward", 0);
+    // double max = SmartDashboard.getNumber("Max Output", 0);
+    // double min = SmartDashboard.getNumber("Min Output", 0);
 
-    // if PID coefficients on SmartDashboard have changed from PID setting, then
-    // write new values to PID controller
-    if (p != shootPIDController.getP()) {
-      shootPIDController.setP(p);
-    }
-    if (i != shootPIDController.getI()) {
-      shootPIDController.setI(i);
-    }
-    if (d != shootPIDController.getD()) {
-      shootPIDController.setD(d);
-    }
-    if (iz != shootPIDController.getIZone()) {
-      shootPIDController.setIZone(iz);
-    }
-    if (ff != shootPIDController.getFF()) {
-      shootPIDController.setFF(ff);
-    }
-    if ((max != shootPIDController.getOutputMax()) || (min != shootPIDController.getOutputMin())) {
-      shootPIDController.setOutputRange(min, max);
-    }
+    // // if PID coefficients on SmartDashboard have changed from PID setting, then
+    // // write new values to PID controller
+    // if (p != shootPIDController.getP()) {
+    //   shootPIDController.setP(p);
+    // }
+    // if (i != shootPIDController.getI()) {
+    //   shootPIDController.setI(i);
+    // }
+    // if (d != shootPIDController.getD()) {
+    //   shootPIDController.setD(d);
+    // }
+    // if (iz != shootPIDController.getIZone()) {
+    //   shootPIDController.setIZone(iz);
+    // }
+    // if (ff != shootPIDController.getFF()) {
+    //   shootPIDController.setFF(ff);
+    // }
+    // if ((max != shootPIDController.getOutputMax()) || (min != shootPIDController.getOutputMin())) {
+    //   shootPIDController.setOutputRange(min, max);
+    // }
 
     sbShootVel.setDouble(getShootVelocity());
     sbSetPoint.setDouble(shootSetPoint);

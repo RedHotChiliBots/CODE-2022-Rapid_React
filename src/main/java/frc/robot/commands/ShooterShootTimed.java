@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.ShooterState;
 import frc.robot.subsystems.Shooter.GuardState;
@@ -17,8 +15,6 @@ import frc.robot.RobotContainer;
 public class ShooterShootTimed extends CommandBase {
   private Shooter shooter = null;
   private RobotContainer robotContainer = null;
-  private boolean waiting = false;
-  private Timer timer = new Timer();
 
   public ShooterShootTimed(Shooter shooter, RobotContainer robotContainer) {
     this.shooter = shooter;
