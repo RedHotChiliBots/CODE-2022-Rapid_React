@@ -24,7 +24,7 @@ public class ChasisDriveIntoRung extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.driveArcade(0.8, 0.0);
+    chassis.driveArcade(0.5, 0.0);
   }
 
   // Called once the command ends or is interrupted.

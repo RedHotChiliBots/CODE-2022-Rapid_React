@@ -6,33 +6,54 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.SwivelState;
 
 public class ClimberSwivel extends CommandBase {
-  private Climber climber = null; 
-  /** Creates a new ClimberSwivel. */
-  public ClimberSwivel(Climber climber ) {
-    this.climber = climber;
-    addRequirements(climber);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+	private Climber climber = null;
+	private SwivelState state = null;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    climber.climberSwivel();
-  }
+	public ClimberSwivel(Climber climber, SwivelState state) {
+		this.climber = climber;
+		this.state = state;
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
+		addRequirements(climber);
+		// Use addRequirements() here to declare subsystem dependencies.
+	}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+		if (state == SwivelState.SWIVEL) {
+			climber.climberSwivel();
+		} else {
+			climber.climberPerpendicular();
+		}
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
-  }
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
+		// empty
+	}
+
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+	}
+
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		boolean status = false;
+		if (state == SwivelState.SWIVEL) {
+			if (climber.getSwivelState() == SwivelState.SWIVEL) {
+				status = true;
+			}
+		} else {
+			if (climber.getSwivelState() == SwivelState.PERPENDICULAR) {
+				status = true;
+			}
+		}
+		return status;
+	}
 }

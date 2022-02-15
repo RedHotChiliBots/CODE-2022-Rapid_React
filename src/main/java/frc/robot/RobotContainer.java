@@ -19,7 +19,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
-
+import frc.robot.subsystems.Climber.SwivelState;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -29,7 +29,6 @@ import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberMidRungClimb;
-import frc.robot.commands.ClimberPerpendicular;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.DoRumble;
 import frc.robot.commands.IntakeArmExtend;
@@ -86,12 +85,14 @@ public class RobotContainer {
   private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
   private final SHOOT SHOOT = new SHOOT(shooter);
 
-  private final ClimberSwivel swivel = new ClimberSwivel(climber);
-  private final ClimberPerpendicular perpendicular = new ClimberPerpendicular(climber);
+  private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
+  private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
   private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
   private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
-  private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber, ClimberConstants.kFullExtendPerpendicular);
-  private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel);
+  // private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,
+  // ClimberConstants.kFullExtendPerpendicular);
+  // private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber,
+  // ClimberConstants.kFullExtendSwivel);
   private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
   private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
   private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
@@ -160,10 +161,11 @@ public class RobotContainer {
     new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
     new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
-//    new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+    // new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
     new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
-    new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
-    new JoystickButton(operator, Button.kA.value).whenPressed(toFullExtendSwivel);
+    // new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
+    // new JoystickButton(operator,
+    // Button.kA.value).whenPressed(toFullExtendSwivel);
     // Will need a stow at soem point but will add in when rest is auto command
     // because not enough buttons for testing
     // new JoystickButton(operator, Button..value).whenPressed(toStow);

@@ -7,20 +7,25 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.LatchState;
+import frc.robot.subsystems.Climber.SwivelState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ClimberHighTravClimb extends SequentialCommandGroup {
-  /** Creates a new ClimberHighTravClimb. */
-  public ClimberHighTravClimb(Climber climber) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ClimberGoTo(climber, ClimberConstants.kLowRung),
-    new ClimberSwivel(climber),
-    new ClimberGoTo(climber, ClimberConstants.kFullExtendSwivel),
-    new ClimberPerpendicular(climber),
-    new ClimberGoTo(climber, ClimberConstants.kFullExtendPerpendicular),
-    new ClimberGoTo(climber, ClimberConstants.kPullUp));
-  }
+	/** Creates a new ClimberHighTravClimb. */
+	public ClimberHighTravClimb(Climber climber) {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(
+				new ClimberSwivel(climber, SwivelState.SWIVEL),
+				new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav),
+				new ClimberSwivel(climber, SwivelState.PERPENDICULAR),
+				new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav),
+				new ClimberLatch(climber, LatchState.OPEN),
+				new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
+				new ClimberLatch(climber, LatchState.CLOSE),
+				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
+	}
 }

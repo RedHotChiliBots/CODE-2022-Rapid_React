@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -25,154 +26,293 @@ import frc.robot.Constants.CANidConstants;
 
 public class Climber extends SubsystemBase {
 
-  // ==============================================================
-  // Define Solenoids
-  private final DoubleSolenoid climbRight = new DoubleSolenoid(
-      PneumaticsModuleType.CTREPCM,
-      PneumaticChannelConstants.kClimbRightExtend,
-      PneumaticChannelConstants.kClimbRightRetract);
-  private final DoubleSolenoid climbLeft = new DoubleSolenoid(
-      PneumaticsModuleType.CTREPCM,
-      PneumaticChannelConstants.kClimbLeftExtend,
-      PneumaticChannelConstants.kClimbLeftRetract);
+	// ==============================================================
+	// Define Solenoids
+	private final DoubleSolenoid climbRight = new DoubleSolenoid(
+			PneumaticsModuleType.CTREPCM,
+			PneumaticChannelConstants.kClimbRightExtend,
+			PneumaticChannelConstants.kClimbRightRetract);
+	private final DoubleSolenoid climbLeft = new DoubleSolenoid(
+			PneumaticsModuleType.CTREPCM,
+			PneumaticChannelConstants.kClimbLeftExtend,
+			PneumaticChannelConstants.kClimbLeftRetract);
 
-  // ==============================================================
-  // Define Motors
-  private final CANSparkMax climbRightMotor = new CANSparkMax(
-      CANidConstants.kClimbLeftMotor,
-      MotorType.kBrushless);
-  private final CANSparkMax climbLeftMotor = new CANSparkMax(
-      CANidConstants.kClimbRightMotor,
-      MotorType.kBrushless);
+	private final DoubleSolenoid climbLatch = new DoubleSolenoid(
+			PneumaticsModuleType.CTREPCM,
+			PneumaticChannelConstants.kLatchOpen,
+			PneumaticChannelConstants.kLatchClose);
 
-  // ==============================================================
-  // Define encoders and PID controller
-  private final RelativeEncoder leftEncoder = climbLeftMotor.getEncoder();
-  private final RelativeEncoder rightEncoder = climbRightMotor.getEncoder();
-  private final SparkMaxPIDController climbPIDController = climbLeftMotor.getPIDController();
+	// ==============================================================
+	// Define Motors
+	private final CANSparkMax climbRightMotor = new CANSparkMax(
+			CANidConstants.kClimbLeftMotor,
+			MotorType.kBrushless);
+	private final CANSparkMax climbLeftMotor = new CANSparkMax(
+			CANidConstants.kClimbRightMotor,
+			MotorType.kBrushless);
 
-  // ==============================================================
-  // Define Shuffleboard Tab
-  private final ShuffleboardTab climberTab = Shuffleboard.getTab("Climber");
-  private final NetworkTableEntry cbLeftPos = climberTab.addPersistent("Left Position", 0.0).getEntry();
-  private final NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
-  private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
-  private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
-  private final NetworkTableEntry cbSwivel = climberTab.addPersistent("Swivel State", "").getEntry();
+	// ==============================================================
+	// Define encoders and PID controller
+	private final RelativeEncoder leftEncoder = climbLeftMotor.getEncoder();
+	private final RelativeEncoder rightEncoder = climbRightMotor.getEncoder();
+	private final SparkMaxPIDController climbPIDController = climbLeftMotor.getPIDController();
 
-  // ==============================================================
-  // Define local variables
-  private double setPoint = 0;
+	// ==============================================================
+	// Define Shuffleboard Tab
+	private final ShuffleboardTab climberTab = Shuffleboard.getTab("Climber");
+	private final NetworkTableEntry cbLeftPos = climberTab.addPersistent("Left Position", 0.0).getEntry();
+	private final NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
+	private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
+	private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
+	private final NetworkTableEntry cbSwivel = climberTab.addPersistent("Swivel State", "").getEntry();
 
-  public enum SwivelState {
-    NA,
-    PERPENDICULAR,
-    SWIVEL
-  }
+	// ==============================================================
+	// Define local variables
+	private double setPoint = 0;
+	Timer latchTimer = new Timer();
+	Timer swivelTimer = new Timer();
 
-  private SwivelState swivelState = SwivelState.NA;
+	public enum SwivelState {
+		NA,
+		PERPENDICULAR,
+		SWIVEL
+	}
 
-  public Climber() {
+	private SwivelState swivelState = SwivelState.NA;
 
-    System.out.println("+++++ Climber Constructor starting +++++");
+	public enum LatchState {
+		NA,
+		OPEN,
+		CLOSE
+	}
 
-    // ==============================================================
-    // Configure left and right Motors
-    climbLeftMotor.restoreFactoryDefaults();
-    climbRightMotor.restoreFactoryDefaults();
+	private LatchState latchState = LatchState.NA;
 
-    climbLeftMotor.clearFaults();
-    climbRightMotor.clearFaults();
+	public Climber() {
 
-    climbLeftMotor.setIdleMode(IdleMode.kBrake);
-    climbRightMotor.setIdleMode(IdleMode.kBrake);
+		System.out.println("+++++ Climber Constructor starting +++++");
 
-    // // Group the left and right motors
-    // climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
-    // motor
+		// ==============================================================
+		// Configure left and right Motors
+		climbLeftMotor.restoreFactoryDefaults();
+		climbRightMotor.restoreFactoryDefaults();
 
-    // ==============================================================
-    // Configure left and right Encoders
-    leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
-    rightEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
+		climbLeftMotor.clearFaults();
+		climbRightMotor.clearFaults();
 
-    // ==============================================================
-    // Configure PID controller
-    climbPIDController.setP(ClimberConstants.kP);
-    climbPIDController.setI(ClimberConstants.kI);
-    climbPIDController.setD(ClimberConstants.kD);
-    climbPIDController.setIZone(ClimberConstants.kIz);
-    climbPIDController.setFF(ClimberConstants.kFF);
-    climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
+		climbLeftMotor.setIdleMode(IdleMode.kBrake);
+		climbRightMotor.setIdleMode(IdleMode.kBrake);
 
-    // ==============================================================
-    // Initialize devices before starting
-//    climberInit();
-    climberPerpendicular();
+		// // Group the left and right motors
+		// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
+		// motor
 
-    System.out.println("----- Climber Constructor finished -----");
-  }
+		// ==============================================================
+		// Configure left and right Encoders
+		leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
+		rightEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    cbLeftPos.setDouble(leftEncoder.getPosition());
-    cbRightPos.setDouble(rightEncoder.getPosition());
-    cbSetPoint.setDouble(setPoint);
-    cbAtTarget.setBoolean(atTarget());
-    cbSwivel.setString(swivelState.toString());
-  }
+		// ==============================================================
+		// Configure PID controller
+		climbPIDController.setP(ClimberConstants.kP);
+		climbPIDController.setI(ClimberConstants.kI);
+		climbPIDController.setD(ClimberConstants.kD);
+		climbPIDController.setIZone(ClimberConstants.kIz);
+		climbPIDController.setFF(ClimberConstants.kFF);
+		climbPIDController.setOutputRange(ClimberConstants.kMinOutput, ClimberConstants.kMaxOutput);
 
-  public void climberSwivel() {
-    climbLeft.set(Value.kForward);
-    climbRight.set(Value.kForward);
-    swivelState = SwivelState.SWIVEL;
-  }
+		// ==============================================================
+		// Initialize devices before starting
+		// climberInit();
+		climberPerpendicular();
+		latchOpen();
+		latchTimer.start();
+		latchTimer.reset();
+		swivelTimer.start();
+		swivelTimer.reset();
 
-  public void climberPerpendicular() {
-    climbLeft.set(Value.kReverse);
-    climbRight.set(Value.kReverse);
-    swivelState = SwivelState.PERPENDICULAR;
-  }
+		System.out.println("----- Climber Constructor finished -----");
+	}
 
-  public SwivelState getSwivelState() {
-    return swivelState;
-  }
+	@Override
+	public void periodic() {
+		// This method will be called once per scheduler run
+		cbLeftPos.setDouble(leftEncoder.getPosition());
+		cbRightPos.setDouble(rightEncoder.getPosition());
+		cbSetPoint.setDouble(setPoint);
+		cbAtTarget.setBoolean(atTarget());
+		cbSwivel.setString(swivelState.toString());
+	}
 
-  public boolean atTarget() {
-    return Math.abs(setPoint - leftEncoder.getPosition()) <= ClimberConstants.kDistanceTolerance;
-  }
+	public SwivelState getSwivelState() {
+		return swivelState;
+	}
 
-  public void climbPosition(double setPoint) {
-    this.setPoint = setPoint;
-    cbSetPoint.setDouble(setPoint);
-    climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-  }
+	public LatchState getLatchState() {
+		return latchState;
+	}
 
-  public void climberInit() {
-    boolean leftDone = false;
-    boolean rightDone = false;
+	public boolean atTarget() {
+		return Math.abs(setPoint - leftEncoder.getPosition()) <= ClimberConstants.kDistanceTolerance;
+	}
 
-    climbLeftMotor.set(ClimberConstants.kInitSpeed);
-    climbRightMotor.set(ClimberConstants.kInitSpeed);
+	public void climbPosition(double setPoint) {
+		this.setPoint = setPoint;
+		cbSetPoint.setDouble(setPoint);
+		climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+	}
 
-    while (!leftDone && !rightDone) {
-      if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
-        climbLeftMotor.set(0.0);
-        rightEncoder.setPosition(0.0);
-        leftDone = true;
-      }
-      if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
-        climbRightMotor.set(0.0);
-        leftEncoder.setPosition(0.0);
-        rightDone = true;
-      }
-    }
+	public void climberInit() {
+		boolean leftDone = false;
+		boolean rightDone = false;
 
-    // Group the left and right motors
-    climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+		climbLeftMotor.set(ClimberConstants.kInitSpeed);
+		climbRightMotor.set(ClimberConstants.kInitSpeed);
 
-    setPoint = 0.0;
-    climbPosition(setPoint);
-  }
+		while (!leftDone && !rightDone) {
+			if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+				climbLeftMotor.set(0.0);
+				rightEncoder.setPosition(0.0);
+				leftDone = true;
+			}
+			if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+				climbRightMotor.set(0.0);
+				leftEncoder.setPosition(0.0);
+				rightDone = true;
+			}
+		}
+
+		// Group the left and right motors
+		climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+
+		setPoint = 0.0;
+		climbPosition(setPoint);
+	}
+
+	public void latchOpen() {
+		latchOpen(false);
+	}
+
+	public void latchOpen(boolean noWait) {
+		Thread thread = new Thread("LatchOpen") {
+			public void run() {
+				boolean waiting = false;
+				boolean complete = false;
+
+				while (!complete) {
+					if (!waiting) {
+						climbLatch.set(Value.kForward);
+
+						latchTimer.reset();
+						waiting = true;
+
+					} else {
+						if (latchTimer.hasElapsed(ClimberConstants.kLatchDelay) || noWait) {
+
+							latchState = LatchState.OPEN;
+							waiting = false;
+							complete = true;
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+	}
+
+	public void latchClose() {
+		latchClose(false);
+	}
+
+	public void latchClose(boolean noWait) {
+		Thread thread = new Thread("LatchClose") {
+			public void run() {
+				boolean waiting = false;
+				boolean complete = false;
+
+				while (!complete) {
+					if (!waiting) {
+						climbLatch.set(Value.kReverse);
+
+						latchTimer.reset();
+						waiting = true;
+
+					} else {
+						if (latchTimer.hasElapsed(ClimberConstants.kLatchDelay) || noWait) {
+
+							latchState = LatchState.CLOSE;
+							waiting = false;
+							complete = true;
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+	}
+
+	public void climberSwivel() {
+		climberSwivel(false);
+	}
+
+	public void climberSwivel(boolean noWait) {
+		Thread thread = new Thread("ClimbExtend") {
+			public void run() {
+				boolean waiting = false;
+				boolean complete = false;
+
+				while (!complete) {
+					if (!waiting) {
+						climbLeft.set(Value.kForward);
+						climbRight.set(Value.kForward);
+
+						swivelTimer.reset();
+						waiting = true;
+
+					} else {
+						if (swivelTimer.hasElapsed(ClimberConstants.kSwivelDelay) || noWait) {
+
+							swivelState = SwivelState.SWIVEL;
+							waiting = false;
+							complete = true;
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+	}
+
+	public void climberPerpendicular() {
+		climberPerpendicular(false);
+	}
+
+	public void climberPerpendicular(boolean noWait) {
+		Thread thread = new Thread("ClimberRetract") {
+			public void run() {
+				boolean waiting = false;
+				boolean complete = false;
+
+				while (!complete) {
+					if (!waiting) {
+						climbLeft.set(Value.kReverse);
+						climbRight.set(Value.kReverse);
+
+						swivelTimer.reset();
+						waiting = true;
+
+					} else {
+						if (swivelTimer.hasElapsed(ClimberConstants.kSwivelDelay) || noWait) {
+
+							swivelState = SwivelState.PERPENDICULAR;
+							waiting = false;
+							complete = true;
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+	}
+
 }

@@ -8,18 +8,25 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.LatchState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ClimberMidRungClimb extends SequentialCommandGroup {
-  /** Creates a new ClimberLowRungClimb. */
-  public ClimberMidRungClimb(Climber climber, Chassis chassis) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ClimberGoTo(climber, ClimberConstants.kClearLowRung), 
-    new ChasisDriveIntoRung(chassis),
-    new ClimberGoTo(climber, ClimberConstants.kLowRung), 
-    new ClimberGoTo(climber, ClimberConstants.kPullUp));
-  }
+
+	public ClimberMidRungClimb(Climber climber, Chassis chassis) {
+
+		/**
+		 * This command assumes robot has cleared the Low Rung and
+		 * is positioned to intercept the Mid Rung driving forward.
+		 */
+
+		addCommands(
+				new ClimberGoTo(climber, ClimberConstants.kEngageMidRung),
+				new ChasisDriveIntoRung(chassis),
+				new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
+				new ClimberLatch(climber, LatchState.CLOSE),
+				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
+	}
 }

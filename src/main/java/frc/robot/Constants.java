@@ -46,8 +46,8 @@ public final class Constants {
 		public static final int kClimbRightExtend = 2;
 		public static final int kClimbRightRetract = 3;
 
-		public static final int kPlungerExtend = 4;
-		public static final int kPlungerRetract = 5;
+		public static final int kLatchOpen = 4;
+		public static final int kLatchClose = 5;
 
 		public static final int kIntakeExtend = 6;
 		public static final int kIntakeRetract = 7;
@@ -126,22 +126,34 @@ public final class Constants {
 		public static final double kMinOutput = -1.0;
 		public static final double kMaxOutput = 1.0;
 
-		public static final double kPulleyCirc = Math.PI * (20 / 25.4); // meters
+		public static final double kRopeDia = 0.125; // inches add to Circ calc
+		public static final double kPulleyCirc = Math.PI * ((20 / 25.4) + kRopeDia); // inches
 		public static final int kEncoderResolution = 42; // not used, NEO's native units are rotations
 		public static final double kGearBoxRatio = 12;
 		public static final double kCountsPerRevGearbox = kEncoderResolution * kGearBoxRatio;
 		public static final double kPosFactorIPC = kPulleyCirc / kCountsPerRevGearbox; // Meters per Revolution
 		public static final double kPosFactorCPI = kCountsPerRevGearbox / kPulleyCirc; // Meters per Revolution
 
-		public static final double kLowRung = 47.0;// inches
-		public static final double kClearLowRung = 53.75;// inches
-		public static final double kFullExtendPerpendicular = 66.0;// inches
-		public static final double kFullExtendSwivel = 72.92;// inches
+		public static final double kClearUnder = 3.0;// inches below top of rung to clear
+		public static final double kEngageOver = 3.0;// inches avobe top of rung to engage
+		public static final double kLowRung = 48.75;// inches above floor
+		public static final double kClearLowRung = kLowRung - kClearUnder;// inches
+		public static final double kEngageLowRung = kLowRung + kEngageOver;// inches
+		public static final double kMidRung = 60.25;// inches aboave floor
+		public static final double kClearMidRung = kMidRung - kClearUnder;// inches
+		public static final double kEngageMidRung = kMidRung + kEngageOver;// inches
+		public static final double kEngageHighTrav = 66.0;// inches to extend to engage high and traverse rungs
+		public static final double kLatchHighTrav = 62.0;// inches to extend to latch high and traverse rungs
+		// public static final double kFullExtendPerpendicular = 66.0; // inches
+		// public static final double kFullExtendSwivel = 72.92;// inches
+		public static final double kPullUpLatch = 0.0; // inches to latch climber
+		public static final double kPullUpClear = 0.0; // inches to unhook while latched
 		public static final double kStow = 0.0;
 
-		public static final double kDistanceTolerance = 0.5;// inches
+		public static final double kDistanceTolerance = 0.5; // inches
 
-		public static final double kPullUp = 0;// inches
+		public static final double kLatchDelay = 1.0; // seconds
+		public static final double kSwivelDelay = 3.0; // seconds
 
 		public static final double kMaxAmps = 0;
 		public static final double kInitSpeed = 0;
@@ -164,13 +176,13 @@ public final class Constants {
 
 		public static final double kVelocityTolerance = 100.0; // rpms
 
-		public static final double kServoLeftOpen = 10.0;	// degrees
-		public static final double kServoLeftClosed = 100.0;	// degrees
-		public static final double kServoRightOpen = 100.0;	// degrees
-		public static final double kServoRightClosed = 10.0;	// degrees
+		public static final double kServoLeftOpen = 10.0; // degrees
+		public static final double kServoLeftClosed = 100.0; // degrees
+		public static final double kServoRightOpen = 100.0; // degrees
+		public static final double kServoRightClosed = 10.0; // degrees
 
-		public static final double kServoDelay = 1.0;	// second
-		public static final double kPlungerDelay = 3.0;	// second
+		public static final double kServoDelay = 1.0; // second
+		public static final double kPlungerDelay = 3.0; // second
 	}
 
 	public static final class IntakeConstants {

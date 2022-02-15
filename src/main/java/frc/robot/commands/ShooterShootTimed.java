@@ -13,45 +13,45 @@ import frc.robot.subsystems.Shooter.PlungerState;
 import frc.robot.RobotContainer;
 
 public class ShooterShootTimed extends CommandBase {
-  private Shooter shooter = null;
-  private RobotContainer robotContainer = null;
+	private Shooter shooter = null;
+	private RobotContainer robotContainer = null;
 
-  public ShooterShootTimed(Shooter shooter, RobotContainer robotContainer) {
-    this.shooter = shooter;
-    this.robotContainer = robotContainer;
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+	public ShooterShootTimed(Shooter shooter, RobotContainer robotContainer) {
+		this.shooter = shooter;
+		this.robotContainer = robotContainer;
+		// Use addRequirements() here to declare subsystem dependencies.
+	}
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    // empty
-  }
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
+		// empty
+	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
 
-    if (shooter.atTarget()
-        && shooter.getGuardState() == GuardState.CLOSED
-        && shooter.getPlungerState() == PlungerState.READY
-        && shooter.getShooterState() == ShooterState.CONTROLLED) {
+		if (shooter.atTarget()
+				&& shooter.getGuardState() == GuardState.CLOSED
+				&& shooter.getPlungerState() == PlungerState.READY
+				&& shooter.getShooterState() == ShooterState.CONTROLLED) {
 
-      shooter.plungerPlunge();
-    } else {
-      robotContainer.doRumble(robotContainer.operator, RumbleType.kRightRumble);
-    }
-  }
+			// shooter.plungerPlunge();
+		} else {
+			robotContainer.doRumble(robotContainer.operator, RumbleType.kRightRumble);
+		}
+	}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    // empty
-  }
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+		// empty
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		return false;
+	}
 }
