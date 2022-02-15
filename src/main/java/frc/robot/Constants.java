@@ -134,20 +134,24 @@ public final class Constants {
 		public static final double kPosFactorIPC = kPulleyCirc / kCountsPerRevGearbox; // Meters per Revolution
 		public static final double kPosFactorCPI = kCountsPerRevGearbox / kPulleyCirc; // Meters per Revolution
 
-		public static final double kClearUnder = 3.0;// inches below top of rung to clear
-		public static final double kEngageOver = 3.0;// inches avobe top of rung to engage
-		public static final double kLowRung = 48.75;// inches above floor
-		public static final double kClearLowRung = kLowRung - kClearUnder;// inches
-		public static final double kEngageLowRung = kLowRung + kEngageOver;// inches
-		public static final double kMidRung = 60.25;// inches aboave floor
-		public static final double kClearMidRung = kMidRung - kClearUnder;// inches
-		public static final double kEngageMidRung = kMidRung + kEngageOver;// inches
-		public static final double kEngageHighTrav = 66.0;// inches to extend to engage high and traverse rungs
-		public static final double kLatchHighTrav = 62.0;// inches to extend to latch high and traverse rungs
+		public static final double kFloor2Pulley = 10.4 + 33.3; // inches from floor to top of outer climber tube
+		public static final double kClearUnder = 3.0; // inches below top of rung to clear
+		public static final double kEngageOver = 3.0; // inches avobe top of rung to engage
+
+		public static final double kLowRung = 48.75; // inches above floor
+		public static final double kClearLowRung = kLowRung - kFloor2Pulley - kClearUnder; // inches
+		public static final double kEngageLowRung = kLowRung - kFloor2Pulley + kEngageOver; // inches
+		public static final double kMidRung = 60.25; // inches aboave floor
+		public static final double kClearMidRung = kMidRung - kFloor2Pulley - kClearUnder; // inches
+		public static final double kEngageMidRung = kMidRung - kFloor2Pulley + kEngageOver; // inches
+		public static final double kEngageHighTrav = 66.0 - kFloor2Pulley; // inches to extend to engage high and
+																			// traverse rungs
+		public static final double kLatchHighTrav = 62.0 - kFloor2Pulley; // inches to extend to latch high and traverse
+																			// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
 		// public static final double kFullExtendSwivel = 72.92;// inches
-		public static final double kPullUpLatch = 0.0; // inches to latch climber
-		public static final double kPullUpClear = 0.0; // inches to unhook while latched
+		public static final double kPullUpLatch = 3.0; // inches to latch climber
+		public static final double kPullUpClear = 6.0; // inches to unhook while latched
 		public static final double kStow = 0.0;
 
 		public static final double kDistanceTolerance = 0.5; // inches
