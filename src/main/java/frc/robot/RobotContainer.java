@@ -51,179 +51,181 @@ import frc.robot.commands.ShooterStop;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final Chassis chassis = new Chassis();
-  private final Climber climber = new Climber();
-  private final Intake intake = new Intake();
-  private final Hopper hopper = new Hopper();
-  private final Shooter shooter = new Shooter();
+	// The robot's subsystems and commands are defined here...
+	private final Chassis chassis = new Chassis();
+	private final Climber climber = new Climber();
+	private final Intake intake = new Intake();
+	private final Hopper hopper = new Hopper();
+	private final Shooter shooter = new Shooter();
 
-  // =============================================================
-  // Define Joysticks
-  public final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
-  public final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
+	// =============================================================
+	// Define Joysticks
+	public final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
+	public final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private static final double DEADZONE = 0.3;
+	private static final double DEADZONE = 0.3;
 
-  // Define a chooser for autonomous commands
-  private final SendableChooser<Command> chooser = new SendableChooser<>();
+	// Define a chooser for autonomous commands
+	private final SendableChooser<Command> chooser = new SendableChooser<>();
 
-  // =============================================================
-  // Define Commands here to avoid multiple instantiations
-  // If commands use Shuffleboard and are instantiated multiple time, an error
-  // is thrown on the second instantiation becuase the "title" already exists.
-  private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
-      () -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
-  private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
-      () -> -0.4, () -> -0.4);
-  private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
-      () -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
+	// =============================================================
+	// Define Commands here to avoid multiple instantiations
+	// If commands use Shuffleboard and are instantiated multiple time, an error
+	// is thrown on the second instantiation becuase the "title" already exists.
+	private final ChassisTankDrive chassisTankDrive = new ChassisTankDrive(chassis,
+			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
+	private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
+			() -> -0.4, () -> -0.4);
+	private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
+			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
 
-  private final ShooterShoot shoot = new ShooterShoot(shooter);
-  private final ShooterStop shooterStop = new ShooterStop(shooter);
-  private final ShooterPlungerExtend plungerExtend = new ShooterPlungerExtend(shooter);
-  private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
-  private final SHOOT SHOOT = new SHOOT(shooter);
+	private final ShooterShoot shoot = new ShooterShoot(shooter);
+	private final ShooterStop shooterStop = new ShooterStop(shooter);
+	private final ShooterPlungerExtend plungerExtend = new ShooterPlungerExtend(shooter);
+	private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
+	private final SHOOT SHOOT = new SHOOT(shooter);
 
-  private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
-  private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
-  private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
-  private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
-  // private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,
-  // ClimberConstants.kFullExtendPerpendicular);
-  // private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber,
-  // ClimberConstants.kFullExtendSwivel);
-  private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
-  private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
-  private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
-  private final CLIMB CLIMB = new CLIMB(climber, chassis);
+	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
+	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
+	private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
+	private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
+	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
+	// private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,
+	// ClimberConstants.kFullExtendPerpendicular);
+	// private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber,
+	// ClimberConstants.kFullExtendSwivel);
+	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
+	private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
+	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
+	private final CLIMB CLIMB = new CLIMB(climber, chassis);
 
-  private final IntakeArmExtend intakeArmExtend = new IntakeArmExtend(intake);
-  private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
-  private final IntakeStop intakeStop = new IntakeStop(intake);
+	private final IntakeArmExtend intakeArmExtend = new IntakeArmExtend(intake);
+	private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
+	private final IntakeStop intakeStop = new IntakeStop(intake);
 
-  private final DoRumble doRumble = new DoRumble(this);
+	private final DoRumble doRumble = new DoRumble(this);
 
-  private Timer rumbleTimer = new Timer();
+	private Timer rumbleTimer = new Timer();
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    // Configure the button bindings
-    configureButtonBindings();
+	/**
+	 * The container for the robot. Contains subsystems, OI devices, and commands.
+	 */
+	public RobotContainer() {
+		// Configure the button bindings
+		configureButtonBindings();
 
-    // ==============================================================================
-    // Add Subsystems to Dashboard
-    SmartDashboard.putData("Chassis", chassis);
-    SmartDashboard.putData("Shooter", shooter);
-    SmartDashboard.putData("Climber", climber);
-    SmartDashboard.putData("Intake", intake);
-    SmartDashboard.putData("Hopper", hopper);
+		// ==============================================================================
+		// Add Subsystems to Dashboard
+		SmartDashboard.putData("Chassis", chassis);
+		SmartDashboard.putData("Shooter", shooter);
+		SmartDashboard.putData("Climber", climber);
+		SmartDashboard.putData("Intake", intake);
+		SmartDashboard.putData("Hopper", hopper);
 
-    // ==============================================================================
-    // Add commands to the autonomous command chooser
-    chooser.setDefaultOption("Tank Drive", chassisTankDrive);
-    chooser.addOption("Arcade Drive", chassisArcadeDrive);
-    chooser.addOption("Modified Tank Drive", modifiedTankDrive);
-    // Put the chooser on the dashboard
-    SmartDashboard.putData(chooser);
+		// ==============================================================================
+		// Add commands to the autonomous command chooser
+		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
+		chooser.addOption("Arcade Drive", chassisArcadeDrive);
+		chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+		// Put the chooser on the dashboard
+		SmartDashboard.putData(chooser);
 
-    // =============================================================
-    // Configure default commands for each subsystem
-    chassis.setDefaultCommand(chassisTankDrive);
-    // climber.setDefaultCommand(climberStop);
-    intake.setDefaultCommand(intakeStop);
-    // hopper.setDefaultCommand(hopperStop);
-    shooter.setDefaultCommand(shooterStop);
+		// =============================================================
+		// Configure default commands for each subsystem
+		chassis.setDefaultCommand(chassisTankDrive);
+		// climber.setDefaultCommand(climberStop);
+		intake.setDefaultCommand(intakeStop);
+		// hopper.setDefaultCommand(hopperStop);
+		shooter.setDefaultCommand(shooterStop);
 
-    rumbleTimer.reset();
-    rumbleTimer.start();
-  }
+		rumbleTimer.reset();
+		rumbleTimer.start();
+	}
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
-    new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-    new JoystickButton(driver, Button.kX.value).whenPressed(modifiedTankDrive);
+	/**
+	 * Use this method to define your button->command mappings. Buttons can be
+	 * created by
+	 * instantiating a {@link GenericHID} or one of its subclasses ({@link
+	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
+	 * it to a {@link
+	 * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+	 */
+	private void configureButtonBindings() {
+		new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
+		new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
+		new JoystickButton(driver, Button.kX.value).whenPressed(modifiedTankDrive);
 
-    new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
-    new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(shooterStop);
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(shooterStop);
 
-    new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
-    new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
+		new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
-    new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
-    // new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
-    new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
-    // new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
-    // new JoystickButton(operator,
-    // Button.kA.value).whenPressed(toFullExtendSwivel);
-    // Will need a stow at soem point but will add in when rest is auto command
-    // because not enough buttons for testing
-    // new JoystickButton(operator, Button..value).whenPressed(toStow);
-  }
+		new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
+		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+		new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
+		new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
+		// new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
+		// new JoystickButton(operator,
+		// Button.kA.value).whenPressed(toFullExtendSwivel);
+		// Will need a stow at soem point but will add in when rest is auto command
+		// because not enough buttons for testing
+		// new JoystickButton(operator, Button..value).whenPressed(toStow);
+	}
 
-  public double getJoystick(double js) {
-    return Math.abs(js) < DEADZONE ? 0.0 : js;
-  }
+	public double getJoystick(double js) {
+		return Math.abs(js) < DEADZONE ? 0.0 : js;
+	}
 
-  public void setDriverRumble(GenericHID.RumbleType t) {
-    driver.setRumble(t, 1);
-  }
+	public void setDriverRumble(GenericHID.RumbleType t) {
+		driver.setRumble(t, 1);
+	}
 
-  public void resetDriverRumble(GenericHID.RumbleType t) {
-    driver.setRumble(t, 0);
-  }
+	public void resetDriverRumble(GenericHID.RumbleType t) {
+		driver.setRumble(t, 0);
+	}
 
-  public void setOperatorRumble(GenericHID.RumbleType t) {
-    operator.setRumble(t, 1);
-  }
+	public void setOperatorRumble(GenericHID.RumbleType t) {
+		operator.setRumble(t, 1);
+	}
 
-  public void resetOperatorRumble(GenericHID.RumbleType t) {
-    operator.setRumble(t, 0);
-  }
+	public void resetOperatorRumble(GenericHID.RumbleType t) {
+		operator.setRumble(t, 0);
+	}
 
-  public void doRumble(XboxController c, GenericHID.RumbleType t) {
-    Thread thread = new Thread("Rumble") {
-      public void run() {
-        boolean waiting = false;
-        boolean complete = false;
+	public void doRumble(XboxController c, GenericHID.RumbleType t) {
+		Thread thread = new Thread("Rumble") {
+			public void run() {
+				boolean waiting = false;
+				boolean complete = false;
 
-        while (!complete) {
-          if (!waiting) {
-            c.setRumble(t, 1);
+				while (!complete) {
+					if (!waiting) {
+						c.setRumble(t, 1);
 
-            rumbleTimer.reset();
-            waiting = true;
+						rumbleTimer.reset();
+						waiting = true;
 
-          } else {
-            if (rumbleTimer.hasElapsed(OIConstants.kRumbleDelay)) {
+					} else {
+						if (rumbleTimer.hasElapsed(OIConstants.kRumbleDelay)) {
 
-              c.setRumble(t, 0);
-              waiting = false;
-              complete = true;
-            }
-          }
-        }
-      }
-    };
-    thread.start();
-  }
+							c.setRumble(t, 0);
+							waiting = false;
+							complete = true;
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+	}
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return chooser.getSelected();
-  }
+	/**
+	 * Use this to pass the autonomous command to the main {@link Robot} class.
+	 *
+	 * @return the command to run in autonomous
+	 */
+	public Command getAutonomousCommand() {
+		return chooser.getSelected();
+	}
 }
