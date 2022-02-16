@@ -105,6 +105,9 @@ public final class Constants {
 		public static final double kvVoltSecondsPerMeter = 0.3;
 		public static final double kaVoltSecondsSquaredPerMeter = 0.01;
 
+		// Example value only - as above, this must be tuned for your drive!
+		public static final double kPDriveVel = 8.5;
+
 		public static final double kMaxSpeedMetersPerSecond = 1.0;
 		public static final double kMaxAccelerationMetersPerSecondSquared = 0.7;
 
@@ -115,6 +118,11 @@ public final class Constants {
 		public static final double kDistanceTolerance = 0.5;// inches
 
 		public static final double kAngleRungAttached = 15.0;// degrees
+
+		// Reasonable baseline values for a RAMSETE follower in units of meters and
+		// seconds
+		public static final double kRamseteB = 2;
+		public static final double kRamseteZeta = 0.7;
 	}
 
 	public static final class ClimberConstants {

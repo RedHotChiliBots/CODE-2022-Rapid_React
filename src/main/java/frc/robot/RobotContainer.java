@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -12,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.Chassis;
@@ -20,6 +24,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Climber.SwivelState;
+import frc.robot.Constants.ChassisConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -57,6 +62,7 @@ public class RobotContainer {
 	private final Intake intake = new Intake();
 	private final Hopper hopper = new Hopper();
 	private final Shooter shooter = new Shooter();
+  private final Robot robot = new Robot();
 
 	// =============================================================
 	// Define Joysticks
@@ -219,7 +225,7 @@ public class RobotContainer {
 		};
 		thread.start();
 	}
-
+ 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
 	 *

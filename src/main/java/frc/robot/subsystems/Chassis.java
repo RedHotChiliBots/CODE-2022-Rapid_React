@@ -38,8 +38,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Robot;
 import frc.robot.Constants.AnalogIOConstants;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ChassisConstants;
@@ -78,7 +79,7 @@ public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define autonomous support functions
-	private DifferentialDriveKinematics kinematics;
+	public DifferentialDriveKinematics kinematics;
 
 	private DifferentialDriveOdometry odometry;
 
@@ -91,6 +92,7 @@ public class Chassis extends SubsystemBase {
 
 	// An example trajectory to follow. All units in meters.
 	private Trajectory lineToRendezvousTrajectory;
+	private Trajectory BlueSideRung;
 
 	// ==============================================================
 	// Initialize NavX AHRS board
@@ -249,7 +251,7 @@ public class Chassis extends SubsystemBase {
 		sbLoPressure.setDouble(getLoPressure());
 
 		// Update field position - for autonomous
-		updateOdometry();
+		resetOdometry(lineToRendezvousTrajectory.getInitialPose());
 
 		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
@@ -326,23 +328,7 @@ public class Chassis extends SubsystemBase {
 	 *
 	 * @param speeds The desired wheel speeds.
 	 */
-	// public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
-	// double leftFeedforward = 0.0;//
-	// m_Feedforward.calculate(speeds.leftMetersPerSecond);
-	// double rightFeedforward = 0.0; //
-	// m_Feedforward.calculate(speeds.rightMetersPerSecond);
-
-	// double leftOutput =
-	// leftPIDController.calculate(leftMaster.getEncoder().getVelocity(),
-	// speeds.leftMetersPerSecond);
-	// double rightOutput =
-	// rightPIDController.calculate(rightMaster.getEncoder().getVelocity(),
-	// speeds.rightMetersPerSecond);
-
-	// leftMaster.set(leftOutput + leftFeedforward);
-	// rightMaster.set(rightOutput + rightFeedforward);
-	// }
-
+	
 	/**
 	 * Drives the robot with the given linear velocity and angular velocity.
 	 *
@@ -363,6 +349,16 @@ public class Chassis extends SubsystemBase {
 	public void updateOdometry() {
 		odometry.update(getAngle(), leftEncoder.getPosition(), rightEncoder.getPosition());
 	}
+
+	public void resetOdometry(Pose2d pose) {
+		resetEncoders();
+		odometry.resetPosition(pose, ahrs.getRotation2d());
+	}
+
+	public void resetEncoders() {
+	    leftEncoder.setPosition(0.0);
+	    rightEncoder.setPosition(0.0);
+    }
 
 	public void driveTrajectory(double left, double right) {
 		leftMaster.set(left);

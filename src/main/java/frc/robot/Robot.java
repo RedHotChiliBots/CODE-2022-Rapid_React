@@ -29,8 +29,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
-  String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
-  Trajectory BlueRungSideCargoToHub = new Trajectory();
+  private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
+  public Trajectory BlueRungSideCargoToHub = new Trajectory();
 
   /**
    * This function is run when the robot is first started up and should be used
