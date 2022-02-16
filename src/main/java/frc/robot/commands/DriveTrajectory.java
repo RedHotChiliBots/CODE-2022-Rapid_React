@@ -22,8 +22,23 @@ public class DriveTrajectory extends RamseteCommand {
   public DriveTrajectory(Chassis chassis, Trajectory trajectory) {
     // Use addRequirements() here to declare subsystem dependencies.
 
-    super(
-        trajectory,
+    // super(
+    //     trajectory,
+    //     chassis::getPose,
+    //     new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
+    //     new SimpleMotorFeedforward(
+    //         ChassisConstants.ksVolts,
+    //         ChassisConstants.kvVoltSecondsPerMeter,
+    //         ChassisConstants.kaVoltSecondsSquaredPerMeter),
+    //     chassis.kinematics,
+    //     chassis::getWheelSpeeds,
+    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+    //     // RamseteCommand passes volts to the callback
+    //     chassis::tankDriveVolts,
+    //     chassis);
+	super(
+		trajectory,
         chassis::getPose,
         new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
         new SimpleMotorFeedforward(
@@ -35,7 +50,7 @@ public class DriveTrajectory extends RamseteCommand {
         new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
         new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
         // RamseteCommand passes volts to the callback
-        chassis::tankDriveVolts,
+        chassis::driveTankVolts,
         chassis);
 
 	this.chassis = chassis;

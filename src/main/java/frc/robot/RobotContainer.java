@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -62,7 +69,7 @@ public class RobotContainer {
 	private final Intake intake = new Intake();
 	private final Hopper hopper = new Hopper();
 	private final Shooter shooter = new Shooter();
-  private final Robot robot = new Robot();
+//  	private final Robot robot = new Robot();
 
 	// =============================================================
 	// Define Joysticks
@@ -111,6 +118,13 @@ public class RobotContainer {
 
 	private final DoRumble doRumble = new DoRumble(this);
 
+	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
+	public Trajectory BlueRungSideCargoToHub = new Trajectory();
+  
+  
+	private RamseteCommand ramseteCommand = null;
+
+
 	private Timer rumbleTimer = new Timer();
 
 	/**
@@ -143,6 +157,29 @@ public class RobotContainer {
 		intake.setDefaultCommand(intakeStop);
 		// hopper.setDefaultCommand(hopperStop);
 		shooter.setDefaultCommand(shooterStop);
+
+		try {
+			Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath().resolve(BlueRungSideCargoToHubJSON);
+			BlueRungSideCargoToHub = TrajectoryUtil.fromPathweaverJson(BlueRungSideCargoToHubPath);
+		  } catch (IOException ex) {
+			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
+		  }
+		  
+		ramseteCommand = new RamseteCommand(
+		BlueRungSideCargoToHub,
+        chassis::getPose,
+        new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(
+            ChassisConstants.ksVolts,
+            ChassisConstants.kvVoltSecondsPerMeter,
+            ChassisConstants.kaVoltSecondsSquaredPerMeter),
+        chassis.kinematics,
+        chassis::getWheelSpeeds,
+        new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+        new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+        // RamseteCommand passes volts to the callback
+        chassis::driveTankVolts,
+        chassis);
 
 		rumbleTimer.reset();
 		rumbleTimer.start();

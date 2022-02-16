@@ -290,8 +290,14 @@ public class Chassis extends SubsystemBase {
 		return ahrs.getPitch();
 	}
 
-	public void driveTankVolts(double left, double right) {
-		diffDrive.tankDrive(left, right);
+	// public void driveTankVolts(double left, double right) {
+	// 	diffDrive.tankDrive(left, right);
+	// }
+
+	public void driveTankVolts(double leftVolts, double rightVolts) {
+		leftMaster.set(leftVolts);
+		rightMaster.setVoltage(rightVolts);
+		diffDrive.feed();
 	}
 
 	public void driveTank(double left, double right) {
