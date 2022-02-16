@@ -40,6 +40,7 @@ import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighTravClimb;
+import frc.robot.commands.ClimberInit;
 import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.DoRumble;
@@ -47,6 +48,7 @@ import frc.robot.commands.IntakeArmExtend;
 import frc.robot.commands.IntakeArmRetract;
 import frc.robot.commands.IntakeStop;
 import frc.robot.commands.DriveForward;
+import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterPlungerExtend;
 import frc.robot.commands.ShooterPlungerRetract;
@@ -65,11 +67,10 @@ import frc.robot.commands.ShooterStop;
 public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private final Chassis chassis = new Chassis();
-	private final Climber climber = new Climber();
+	private static final Climber climber = new Climber();
 	private final Intake intake = new Intake();
 	private final Hopper hopper = new Hopper();
 	private final Shooter shooter = new Shooter();
-//  	private final Robot robot = new Robot();
 
 	// =============================================================
 	// Define Joysticks
@@ -103,6 +104,7 @@ public class RobotContainer {
 	private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
 	private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
 	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
+	private final ClimberInit climberInit = new ClimberInit(climber);
 	// private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,
 	// ClimberConstants.kFullExtendPerpendicular);
 	// private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber,
@@ -121,11 +123,9 @@ public class RobotContainer {
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public Trajectory BlueRungSideCargoToHub = new Trajectory();
   
-  
-	private RamseteCommand ramseteCommand = null;
+  // private RamseteCommand ramseteCommand = null;
 
-
-	private Timer rumbleTimer = new Timer();
+  private Timer rumbleTimer = new Timer();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -165,25 +165,27 @@ public class RobotContainer {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
 		  }
 		  
-		ramseteCommand = new RamseteCommand(
-		BlueRungSideCargoToHub,
-        chassis::getPose,
-        new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(
-            ChassisConstants.ksVolts,
-            ChassisConstants.kvVoltSecondsPerMeter,
-            ChassisConstants.kaVoltSecondsSquaredPerMeter),
-        chassis.kinematics,
-        chassis::getWheelSpeeds,
-        new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
-        new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
-        // RamseteCommand passes volts to the callback
-        chassis::driveTankVolts,
-        chassis);
+		// ramseteCommand = new RamseteCommand(
+		// BlueRungSideCargoToHub,
+    //     chassis::getPose,
+    //     new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
+    //     new SimpleMotorFeedforward(
+    //         ChassisConstants.ksVolts,
+    //         ChassisConstants.kvVoltSecondsPerMeter,
+    //         ChassisConstants.kaVoltSecondsSquaredPerMeter),
+    //     chassis.kinematics,
+    //     chassis::getWheelSpeeds,
+    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
+    //     // RamseteCommand passes volts to the callback
+    //     chassis::driveTankVolts,
+    //     chassis);
 
 		rumbleTimer.reset();
 		rumbleTimer.start();
 	}
+
+  private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
 
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
@@ -206,6 +208,7 @@ public class RobotContainer {
 
 		new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
 		new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
 		new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
 		// new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
@@ -214,6 +217,12 @@ public class RobotContainer {
 		// Will need a stow at soem point but will add in when rest is auto command
 		// because not enough buttons for testing
 		// new JoystickButton(operator, Button..value).whenPressed(toStow);
+
+    new JoystickButton(driver, Button.kY.value).whenPressed(blueRungSideCargoToHubCommand);
+	}
+
+	public static Climber getClimber() {
+		return climber;
 	}
 
 	public double getJoystick(double js) {

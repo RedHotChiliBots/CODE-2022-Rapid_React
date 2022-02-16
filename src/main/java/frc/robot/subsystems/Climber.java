@@ -65,6 +65,10 @@ public class Climber extends SubsystemBase {
 	private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
 	private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
 	private final NetworkTableEntry cbSwivel = climberTab.addPersistent("Swivel State", "").getEntry();
+	private final NetworkTableEntry cbLeftPower = climberTab.addPersistent("Left Power", 0.0).getEntry();
+	private final NetworkTableEntry cbRightPower = climberTab.addPersistent("Right Power", 0.0).getEntry();
+	private final NetworkTableEntry cbLeftAmps = climberTab.addPersistent("Left Amps", 0.0).getEntry();
+	private final NetworkTableEntry cbRightAmps = climberTab.addPersistent("Right Amps", 0.0).getEntry();
 
 	// ==============================================================
 	// Define local variables
@@ -142,6 +146,10 @@ public class Climber extends SubsystemBase {
 		cbSetPoint.setDouble(setPoint);
 		cbAtTarget.setBoolean(atTarget());
 		cbSwivel.setString(swivelState.toString());
+		cbLeftPower.setDouble(climbLeftMotor.get());
+		cbRightPower.setDouble(climbRightMotor.get());
+		cbLeftAmps.setDouble(climbLeftMotor.getOutputCurrent());
+		cbRightAmps.setDouble(climbRightMotor.getOutputCurrent());
 	}
 
 	public SwivelState getSwivelState() {
@@ -166,19 +174,29 @@ public class Climber extends SubsystemBase {
 		boolean leftDone = false;
 		boolean rightDone = false;
 
+		System.out.println("climberInit starting");
+
 		climbLeftMotor.set(ClimberConstants.kInitSpeed);
 		climbRightMotor.set(ClimberConstants.kInitSpeed);
 
 		while (!leftDone && !rightDone) {
-			if (climbLeftMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+			System.out.println("Left: Amps: " + climbLeftMotor.getOutputCurrent() + " Power: " + climbLeftMotor.get());
+			System.out
+					.println("Right: Amps: " + climbRightMotor.getOutputCurrent() + " Power: " + climbRightMotor.get());
+
+			if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
 				climbLeftMotor.set(0.0);
 				rightEncoder.setPosition(0.0);
 				leftDone = true;
+
+				System.out.println("climberInit left done");
 			}
-			if (climbRightMotor.getOutputCurrent() < ClimberConstants.kMaxAmps) {
+			if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
 				climbRightMotor.set(0.0);
 				leftEncoder.setPosition(0.0);
 				rightDone = true;
+
+				System.out.println("climberInit right done");
 			}
 		}
 
@@ -187,6 +205,8 @@ public class Climber extends SubsystemBase {
 
 		setPoint = 0.0;
 		climbPosition(setPoint);
+
+		System.out.println("climberInit finished");
 	}
 
 	public void latchOpen() {
