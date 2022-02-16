@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.controller.RamseteController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,9 +21,7 @@ public class DriveTrajectory extends RamseteCommand {
 
   public DriveTrajectory(Chassis chassis, Trajectory trajectory) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.chassis = chassis;
-    this.trajectory = trajectory;
-    addRequirements(chassis);
+
     super(
         trajectory,
         chassis::getPose,
@@ -39,7 +37,12 @@ public class DriveTrajectory extends RamseteCommand {
         // RamseteCommand passes volts to the callback
         chassis::tankDriveVolts,
         chassis);
-  }
+
+	this.chassis = chassis;
+	this.trajectory = trajectory;
+	addRequirements(chassis);
+}
+
 
   // // Called when the command is initially scheduled.
   // @Override
