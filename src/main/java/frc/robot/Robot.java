@@ -42,12 +42,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    try {
-      Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath().resolve(BlueRungSideCargoToHubJSON);
-      BlueRungSideCargoToHub = TrajectoryUtil.fromPathweaverJson(BlueRungSideCargoToHubPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
-    }
 
     robotContainer = new RobotContainer();
   }

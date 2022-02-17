@@ -169,8 +169,10 @@ public final class Constants {
 
 		public static final double kLatchDelay = 1.0; // seconds
 		public static final double kSwivelDelay = 3.0; // seconds
+		public static final double kInitDelay = 10.0; // seconds
+		public static final double kInitSafety = 10.0; // seconds
 
-		public static final double kMaxAmps = 30.0;
+		public static final double kMaxAmps = 15.0;
 		public static final double kInitSpeed = 0.3;
 	}
 

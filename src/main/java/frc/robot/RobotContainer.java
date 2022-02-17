@@ -7,9 +7,6 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.Chassis;
@@ -31,7 +27,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Climber.SwivelState;
-import frc.robot.Constants.ChassisConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -105,10 +100,8 @@ public class RobotContainer {
 	private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
 	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
 	private final ClimberInit climberInit = new ClimberInit(climber);
-	// private final ClimberGoTo toFullExtendPerp = new ClimberGoTo(climber,
-	// ClimberConstants.kFullExtendPerpendicular);
-	// private final ClimberGoTo toFullExtendSwivel = new ClimberGoTo(climber,
-	// ClimberConstants.kFullExtendSwivel);
+	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
+	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav);
 	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
 	private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
 	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
@@ -122,10 +115,8 @@ public class RobotContainer {
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public Trajectory BlueRungSideCargoToHub = new Trajectory();
-  
-  // private RamseteCommand ramseteCommand = null;
 
-  private Timer rumbleTimer = new Timer();
+	private Timer rumbleTimer = new Timer();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -159,33 +150,18 @@ public class RobotContainer {
 		shooter.setDefaultCommand(shooterStop);
 
 		try {
-			Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath().resolve(BlueRungSideCargoToHubJSON);
+			Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(BlueRungSideCargoToHubJSON);
 			BlueRungSideCargoToHub = TrajectoryUtil.fromPathweaverJson(BlueRungSideCargoToHubPath);
-		  } catch (IOException ex) {
+		} catch (IOException ex) {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
-		  }
-		  
-		// ramseteCommand = new RamseteCommand(
-		// BlueRungSideCargoToHub,
-    //     chassis::getPose,
-    //     new RamseteController(ChassisConstants.kRamseteB, ChassisConstants.kRamseteZeta),
-    //     new SimpleMotorFeedforward(
-    //         ChassisConstants.ksVolts,
-    //         ChassisConstants.kvVoltSecondsPerMeter,
-    //         ChassisConstants.kaVoltSecondsSquaredPerMeter),
-    //     chassis.kinematics,
-    //     chassis::getWheelSpeeds,
-    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
-    //     new PIDController(ChassisConstants.kP, ChassisConstants.kI, ChassisConstants.kD),
-    //     // RamseteCommand passes volts to the callback
-    //     chassis::driveTankVolts,
-    //     chassis);
+		}
 
 		rumbleTimer.reset();
 		rumbleTimer.start();
 	}
 
-  private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
+	private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
 
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
@@ -207,18 +183,16 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
 		new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
-		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
 		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
 		new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
-		new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
-		// new JoystickButton(operator, Button.kX.value).whenPressed(toFullExtendPerp);
-		// new JoystickButton(operator,
-		// Button.kA.value).whenPressed(toFullExtendSwivel);
-		// Will need a stow at soem point but will add in when rest is auto command
-		// because not enough buttons for testing
-		// new JoystickButton(operator, Button..value).whenPressed(toStow);
 
-    new JoystickButton(driver, Button.kY.value).whenPressed(blueRungSideCargoToHubCommand);
+		// new JoystickButton(operator, Button..value).whenPressed(toStow);
+		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+		// new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
+		// new JoystickButton(operator, Button.kA.value).whenPressed(toHighTravEngage);
+		// new JoystickButton(operator, Button.kB.value).whenPressed(toHighTravLatch);
+
+		new JoystickButton(driver, Button.kY.value).whenPressed(blueRungSideCargoToHubCommand);
 	}
 
 	public static Climber getClimber() {
@@ -247,6 +221,7 @@ public class RobotContainer {
 
 	public void doRumble(XboxController c, GenericHID.RumbleType t) {
 		Thread thread = new Thread("Rumble") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -271,7 +246,7 @@ public class RobotContainer {
 		};
 		thread.start();
 	}
- 
+
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
 	 *

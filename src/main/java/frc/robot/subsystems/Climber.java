@@ -75,6 +75,7 @@ public class Climber extends SubsystemBase {
 	private double setPoint = 0;
 	Timer latchTimer = new Timer();
 	Timer swivelTimer = new Timer();
+	Timer initTimer = new Timer();
 
 	public enum SwivelState {
 		NA,
@@ -134,6 +135,8 @@ public class Climber extends SubsystemBase {
 		latchTimer.reset();
 		swivelTimer.start();
 		swivelTimer.reset();
+		initTimer.start();
+		initTimer.reset();
 
 		System.out.println("----- Climber Constructor finished -----");
 	}
@@ -171,42 +174,79 @@ public class Climber extends SubsystemBase {
 	}
 
 	public void climberInit() {
-		boolean leftDone = false;
-		boolean rightDone = false;
+		climberInit(false);
+	}
 
-		System.out.println("climberInit starting");
+	public void climberInit(boolean noWait) {
+		Thread thread = new Thread("ClimberInit") {
+			public void run() {
+				boolean complete = false;
+				boolean timedOut = false;
+				boolean leftDone = false;
+				boolean rightDone = false;
+				initTimer.reset();
 
-		climbLeftMotor.set(ClimberConstants.kInitSpeed);
-		climbRightMotor.set(ClimberConstants.kInitSpeed);
+				System.out.println("climberInit pending start");
 
-		while (!leftDone && !rightDone) {
-			System.out.println("Left: Amps: " + climbLeftMotor.getOutputCurrent() + " Power: " + climbLeftMotor.get());
-			System.out
-					.println("Right: Amps: " + climbRightMotor.getOutputCurrent() + " Power: " + climbRightMotor.get());
+				climbLeftMotor.set(ClimberConstants.kInitSpeed);
+				climbRightMotor.set(ClimberConstants.kInitSpeed);
 
-			if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
-				climbLeftMotor.set(0.0);
-				rightEncoder.setPosition(0.0);
-				leftDone = true;
+				while (!complete) {
+					double time = initTimer.get();
+					System.out.println(time +
+							"Left: Amps: " + climbLeftMotor.getOutputCurrent() + " Power: " + climbLeftMotor.get());
+					System.out.println(time +
+							"Right: Amps: " + climbRightMotor.getOutputCurrent() + " Power: " + climbRightMotor.get());
 
-				System.out.println("climberInit left done");
+					if (initTimer.hasElapsed(ClimberConstants.kInitDelay) || noWait) {
+
+						System.out.println("climberInit starting");
+
+						time = initTimer.get();
+						System.out.println(time +
+								"Left: Amps: " + climbLeftMotor.getOutputCurrent() + " Power: " + climbLeftMotor.get());
+						System.out.println(time +
+								"Right: Amps: " + climbRightMotor.getOutputCurrent() + " Power: "
+								+ climbRightMotor.get());
+
+						while ((!leftDone && !rightDone) && !timedOut) {
+
+							if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+								climbLeftMotor.set(0.0);
+								rightEncoder.setPosition(0.0);
+								leftDone = true;
+
+								System.out.println("climberInit left done");
+							}
+							if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+								climbRightMotor.set(0.0);
+								leftEncoder.setPosition(0.0);
+								rightDone = true;
+
+								System.out.println("climberInit right done");
+							}
+
+							if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
+								timedOut = true;
+								System.out.println("climberInit safety abort");
+							}
+						}
+					}
+					complete = true;
+				}
+
+				if (!timedOut) {
+					System.out.println("climberInit configure motors");
+					// Group the left and right motors
+					climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+
+					setPoint = 0.0;
+					climbPosition(setPoint);
+				}
+				System.out.println("climberInit finished");
 			}
-			if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
-				climbRightMotor.set(0.0);
-				leftEncoder.setPosition(0.0);
-				rightDone = true;
-
-				System.out.println("climberInit right done");
-			}
-		}
-
-		// Group the left and right motors
-		climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
-
-		setPoint = 0.0;
-		climbPosition(setPoint);
-
-		System.out.println("climberInit finished");
+		};
+		thread.start();
 	}
 
 	public void latchOpen() {
@@ -215,6 +255,7 @@ public class Climber extends SubsystemBase {
 
 	public void latchOpen(boolean noWait) {
 		Thread thread = new Thread("LatchOpen") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -246,6 +287,7 @@ public class Climber extends SubsystemBase {
 
 	public void latchClose(boolean noWait) {
 		Thread thread = new Thread("LatchClose") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -277,6 +319,7 @@ public class Climber extends SubsystemBase {
 
 	public void climberSwivel(boolean noWait) {
 		Thread thread = new Thread("ClimbExtend") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -309,6 +352,7 @@ public class Climber extends SubsystemBase {
 
 	public void climberPerpendicular(boolean noWait) {
 		Thread thread = new Thread("ClimberRetract") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -334,5 +378,4 @@ public class Climber extends SubsystemBase {
 		};
 		thread.start();
 	}
-
 }

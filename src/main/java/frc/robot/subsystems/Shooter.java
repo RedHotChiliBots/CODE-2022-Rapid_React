@@ -275,6 +275,7 @@ public class Shooter extends SubsystemBase {
 
 	public void guardOpen(boolean noWait) {
 		Thread thread = new Thread("ServoOpen") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
@@ -307,6 +308,7 @@ public class Shooter extends SubsystemBase {
 
 	public void guardClose(boolean noWait) {
 		Thread thread = new Thread("ServoOpen") {
+			@Override
 			public void run() {
 				boolean waiting = false;
 				boolean complete = false;
