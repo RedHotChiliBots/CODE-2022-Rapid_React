@@ -258,6 +258,10 @@ public class Chassis extends SubsystemBase {
 		Rotation2d rot = pose.getRotation();
 	}
 
+	public PowerDistribution getPDP() {
+		return pdp;
+	}
+
 	public DifferentialDriveOdometry getOdometry() {
 		return odometry;
 	}

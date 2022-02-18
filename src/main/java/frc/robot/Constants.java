@@ -66,6 +66,11 @@ public final class Constants {
 		public static final int kShooterRightServo = 1;
 	}
 
+	public static final class PDPChannelConstants {
+		public static final int kClimberRight = 13;
+		public static final int kClimberLeft = 14;
+	}
+
 	public static final class OIConstants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
