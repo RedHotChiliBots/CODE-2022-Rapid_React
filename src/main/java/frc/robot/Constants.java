@@ -174,11 +174,11 @@ public final class Constants {
 
 		public static final double kLatchDelay = 1.0; // seconds
 		public static final double kSwivelDelay = 3.0; // seconds
-		public static final double kInitDelay = 0.3; // seconds
+		public static final double kInitDelay = 0.25; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 
 		public static final double kMaxAmps = 10.0;
-		public static final double kInitSpeed = 0.4;
+		public static final double kInitSpeed = 0.3;
 	}
 
 	public static final class ShooterConstants {
