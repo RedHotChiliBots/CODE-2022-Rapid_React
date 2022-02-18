@@ -185,6 +185,7 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
 		new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
+		new JoystickButton(operator, Button.kB.value).whenPressed(toStow);
 
 		// new JoystickButton(operator, Button..value).whenPressed(toStow);
 		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
