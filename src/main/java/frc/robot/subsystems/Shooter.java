@@ -12,11 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,45 +24,33 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.DIOChannelConstants;
-import frc.robot.Constants.PWMChannelConstants;
-import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
 
 	// ==============================================================
 	// Define Motors
-	private final CANSparkMax shootLeadMotor = new CANSparkMax(
-			CANidConstants.kShooterLeadMotor,
+	private final CANSparkMax shootMotor = new CANSparkMax(
+			CANidConstants.kShooterMotor,
 			MotorType.kBrushless);
-	private final CANSparkMax shootFollowMotor = new CANSparkMax(
-			CANidConstants.kShooterFollowerMotor,
+	private final CANSparkMax injectorMotor = new CANSparkMax(
+			CANidConstants.kInjectorMotor,
 			MotorType.kBrushless);
 
 	// ==============================================================
 	// Define PID Controller
-	private final SparkMaxPIDController shootPIDController = shootLeadMotor.getPIDController();
+	private final SparkMaxPIDController shootPIDController = shootMotor.getPIDController();
+	private final SparkMaxPIDController injectPIDController = injectorMotor.getPIDController();
 
 	// ==============================================================
 	// Define Encoder
-	private final RelativeEncoder shootEncoder = shootLeadMotor.getEncoder();
-
-	// ==============================================================
-	// Define Solenoid
-	// private final DoubleSolenoid plunger = new
-	// DoubleSolenoid(PneumaticsModuleType.CTREPCM,
-	// PneumaticChannelConstants.kPlungerExtend,
-	// PneumaticChannelConstants.kPlungerRetract);
+	private final RelativeEncoder shootEncoder = shootMotor.getEncoder();
+	private final RelativeEncoder injectEncoder = injectorMotor.getEncoder();
 
 	// ==============================================================
 	// Define Digital Inputs
-	private final DigitalInput shooterEntering = new DigitalInput(DIOChannelConstants.kShooterEntering);
-	private final DigitalInput shooterExiting = new DigitalInput(DIOChannelConstants.kShooterExiting);
-
-	// ==============================================================
-	// Define PWM Connections (Servos)
-	private final Servo leftServo = new Servo(PWMChannelConstants.kShooterLeftServo);
-	private final Servo rightServo = new Servo(PWMChannelConstants.kShooterRightServo);
+	private final DigitalInput injectorEntering = new DigitalInput(DIOChannelConstants.kInjectorEntering);
+	private final DigitalInput injectorExiting = new DigitalInput(DIOChannelConstants.kInjectorExiting);
 
 	// ==============================================================
 	// Define Library
@@ -79,14 +63,13 @@ public class Shooter extends SubsystemBase {
 	private final NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
 	private final NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
 	private final NetworkTableEntry sbShooterState = shooterTab.addPersistent("Shooter State", "").getEntry();
-	private final NetworkTableEntry sbGuardState = shooterTab.addPersistent("Guard State", "").getEntry();
-	private final NetworkTableEntry sbPlungerState = shooterTab.addPersistent("Plunger State", "").getEntry();
 	private final NetworkTableEntry sbEntering = shooterTab.addPersistent("Entering", false).getEntry();
 	private final NetworkTableEntry sbExiting = shooterTab.addPersistent("Exiting", false).getEntry();
 
 	// ==============================================================
 	// Define local variables
 	private double shootSetPoint = 0.0;
+	private double injectSetPoint = 0.0;
 	private boolean running = false;
 
 	Timer plungerTimer = new Timer();
@@ -115,25 +98,29 @@ public class Shooter extends SubsystemBase {
 
 		// ==============================================================
 		// Configure Motors
-		shootLeadMotor.restoreFactoryDefaults();
-		shootFollowMotor.restoreFactoryDefaults();
+		shootMotor.restoreFactoryDefaults();
+		shootMotor.clearFaults();
+		shootMotor.setIdleMode(IdleMode.kBrake);
 
-		shootLeadMotor.clearFaults();
-		shootFollowMotor.clearFaults();
-
-		shootLeadMotor.setIdleMode(IdleMode.kBrake);
-		shootFollowMotor.setIdleMode(IdleMode.kBrake);
-
-		shootFollowMotor.follow(shootLeadMotor, true);
+		injectorMotor.restoreFactoryDefaults();
+		injectorMotor.clearFaults();
+		injectorMotor.setIdleMode(IdleMode.kBrake);
 
 		// ==============================================================
 		// Configure PID Controller
-		shootPIDController.setP(ShooterConstants.kP);
-		shootPIDController.setI(ShooterConstants.kI);
-		shootPIDController.setD(ShooterConstants.kD);
-		shootPIDController.setIZone(ShooterConstants.kIz);
-		shootPIDController.setFF(ShooterConstants.kFF);
-		shootPIDController.setOutputRange(ShooterConstants.kMinOutput, ShooterConstants.kMaxOutput);
+		injectPIDController.setP(ShooterConstants.kShootP);
+		injectPIDController.setI(ShooterConstants.kShootI);
+		injectPIDController.setD(ShooterConstants.kShootD);
+		injectPIDController.setIZone(ShooterConstants.kShootIz);
+		injectPIDController.setFF(ShooterConstants.kShootFF);
+		injectPIDController.setOutputRange(ShooterConstants.kShootMinOutput, ShooterConstants.kShootMaxOutput);
+
+		shootPIDController.setP(ShooterConstants.kInjectP);
+		shootPIDController.setI(ShooterConstants.kInjectI);
+		shootPIDController.setD(ShooterConstants.kInjectD);
+		shootPIDController.setIZone(ShooterConstants.kInjectIz);
+		shootPIDController.setFF(ShooterConstants.kInjectFF);
+		shootPIDController.setOutputRange(ShooterConstants.kInjectMinOutput, ShooterConstants.kInjectMaxOutput);
 
 		// ==============================================================
 		// Display PID coefficients on SmartDashboard
@@ -149,10 +136,7 @@ public class Shooter extends SubsystemBase {
 		// ==============================================================
 		// Initialize devices before starting
 		setShootVelocity(0.0);
-		guardOpen(true);
-		// plungerRetract();
-		// plungerTimer.reset();
-		// plungerTimer.start();
+		setInjectVelocity(0.0);
 		guardTimer.reset();
 		guardTimer.start();
 
@@ -194,20 +178,18 @@ public class Shooter extends SubsystemBase {
 
 		sbShootVel.setDouble(getShootVelocity());
 		sbSetPoint.setDouble(shootSetPoint);
-		sbAtTarget.setBoolean(atTarget());
+		sbAtTarget.setBoolean(atShootTarget());
 		sbShooterState.setString(shooterState.toString());
-		sbGuardState.setString(guardState.toString());
-		sbPlungerState.setString(plungerState.toString());
 		sbEntering.setBoolean(isEntering());
 		sbExiting.setBoolean(isExiting());
 	}
 
 	public boolean isEntering() {
-		return shooterEntering.get();
+		return injectorEntering.get();
 	}
 
 	public boolean isExiting() {
-		return shooterExiting.get();
+		return injectorExiting.get();
 	}
 
 	public void setShooterState(ShooterState state) {
@@ -218,24 +200,12 @@ public class Shooter extends SubsystemBase {
 		return shooterState;
 	}
 
-	public void setGuardState(GuardState state) {
-		guardState = state;
-	}
-
-	public GuardState getGuardState() {
-		return guardState;
-	}
-
-	public void setPlungerState(PlungerState state) {
-		plungerState = state;
-	}
-
-	public PlungerState getPlungerState() {
-		return plungerState;
-	}
-
 	public double getShootVelocity() {
 		return shootEncoder.getVelocity();
+	}
+
+	public double getInjectVelocity() {
+		return injectEncoder.getVelocity();
 	}
 
 	public void setShootVelocity(double rpm) {
@@ -243,8 +213,17 @@ public class Shooter extends SubsystemBase {
 		shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
 	}
 
+	public void setInjectVelocity(double rpm) {
+		this.injectSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxRPM, ShooterConstants.kMinRPM);
+		injectPIDController.setReference(injectSetPoint, ControlType.kVelocity);
+	}
+
 	public void stopShoot() {
 		setShootVelocity(0.0);
+	}
+
+	public void stopInject() {
+		setInjectVelocity(0.0);
 	}
 
 	public void setRunning(boolean r) {
@@ -255,114 +234,11 @@ public class Shooter extends SubsystemBase {
 		return running;
 	}
 
-	public boolean atTarget() {
-		return Math.abs(shootSetPoint - getShootVelocity()) <= ShooterConstants.kVelocityTolerance;
+	public boolean atShootTarget() {
+		return Math.abs(shootSetPoint - getShootVelocity()) <= ShooterConstants.kShootVelocityTolerance;
 	}
 
-	// public void plungerExtend() {
-	// plunger.set(Value.kForward);
-	// plungerState = PlungerState.ACTIVE;
-	// }
-
-	// public void plungerRetract() {
-	// plunger.set(Value.kReverse);
-	// plungerState = PlungerState.READY;
-	// }
-
-	public void guardOpen() {
-		guardOpen(false);
+	public boolean atInjectTarget() {
+		return Math.abs(shootSetPoint - getInjectVelocity()) <= ShooterConstants.kInjectVelocityTolerance;
 	}
-
-	public void guardOpen(boolean noWait) {
-		Thread thread = new Thread("ServoOpen") {
-			@Override
-			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
-
-				while (!complete) {
-					if (!waiting) {
-						leftServo.setAngle(ShooterConstants.kServoLeftOpen);
-						rightServo.setAngle(ShooterConstants.kServoRightOpen);
-
-						guardTimer.reset();
-						waiting = true;
-
-					} else {
-						if (guardTimer.hasElapsed(ShooterConstants.kServoDelay) || noWait) {
-
-							guardState = GuardState.OPEN;
-							waiting = false;
-							complete = true;
-						}
-					}
-				}
-			}
-		};
-		thread.start();
-	}
-
-	public void guardClose() {
-		guardClose(false);
-	}
-
-	public void guardClose(boolean noWait) {
-		Thread thread = new Thread("ServoOpen") {
-			@Override
-			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
-
-				while (!complete) {
-					if (!waiting) {
-						leftServo.setAngle(ShooterConstants.kServoLeftClosed);
-						rightServo.setAngle(ShooterConstants.kServoRightClosed);
-
-						guardTimer.reset();
-						waiting = true;
-
-					} else {
-						if (guardTimer.hasElapsed(ShooterConstants.kServoDelay) || noWait) {
-
-							guardState = GuardState.OPEN;
-							waiting = false;
-							complete = true;
-						}
-					}
-				}
-			}
-		};
-		thread.start();
-	}
-
-	// public void plungerPlunge() {
-	// plungerPlunge(false);
-	// }
-
-	// public void plungerPlunge(boolean noWait) {
-	// Thread thread = new Thread("Punger") {
-	// public void run() {
-	// boolean waiting = false;
-	// boolean complete = false;
-
-	// while (!complete) {
-	// if (!waiting) {
-	// plungerExtend();
-
-	// plungerTimer.reset();
-	// waiting = true;
-
-	// } else {
-	// if (plungerTimer.hasElapsed(ShooterConstants.kPlungerDelay) || noWait) {
-
-	// plungerRetract();
-	// waiting = false;
-	// complete = true;
-	// }
-	// }
-	// }
-	// }
-	// };
-	// thread.start();
-	// }
 }

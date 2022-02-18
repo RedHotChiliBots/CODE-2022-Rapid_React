@@ -30,6 +30,6 @@ public class ShooterAtSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.atTarget();
+    return shooter.atShootTarget();
   }
 }

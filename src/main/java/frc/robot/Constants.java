@@ -32,8 +32,8 @@ public final class Constants {
 		public static final int kClimbRightMotor = 20;
 		public static final int kClimbLeftMotor = 21;
 
-		public static final int kShooterLeadMotor = 30;
-		public static final int kShooterFollowerMotor = 31;
+		public static final int kShooterMotor = 30;
+		public static final int kInjectorMotor = 31;
 
 		public static final int kIntakeMotor = 40;
 
@@ -57,8 +57,8 @@ public final class Constants {
 		public static final int kIntakeEntering = 0;
 		public static final int kHopperEntering = 1;
 		public static final int kHopperExiting = 2;
-		public static final int kShooterEntering = 3;
-		public static final int kShooterExiting = 4;
+		public static final int kInjectorEntering = 3;
+		public static final int kInjectorExiting = 4;
 	}
 
 	public static final class PWMChannelConstants {
@@ -182,29 +182,31 @@ public final class Constants {
 	}
 
 	public static final class ShooterConstants {
-		public static final double kP = 0.00008;
-		public static final double kI = 0.0000004;
-		public static final double kD = 0.0;
-		public static final double kIz = 0.0;
-		public static final double kFF = 0.0;
-		public static final double kMinOutput = -0.5;
-		public static final double kMaxOutput = 0.5;
+		public static final double kShootP = 0.00008;
+		public static final double kShootI = 0.0000004;
+		public static final double kShootD = 0.0;
+		public static final double kShootIz = 0.0;
+		public static final double kShootFF = 0.0;
+		public static final double kShootMinOutput = -1.0;
+		public static final double kShootMaxOutput = 1.0;
+
+		public static final double kInjectP = 0.00008;
+		public static final double kInjectI = 0.0000004;
+		public static final double kInjectD = 0.0;
+		public static final double kInjectIz = 0.0;
+		public static final double kInjectFF = 0.0;
+		public static final double kInjectMinOutput = -1.0;
+		public static final double kInjectMaxOutput = 1.0;
 
 		public static final double kStopRPMs = 0.0;
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
 		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
+		public static final double kInjectorerShootRPMs = kMaxRPM * 0.45;
 
-		public static final double kVelocityTolerance = 100.0; // rpms
-
-		public static final double kServoLeftOpen = 10.0; // degrees
-		public static final double kServoLeftClosed = 100.0; // degrees
-		public static final double kServoRightOpen = 100.0; // degrees
-		public static final double kServoRightClosed = 10.0; // degrees
-
-		public static final double kServoDelay = 1.0; // second
-		public static final double kPlungerDelay = 3.0; // second
+		public static final double kShootVelocityTolerance = 100.0; // rpms
+		public static final double kInjectVelocityTolerance = 100.0; // rpms
 	}
 
 	public static final class IntakeConstants {

@@ -32,9 +32,9 @@ public class ShooterShootTimed extends CommandBase {
 	@Override
 	public void execute() {
 
-		if (shooter.atTarget()
-				&& shooter.getGuardState() == GuardState.CLOSED
-				&& shooter.getPlungerState() == PlungerState.READY
+		if (shooter.atShootTarget()
+				// && shooter.getGuardState() == GuardState.CLOSED
+				// && shooter.getPlungerState() == PlungerState.READY
 				&& shooter.getShooterState() == ShooterState.CONTROLLED) {
 
 			// shooter.plungerPlunge();
