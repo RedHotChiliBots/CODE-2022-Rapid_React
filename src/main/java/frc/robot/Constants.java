@@ -126,7 +126,7 @@ public final class Constants {
 	}
 
 	public static final class ClimberConstants {
-		public static final double kP = 0.2;
+		public static final double kP = 0.25;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
@@ -135,8 +135,8 @@ public final class Constants {
 		public static final double kMaxOutput = 1.0;
 
 		public static final double kRopeDia = 0.125; // inches add to Circ calc
-		public static final double kPulleyCirc = Math.PI * ((20.0 / 25.4) + kRopeDia); // inches
-		public static final int kEncoderResolution = 42; // not used, NEO's native units are rotations
+		public static final double kPulleyCirc = Math.PI * ((20.2 / 25.4) + kRopeDia); // inches
+		public static final int kEncoderResolution = 1; // not used, NEO's native units are rotations
 		public static final int kGearBoxRatio = 12;
 		public static final double kCountsPerRevGearbox = kEncoderResolution * kGearBoxRatio;
 		public static final double kPosFactorIPC = kPulleyCirc / kCountsPerRevGearbox; // inches per count
@@ -165,15 +165,15 @@ public final class Constants {
 		public static final double kStow = 0.0;
 		public static final double kOneRev = kPulleyCirc;
 
-		public static final double kDistanceTolerance = 0.5; // inches
+		public static final double kDistanceTolerance = 0.25; // inches
 
 		public static final double kLatchDelay = 1.0; // seconds
 		public static final double kSwivelDelay = 3.0; // seconds
-		public static final double kInitDelay = 10.0; // seconds
+		public static final double kInitDelay = 0.3; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 
-		public static final double kMaxAmps = 15.0;
-		public static final double kInitSpeed = 0.3;
+		public static final double kMaxAmps = 10.0;
+		public static final double kInitSpeed = 0.4;
 	}
 
 	public static final class ShooterConstants {
