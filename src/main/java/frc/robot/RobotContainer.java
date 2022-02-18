@@ -114,7 +114,7 @@ public class RobotContainer {
 	private final DoRumble doRumble = new DoRumble(this);
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
-	public Trajectory BlueRungSideCargoToHub = new Trajectory();
+	public Trajectory BlueRungSideCargoToHub = null;
 
 	private Timer rumbleTimer = new Timer();
 
