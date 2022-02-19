@@ -75,11 +75,11 @@ public class Shooter extends SubsystemBase {
 	Timer plungerTimer = new Timer();
 	Timer guardTimer = new Timer();
 
-	public enum ShooterState {
+	public enum InjectorState {
 		NA, EMPTY, ENTERING, CONTROLLED
 	}
 
-	private volatile ShooterState shooterState = ShooterState.NA;
+	private volatile InjectorState shooterState = InjectorState.NA;
 
 	public enum GuardState {
 		NA, OPEN, CLOSED
@@ -192,11 +192,11 @@ public class Shooter extends SubsystemBase {
 		return injectorExiting.get();
 	}
 
-	public void setShooterState(ShooterState state) {
+	public void setInjectorState(InjectorState state) {
 		shooterState = state;
 	}
 
-	public ShooterState getShooterState() {
+	public InjectorState getInjectorState() {
 		return shooterState;
 	}
 
@@ -209,12 +209,12 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void setShootVelocity(double rpm) {
-		this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxRPM, ShooterConstants.kMinRPM);
+		this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxShootRPM, ShooterConstants.kMinShootRPM);
 		shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
 	}
 
 	public void setInjectVelocity(double rpm) {
-		this.injectSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxRPM, ShooterConstants.kMinRPM);
+		this.injectSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxInjectRPM, ShooterConstants.kMinInjectRPM);
 		injectPIDController.setReference(injectSetPoint, ControlType.kVelocity);
 	}
 
