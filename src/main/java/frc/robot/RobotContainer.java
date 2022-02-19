@@ -77,6 +77,8 @@ public class RobotContainer {
 	// Define a chooser for autonomous commands
 	private final SendableChooser<Command> chooser = new SendableChooser<>();
 
+	private Timer rumbleTimer = new Timer();
+
 	// =============================================================
 	// Define Commands here to avoid multiple instantiations
 	// If commands use Shuffleboard and are instantiated multiple time, an error
@@ -116,7 +118,6 @@ public class RobotContainer {
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public Trajectory BlueRungSideCargoToHub = null;
 
-	private Timer rumbleTimer = new Timer();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
