@@ -43,25 +43,24 @@ import frc.robot.Constants.AnalogIOConstants;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ChassisConstants;
 
-
 public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define the left side motors, master and follower
 	private final CANSparkMax leftMaster = new CANSparkMax(
-		CANidConstants.kLeftMasterMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kLeftMasterMotor,
+			MotorType.kBrushless);
 	private final CANSparkMax leftFollower = new CANSparkMax(
-		CANidConstants.kLeftFollowerMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kLeftFollowerMotor,
+			MotorType.kBrushless);
 
 	// Define the right side motors, master and follower
 	private final CANSparkMax rightMaster = new CANSparkMax(
-		CANidConstants.kRightMasterMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kRightMasterMotor,
+			MotorType.kBrushless);
 	private final CANSparkMax rightFollower = new CANSparkMax(
-		CANidConstants.kRightFollowerMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kRightFollowerMotor,
+			MotorType.kBrushless);
 
 	private final DifferentialDrive diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
@@ -144,7 +143,7 @@ public class Chassis extends SubsystemBase {
 		// Configure the right side motors, master and follower
 		rightMaster.restoreFactoryDefaults();
 		rightFollower.restoreFactoryDefaults();
-		
+
 		rightMaster.clearFaults();
 		rightFollower.clearFaults();
 
@@ -227,7 +226,7 @@ public class Chassis extends SubsystemBase {
 
 		// ==============================================================
 		// Initialize devices before starting
-		resetFieldPosition(0.0, 0.0);	//Reset the field and encoder positions to zero
+		resetFieldPosition(0.0, 0.0); // Reset the field and encoder positions to zero
 
 		System.out.println("----- Chassis Constructor finished -----");
 	}
@@ -244,7 +243,7 @@ public class Chassis extends SubsystemBase {
 		sbPitch.setDouble(getPitch());
 		sbAngle.setDouble(getAngle().getDegrees());
 		sbHeading.setDouble(getHeading());
-	
+
 		sbHiPressure.setDouble(getHiPressure());
 		sbLoPressure.setDouble(getLoPressure());
 
@@ -288,12 +287,18 @@ public class Chassis extends SubsystemBase {
 		return t.getTotalTimeSeconds();
 	}
 
+	/**
+	 * Returns the current robot pitch reported by navX sensor.
+	 * 
+	 * @see com.kauailabs.navx.frc.AHRS.getPitch()
+	 * @return The current pitch value in degrees (-180 to 180).
+	 */
 	public double getPitch() {
 		return ahrs.getPitch();
 	}
 
 	// public void driveTankVolts(double left, double right) {
-	// 	diffDrive.tankDrive(left, right);
+	// diffDrive.tankDrive(left, right);
 	// }
 
 	public void driveTankVolts(double leftVolts, double rightVolts) {
@@ -312,11 +317,17 @@ public class Chassis extends SubsystemBase {
 
 	public void resetFieldPosition(double x, double y) {
 		ahrs.zeroYaw();
-		leftEncoder.setPosition(0.0);
-		rightEncoder.setPosition(0.0);
+		resetEncoders();
 		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
 	}
 
+	/**
+	 * Returns the "fused" (9-axis) heading.
+	 * 
+	 * @see com.kauailabs.navx.frc.AHRS.getFusedHeading()
+	 * @return Fused Heading in Degrees (range 0-360)
+	 * 
+	 */
 	public double getHeading() {
 		return ahrs.getFusedHeading();
 	}
@@ -336,7 +347,7 @@ public class Chassis extends SubsystemBase {
 	 *
 	 * @param speeds The desired wheel speeds.
 	 */
-	
+
 	/**
 	 * Drives the robot with the given linear velocity and angular velocity.
 	 *
@@ -364,9 +375,9 @@ public class Chassis extends SubsystemBase {
 	}
 
 	public void resetEncoders() {
-	    leftEncoder.setPosition(0.0);
-	    rightEncoder.setPosition(0.0);
-    }
+		leftEncoder.setPosition(0.0);
+		rightEncoder.setPosition(0.0);
+	}
 
 	public void driveTrajectory(double left, double right) {
 		leftMaster.set(left);
