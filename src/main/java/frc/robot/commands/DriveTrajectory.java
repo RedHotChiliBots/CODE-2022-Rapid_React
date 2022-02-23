@@ -16,7 +16,10 @@ public class DriveTrajectory extends SequentialCommandGroup {
   public DriveTrajectory(Chassis chassis, Trajectory trajectory) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ResetOdometry(chassis, trajectory),
-        new RamseteCommandOurs(chassis, trajectory));
+    addCommands(
+      new ResetOdometry(chassis, trajectory),
+      new RamseteCommandOurs(chassis, trajectory),
+      new DriveForward(chassis, 0.0, 0.0)
+      );
   }
 }

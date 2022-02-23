@@ -103,8 +103,8 @@ public final class Constants {
 		public static final double kVelFactor = kWheelCirc / kGearBoxRatio / 60.0; // Meters per Second
 		public static final double kCountsPerRevGearbox = kEncoderResolution * kGearBoxRatio;
 
-		public static final double kPosFactorIPC = kWheelCirc / kCountsPerRevGearbox; // Meters per Revolution
-		public static final double kPosFactorCPI = kCountsPerRevGearbox / kWheelCirc; // Meters per Revolution
+		public static final double kPosFactorMPC = kWheelCirc / kCountsPerRevGearbox; // Meters per Revolution
+		public static final double kPosFactorCPM = kCountsPerRevGearbox / kWheelCirc; // Meters per Revolution
 
 		public static final double ksVolts = 0.22;
 		public static final double kvVoltSecondsPerMeter = 0.3;

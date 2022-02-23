@@ -119,7 +119,6 @@ public class RobotContainer {
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public static Trajectory BlueRungSideCargoToHub = null;
 
-
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
@@ -163,8 +162,10 @@ public class RobotContainer {
 		configureButtonBindings();
 	}
 
-	//private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
+	// private final DriveTrajectory blueRungSideCargoToHubCommand = new
+	// DriveTrajectory(chassis, BlueRungSideCargoToHub);
 
+	//
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by
@@ -174,9 +175,10 @@ public class RobotContainer {
 	 * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
+		//new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-		new JoystickButton(driver, Button.kX.value).whenPressed(modifiedTankDrive);
+		new JoystickButton(driver, Button.kX.value).whenPressed(new DriveTrajectory(chassis, chassis.straight));
+		new JoystickButton(driver, Button.kA.value).whenPressed(new DriveTrajectory(chassis, chassis.bouncePath1));
 
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
 		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(shooterStop);

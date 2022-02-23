@@ -26,7 +26,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -90,8 +90,9 @@ public class Chassis extends SubsystemBase {
 	private TrajectoryConfig configReversed;
 
 	// An example trajectory to follow. All units in meters.
-	private Trajectory lineToRendezvousTrajectory;
+	public Trajectory straight;
 	private Trajectory BlueSideRung;
+	public Trajectory bouncePath1;
 
 	// ==============================================================
 	// Initialize NavX AHRS board
@@ -127,7 +128,7 @@ public class Chassis extends SubsystemBase {
 	private NetworkTableEntry sbX = chassisTab.addPersistent("Pose X", 0).getEntry();
 	private NetworkTableEntry sbY = chassisTab.addPersistent("Pose Y", 0).getEntry();
 	private NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
-	
+
 	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting +++++");
 
@@ -181,8 +182,8 @@ public class Chassis extends SubsystemBase {
 
 		// ==============================================================
 		// Configure encoders
-		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
-		rightEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorIPC);
+		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorMPC);
+		rightEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorMPC);
 
 		leftEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
 		rightEncoder.setVelocityConversionFactor(ChassisConstants.kVelFactor);
@@ -216,12 +217,26 @@ public class Chassis extends SubsystemBase {
 						.addConstraint(autoVoltageConstraint)
 						.setReversed(true);
 
-		lineToRendezvousTrajectory = TrajectoryGenerator.generateTrajectory(
-				new Pose2d(0, 1.7, new Rotation2d(0)),
-				List.of(new Translation2d(1, 1)),
-				new Pose2d(2.9, 3.9, new Rotation2d(0)),
+		straight = TrajectoryGenerator.generateTrajectory(
+				new Pose2d(0, 0, new Rotation2d(0)),
+				List.of(new Translation2d(1, 0)),
+				new Pose2d(2, 0, new Rotation2d(0)),
 				// Pass config
 				config);
+
+		bouncePath1 = TrajectoryGenerator.generateTrajectory(
+			// Start at the origin facing the +X direction
+			new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+			// Pass through these two interior waypoints, making an 's' curve path
+			// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+			List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)), 
+			new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)), 
+			new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
+			// End 3 meters straight ahead of where we started, facing forward
+			new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
+			// Pass config
+			config);
+
 
 		// ==============================================================
 		// Add static variables to Shuffleboard
@@ -261,6 +276,15 @@ public class Chassis extends SubsystemBase {
 
 		updateOdometry();
 
+		// // Get the desired pose from the trajectory.
+      	// var desiredPose = trajectory.sample(timer.get());
+
+      	// // Get the reference chassis speeds from the Ramsete controller.
+      	// var refChassisSpeeds = m_ramseteController.calculate(drive.getPose(), desiredPose);
+
+      	// // Set the linear and angular speeds.
+      	// drive.drive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
+    	
 		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
 		double x = trans.getX();

@@ -11,9 +11,14 @@ public class DriveForward extends CommandBase {
   /** Creates a new DriveForward. */
 
   Chassis chassis;
+  double left;
+  double right;
 
-  public DriveForward(Chassis chassis) {
+  public DriveForward(Chassis chassis, double left, double right) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.chassis = chassis;
+    this.left = left;
+    this.right = right;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +30,7 @@ public class DriveForward extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.drive(0.4, 0.0);
+    chassis.drive(left, right);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +42,6 @@ public class DriveForward extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return chassis.atTarget();
+    return true;
   }
 }
