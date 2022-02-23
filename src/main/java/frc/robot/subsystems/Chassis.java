@@ -225,18 +225,17 @@ public class Chassis extends SubsystemBase {
 				config);
 
 		bouncePath1 = TrajectoryGenerator.generateTrajectory(
-			// Start at the origin facing the +X direction
-			new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
-			// Pass through these two interior waypoints, making an 's' curve path
-			// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-			List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)), 
-			new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)), 
-			new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
-			// End 3 meters straight ahead of where we started, facing forward
-			new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
-			// Pass config
-			config);
-
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				// Pass through these two interior waypoints, making an 's' curve path
+				// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+				List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)),
+						new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)),
+						new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
+				// End 3 meters straight ahead of where we started, facing forward
+				new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
+				// Pass config
+				config);
 
 		// ==============================================================
 		// Add static variables to Shuffleboard
@@ -277,14 +276,16 @@ public class Chassis extends SubsystemBase {
 		updateOdometry();
 
 		// // Get the desired pose from the trajectory.
-      	// var desiredPose = trajectory.sample(timer.get());
+		// var desiredPose = trajectory.sample(timer.get());
 
-      	// // Get the reference chassis speeds from the Ramsete controller.
-      	// var refChassisSpeeds = m_ramseteController.calculate(drive.getPose(), desiredPose);
+		// // Get the reference chassis speeds from the Ramsete controller.
+		// var refChassisSpeeds = m_ramseteController.calculate(drive.getPose(),
+		// desiredPose);
 
-      	// // Set the linear and angular speeds.
-      	// drive.drive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-    	
+		// // Set the linear and angular speeds.
+		// drive.drive(refChassisSpeeds.vxMetersPerSecond,
+		// refChassisSpeeds.omegaRadiansPerSecond);
+
 		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
 		double x = trans.getX();
@@ -398,7 +399,7 @@ public class Chassis extends SubsystemBase {
 	 */
 	// @SuppressWarnings("ParameterName")
 	public void drive(double xSpeed, double xRot) {
-		var wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, -xRot));
+		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, -xRot));
 		leftMaster.set(wheelSpeeds.leftMetersPerSecond);
 		rightMaster.set(wheelSpeeds.rightMetersPerSecond);
 	}
