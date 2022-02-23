@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Climber.SwivelState;
@@ -39,9 +39,9 @@ import frc.robot.commands.ClimberInit;
 import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.DoRumble;
-import frc.robot.commands.IntakeArmExtend;
-import frc.robot.commands.IntakeArmRetract;
-import frc.robot.commands.IntakeStop;
+import frc.robot.commands.CollectorArmExtend;
+import frc.robot.commands.CollectorArmRetract;
+import frc.robot.commands.CollectorStop;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.RamseteCommandOurs;
@@ -64,7 +64,7 @@ public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private static final Chassis chassis = new Chassis();
 	private static final Climber climber = new Climber(chassis);
-	private final Intake intake = new Intake();
+	private final Collector collector = new Collector();
 	private final Hopper hopper = new Hopper();
 	private final Shooter shooter = new Shooter();
 
@@ -77,6 +77,8 @@ public class RobotContainer {
 
 	// Define a chooser for autonomous commands
 	private final SendableChooser<Command> chooser = new SendableChooser<>();
+
+	private Timer rumbleTimer = new Timer();
 
 	// =============================================================
 	// Define Commands here to avoid multiple instantiations
@@ -108,16 +110,15 @@ public class RobotContainer {
 	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
 	private final CLIMB CLIMB = new CLIMB(climber, chassis);
 
-	private final IntakeArmExtend intakeArmExtend = new IntakeArmExtend(intake);
-	private final IntakeArmRetract intakeArmRetract = new IntakeArmRetract(intake);
-	private final IntakeStop intakeStop = new IntakeStop(intake);
+	private final CollectorArmExtend collectorArmExtend = new CollectorArmExtend(collector);
+	private final CollectorArmRetract collectorArmRetract = new CollectorArmRetract(collector);
+	private final CollectorStop collectorStop = new CollectorStop(collector);
 
 	private final DoRumble doRumble = new DoRumble(this);
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public static Trajectory BlueRungSideCargoToHub = null;
 
-	private Timer rumbleTimer = new Timer();
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -129,7 +130,7 @@ public class RobotContainer {
 		SmartDashboard.putData("Chassis", chassis);
 		SmartDashboard.putData("Shooter", shooter);
 		SmartDashboard.putData("Climber", climber);
-		SmartDashboard.putData("Intake", intake);
+		SmartDashboard.putData("Collector", collector);
 		SmartDashboard.putData("Hopper", hopper);
 
 		// ==============================================================================
@@ -144,7 +145,7 @@ public class RobotContainer {
 		// Configure default commands for each subsystem
 		chassis.setDefaultCommand(chassisTankDrive);
 		// climber.setDefaultCommand(climberStop);
-		intake.setDefaultCommand(intakeStop);
+		collector.setDefaultCommand(collectorStop);
 		// hopper.setDefaultCommand(hopperStop);
 		shooter.setDefaultCommand(shooterStop);
 

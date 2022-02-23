@@ -35,7 +35,7 @@ public final class Constants {
 		public static final int kShooterMotor = 30;
 		public static final int kInjectorMotor = 31;
 
-		public static final int kIntakeMotor = 40;
+		public static final int kCollectorMotor = 40;
 
 		public static final int kHopperMotor = 50;
 	}
@@ -49,12 +49,12 @@ public final class Constants {
 		public static final int kLatchOpen = 4;
 		public static final int kLatchClose = 5;
 
-		public static final int kIntakeExtend = 6;
-		public static final int kIntakeRetract = 7;
+		public static final int kCollectorExtend = 6;
+		public static final int kCollectorRetract = 7;
 	}
 
 	public static final class DIOChannelConstants {
-		public static final int kIntakeEntering = 0;
+		public static final int kCollectorEntering = 0;
 		public static final int kHopperEntering = 1;
 		public static final int kHopperExiting = 2;
 		public static final int kInjectorEntering = 3;
@@ -199,17 +199,19 @@ public final class Constants {
 		public static final double kInjectMaxOutput = 1.0;
 
 		public static final double kStopRPMs = 0.0;
-		public static final double kMinRPM = -4540.0;
-		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+		public static final double kMinShootRPM = -4540.0;
+		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+		public static final double kMinInjectRPM = -4540.0;
+		public static final double kMaxInjectRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kShooterShootRPMs = kMaxRPM * 0.45;
-		public static final double kInjectorerShootRPMs = kMaxRPM * 0.45;
+		public static final double kShooterShootRPMs = kMaxShootRPM * 0.45;
+		public static final double kInjectorerShootRPMs = kMaxShootRPM * 0.45;
 
 		public static final double kShootVelocityTolerance = 100.0; // rpms
 		public static final double kInjectVelocityTolerance = 100.0; // rpms
 	}
 
-	public static final class IntakeConstants {
+	public static final class CollectorConstants {
 		public static final double kP = 0.00008;
 		public static final double kI = 0.0000004;
 		public static final double kD = 0.0;
@@ -222,7 +224,7 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kIntakeRPMs = kMaxRPM * 0.45;
+		public static final double kCollectorRPMs = kMaxRPM * 0.45;
 
 		public static final double kVelocityTolerance = 100.0; // rpms
 	}

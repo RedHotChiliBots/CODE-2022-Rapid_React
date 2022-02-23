@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.PDPChannelConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.CANidConstants;
 
 public class Climber extends SubsystemBase {
@@ -118,7 +117,7 @@ public class Climber extends SubsystemBase {
 		climbLeftMotor.setIdleMode(IdleMode.kBrake);
 		climbRightMotor.setIdleMode(IdleMode.kBrake);
 
-		climbLeftMotor.setInverted(true);
+		climbRightMotor.setInverted(true);
 
 		// // Group the left and right motors
 		// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right

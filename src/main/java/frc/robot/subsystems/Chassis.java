@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -306,6 +305,12 @@ public class Chassis extends SubsystemBase {
 		return t.getTotalTimeSeconds();
 	}
 
+	/**
+	 * Returns the current robot pitch reported by navX sensor.
+	 * 
+	 * @see com.kauailabs.navx.frc.AHRS.getPitch()
+	 * @return The current pitch value in degrees (-180 to 180).
+	 */
 	public double getPitch() {
 		return ahrs.getPitch();
 	}
@@ -330,11 +335,17 @@ public class Chassis extends SubsystemBase {
 
 	public void resetFieldPosition(double x, double y) {
 		ahrs.zeroYaw();
-		leftEncoder.setPosition(0.0);
-		rightEncoder.setPosition(0.0);
+		resetEncoders();
 		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
 	}
 
+	/**
+	 * Returns the "fused" (9-axis) heading.
+	 * 
+	 * @see com.kauailabs.navx.frc.AHRS.getFusedHeading()
+	 * @return Fused Heading in Degrees (range 0-360)
+	 * 
+	 */
 	public double getHeading() {
 		return ahrs.getFusedHeading();
 	}

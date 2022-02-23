@@ -4,21 +4,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Collector;
 
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.InjectorState;
-import frc.robot.RobotContainer;
+public class CollectorStop extends CommandBase {
+	/** Creates a new CollectorStop. */
 
-public class ShooterShootTimed extends CommandBase {
-	private Shooter shooter = null;
-	private RobotContainer robotContainer = null;
+	Collector collector;
 
-	public ShooterShootTimed(Shooter shooter, RobotContainer robotContainer) {
-		this.shooter = shooter;
-		this.robotContainer = robotContainer;
+	public CollectorStop(Collector collector) {
 		// Use addRequirements() here to declare subsystem dependencies.
+		this.collector = collector;
+		addRequirements(collector);
 	}
 
 	// Called when the command is initially scheduled.
@@ -30,16 +27,7 @@ public class ShooterShootTimed extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-
-		if (shooter.atShootTarget()
-				// && shooter.getGuardState() == GuardState.CLOSED
-				// && shooter.getPlungerState() == PlungerState.READY
-				&& shooter.getInjectorState() == InjectorState.CONTROLLED) {
-
-			// shooter.plungerPlunge();
-		} else {
-			robotContainer.doRumble(robotContainer.operator, RumbleType.kRightRumble);
-		}
+		collector.stopCollector();
 	}
 
 	// Called once the command ends or is interrupted.
