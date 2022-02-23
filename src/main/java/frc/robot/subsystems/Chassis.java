@@ -41,29 +41,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AnalogIOConstants;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ChassisConstants;
-
 
 public class Chassis extends SubsystemBase {
 
 	// ==============================================================
 	// Define the left side motors, master and follower
 	private final CANSparkMax leftMaster = new CANSparkMax(
-		CANidConstants.kLeftMasterMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kLeftMasterMotor,
+			MotorType.kBrushless);
 	private final CANSparkMax leftFollower = new CANSparkMax(
-		CANidConstants.kLeftFollowerMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kLeftFollowerMotor,
+			MotorType.kBrushless);
 
 	// Define the right side motors, master and follower
 	private final CANSparkMax rightMaster = new CANSparkMax(
-		CANidConstants.kRightMasterMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kRightMasterMotor,
+			MotorType.kBrushless);
 	private final CANSparkMax rightFollower = new CANSparkMax(
-		CANidConstants.kRightFollowerMotor, 
-		MotorType.kBrushless);
+			CANidConstants.kRightFollowerMotor,
+			MotorType.kBrushless);
 
 	private final DifferentialDrive diffDrive = new DifferentialDrive(leftMaster, rightMaster);
 
@@ -125,6 +125,10 @@ public class Chassis extends SubsystemBase {
 	private final NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
 	private final NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
 
+	private NetworkTableEntry sbX = chassisTab.addPersistent("Pose X", 0).getEntry();
+	private NetworkTableEntry sbY = chassisTab.addPersistent("Pose Y", 0).getEntry();
+	private NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
+	
 	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting +++++");
 
@@ -146,7 +150,7 @@ public class Chassis extends SubsystemBase {
 		// Configure the right side motors, master and follower
 		rightMaster.restoreFactoryDefaults();
 		rightFollower.restoreFactoryDefaults();
-		
+
 		rightMaster.clearFaults();
 		rightFollower.clearFaults();
 
@@ -229,7 +233,10 @@ public class Chassis extends SubsystemBase {
 
 		// ==============================================================
 		// Initialize devices before starting
-		resetFieldPosition(0.0, 0.0);	//Reset the field and encoder positions to zero
+		resetFieldPosition(0.0, 0.0); // Reset the field and encoder positions to zero
+
+		// Update field position - for autonomous
+		// resetOdometry(RobotContainer.BlueRungSideCargoToHub.getInitialPose());
 
 		System.out.println("----- Chassis Constructor finished -----");
 	}
@@ -246,16 +253,25 @@ public class Chassis extends SubsystemBase {
 		sbPitch.setDouble(getPitch());
 		sbAngle.setDouble(getAngle().getDegrees());
 		sbHeading.setDouble(getHeading());
-	
+
 		sbHiPressure.setDouble(getHiPressure());
 		sbLoPressure.setDouble(getLoPressure());
 
-		// Update field position - for autonomous
-		resetOdometry(lineToRendezvousTrajectory.getInitialPose());
+		// // Update field position - for autonomous
+		// resetOdometry(BlueSideRung.getInitialPose());
+
+		updateOdometry();
 
 		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
+		double x = trans.getX();
+		double y = trans.getY();
 		Rotation2d rot = pose.getRotation();
+		double deg = rot.getDegrees();
+
+		sbX.setDouble(x);
+		sbY.setDouble(y);
+		sbDeg.setDouble(deg);
 	}
 
 	public PowerDistribution getPDP() {
@@ -295,7 +311,7 @@ public class Chassis extends SubsystemBase {
 	}
 
 	// public void driveTankVolts(double left, double right) {
-	// 	diffDrive.tankDrive(left, right);
+	// diffDrive.tankDrive(left, right);
 	// }
 
 	public void driveTankVolts(double leftVolts, double rightVolts) {
@@ -338,7 +354,7 @@ public class Chassis extends SubsystemBase {
 	 *
 	 * @param speeds The desired wheel speeds.
 	 */
-	
+
 	/**
 	 * Drives the robot with the given linear velocity and angular velocity.
 	 *
@@ -366,9 +382,9 @@ public class Chassis extends SubsystemBase {
 	}
 
 	public void resetEncoders() {
-	    leftEncoder.setPosition(0.0);
-	    rightEncoder.setPosition(0.0);
-    }
+		leftEncoder.setPosition(0.0);
+		rightEncoder.setPosition(0.0);
+	}
 
 	public void driveTrajectory(double left, double right) {
 		leftMaster.set(left);

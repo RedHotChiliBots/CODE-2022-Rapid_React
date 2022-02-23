@@ -44,6 +44,7 @@ import frc.robot.commands.IntakeArmRetract;
 import frc.robot.commands.IntakeStop;
 import frc.robot.commands.DriveForward;
 import frc.robot.commands.DriveTrajectory;
+import frc.robot.commands.RamseteCommandOurs;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterPlungerExtend;
 import frc.robot.commands.ShooterPlungerRetract;
@@ -114,7 +115,7 @@ public class RobotContainer {
 	private final DoRumble doRumble = new DoRumble(this);
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
-	public Trajectory BlueRungSideCargoToHub = null;
+	public static Trajectory BlueRungSideCargoToHub = null;
 
 	private Timer rumbleTimer = new Timer();
 
@@ -122,8 +123,6 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		// Configure the button bindings
-		configureButtonBindings();
 
 		// ==============================================================================
 		// Add Subsystems to Dashboard
@@ -159,9 +158,11 @@ public class RobotContainer {
 
 		rumbleTimer.reset();
 		rumbleTimer.start();
+
+		configureButtonBindings();
 	}
 
-	private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
+	//private final DriveTrajectory blueRungSideCargoToHubCommand = new DriveTrajectory(chassis, BlueRungSideCargoToHub);
 
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
@@ -193,7 +194,7 @@ public class RobotContainer {
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toHighTravEngage);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toHighTravLatch);
 
-		new JoystickButton(driver, Button.kY.value).whenPressed(blueRungSideCargoToHubCommand);
+		new JoystickButton(driver, Button.kY.value).whenPressed(new DriveTrajectory(chassis, BlueRungSideCargoToHub));
 	}
 
 	public static Climber getClimber() {
