@@ -43,6 +43,7 @@ import frc.robot.commands.CollectorArmExtend;
 import frc.robot.commands.CollectorArmRetract;
 import frc.robot.commands.CollectorStop;
 import frc.robot.commands.DriveForward;
+import frc.robot.commands.DrivePosition;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.RamseteCommandOurs;
 import frc.robot.commands.SHOOT;
@@ -177,7 +178,7 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		//new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-		new JoystickButton(driver, Button.kX.value).whenPressed(new DriveTrajectory(chassis, chassis.straight));
+		new JoystickButton(driver, Button.kX.value).whenPressed(new DrivePosition(chassis, 1.0));
 		new JoystickButton(driver, Button.kA.value).whenPressed(new DriveTrajectory(chassis, chassis.bouncePath1));
 
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);

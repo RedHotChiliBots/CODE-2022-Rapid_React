@@ -32,6 +32,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -129,6 +130,8 @@ public class Chassis extends SubsystemBase {
 	private NetworkTableEntry sbY = chassisTab.addPersistent("Pose Y", 0).getEntry();
 	private NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
 
+	private NetworkTableEntry sbSetPt = chassisTab.addPersistent("Setpoint", 0.0).getEntry();
+
 	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting +++++");
 
@@ -225,18 +228,17 @@ public class Chassis extends SubsystemBase {
 				config);
 
 		bouncePath1 = TrajectoryGenerator.generateTrajectory(
-			// Start at the origin facing the +X direction
-			new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
-			// Pass through these two interior waypoints, making an 's' curve path
-			// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-			List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)), 
-			new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)), 
-			new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
-			// End 3 meters straight ahead of where we started, facing forward
-			new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
-			// Pass config
-			config);
-
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				// Pass through these two interior waypoints, making an 's' curve path
+				// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+				List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)),
+						new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)),
+						new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
+				// End 3 meters straight ahead of where we started, facing forward
+				new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
+				// Pass config
+				config);
 
 		// ==============================================================
 		// Add static variables to Shuffleboard
@@ -271,20 +273,24 @@ public class Chassis extends SubsystemBase {
 		sbHiPressure.setDouble(getHiPressure());
 		sbLoPressure.setDouble(getLoPressure());
 
+		sbSetPt.setDouble(setPoint);
+
 		// // Update field position - for autonomous
 		// resetOdometry(BlueSideRung.getInitialPose());
 
 		updateOdometry();
 
 		// // Get the desired pose from the trajectory.
-      	// var desiredPose = trajectory.sample(timer.get());
+		// var desiredPose = trajectory.sample(timer.get());
 
-      	// // Get the reference chassis speeds from the Ramsete controller.
-      	// var refChassisSpeeds = m_ramseteController.calculate(drive.getPose(), desiredPose);
+		// // Get the reference chassis speeds from the Ramsete controller.
+		// var refChassisSpeeds = m_ramseteController.calculate(drive.getPose(),
+		// desiredPose);
 
-      	// // Set the linear and angular speeds.
-      	// drive.drive(refChassisSpeeds.vxMetersPerSecond, refChassisSpeeds.omegaRadiansPerSecond);
-    	
+		// // Set the linear and angular speeds.
+		// drive.drive(refChassisSpeeds.vxMetersPerSecond,
+		// refChassisSpeeds.omegaRadiansPerSecond);
+
 		Pose2d pose = odometry.getPoseMeters();
 		Translation2d trans = pose.getTranslation();
 		double x = trans.getX();
@@ -344,7 +350,7 @@ public class Chassis extends SubsystemBase {
 	// }
 
 	public void driveTankVolts(double leftVolts, double rightVolts) {
-		leftMaster.set(leftVolts);
+		leftMaster.setVoltage(leftVolts);
 		rightMaster.setVoltage(rightVolts);
 		diffDrive.feed();
 	}
@@ -379,9 +385,14 @@ public class Chassis extends SubsystemBase {
 	 *
 	 * @return The angle of the robot.
 	 */
+	// public Rotation2d getAngle() {
+	// // Negating the angle because WPILib gyros are CW positive.
+	// return Rotation2d.fromDegrees(-ahrs.getYaw());
+	// }
+
 	public Rotation2d getAngle() {
 		// Negating the angle because WPILib gyros are CW positive.
-		return Rotation2d.fromDegrees(-ahrs.getYaw());
+		return ahrs.getRotation2d();
 	}
 
 	/**
@@ -413,7 +424,7 @@ public class Chassis extends SubsystemBase {
 
 	public void resetOdometry(Pose2d pose) {
 		resetEncoders();
-		odometry.resetPosition(pose, ahrs.getRotation2d());
+		odometry.resetPosition(pose, getAngle());
 	}
 
 	public void resetEncoders() {
@@ -428,14 +439,13 @@ public class Chassis extends SubsystemBase {
 
 	public void drivePosition(double setPoint) {
 		this.setPoint = setPoint;
-		SmartDashboard.putNumber("PIDSetpoint", setPoint);
 		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 		rightPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 	}
 
 	public boolean atTarget() {
 		return Math.abs(setPoint - leftEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance &&
-				Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
+			Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
 	}
 
 	public double getLoPressure() {

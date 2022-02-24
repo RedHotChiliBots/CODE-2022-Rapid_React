@@ -87,7 +87,7 @@ public final class Constants {
 
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
-		public static final double kP = 0.000000000005;
+		public static final double kP = 0.0005;
 		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
@@ -95,8 +95,9 @@ public final class Constants {
 		public static final double kMinOutput = -1.0;
 		public static final double kMaxOutput = 1.0;
 
-		public static final double kTrackWidth = Units.inchesToMeters(26.341); // meters
-		public static final double kWheelCirc = Units.inchesToMeters(Math.PI * 8.0); // meters
+		public static final double kMetersPerInch = 0.0254;
+		public static final double kTrackWidth = 26.341 * kMetersPerInch; // meters
+		public static final double kWheelCirc = (Math.PI * 8.0) * kMetersPerInch; // meters
 		public static final int kEncoderResolution = 1; // not used, NEO's native units are rotations
 		public static final double kGearBoxRatio = 10.71;
 		public static final double kPosFactor = kWheelCirc / kGearBoxRatio; // Meters per Revolution
@@ -120,7 +121,7 @@ public final class Constants {
 		public static final double kDistI = 0.0;
 		public static final double kDistD = 0.0;
 
-		public static final double kDistanceTolerance = 0.5;// inches
+		public static final double kDistanceTolerance = 0.05;// meters
 
 		public static final double kAngleRungAttached = 15.0;// degrees
 
