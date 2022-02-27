@@ -72,6 +72,14 @@ public class Collector extends SubsystemBase {
 	private double collectorSetPoint = 0.0;
 	private boolean running = false;
 
+	public enum ArmState {
+		NA,
+		DEPLOY,
+		STOW
+	}
+
+	private ArmState armState = ArmState.NA;
+
 	public enum CollectorState {
 		NA,
 		EMPTY,

@@ -117,14 +117,17 @@ public class Climber extends SubsystemBase {
 		climbLeftMotor.setIdleMode(IdleMode.kBrake);
 		climbRightMotor.setIdleMode(IdleMode.kBrake);
 
+		climbLeftMotor.setInverted(true);
 		climbRightMotor.setInverted(true);
+
+		//climbRightMotor.setInverted(true);
 
 		// // Group the left and right motors
 		// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
 		// motor
 
 		// ==============================================================
-		// Configure left and right Encoders
+		// Configure left and right Encoders		
 		leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 		rightEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 
@@ -207,15 +210,15 @@ public class Climber extends SubsystemBase {
 				System.out.println("climberInit pending start");
 
 				climbLeftMotor.set(ClimberConstants.kInitSpeed);
-				climbRightMotor.set(ClimberConstants.kInitSpeed);
+				climbRightMotor.set(-ClimberConstants.kInitSpeed);
 
 				while (!complete) {
 					time = initTimer.get();
 					System.out.println(df.format(time) +
-							" Left:  Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft)) + " Power: "
+							" Left:  Amps: " + df.format(climbLeftMotor.getOutputCurrent()) + " Power: "
 							+ df.format(climbLeftMotor.get()));
 					System.out.println(df.format(time) +
-							" Right: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight)) + " Power: "
+							" Right: Amps: " + df.format(climbRightMotor.getOutputCurrent()) + " Power: "
 							+ df.format(climbRightMotor.get()));
 
 					if (initTimer.hasElapsed(ClimberConstants.kInitDelay) || noWait) {
@@ -225,25 +228,32 @@ public class Climber extends SubsystemBase {
 
 						time = initTimer.get();
 						System.out.println(df.format(time) +
-								" Left:  Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft))
+								" Left:  Amps: " + df.format(climbLeftMotor.getOutputCurrent())
 								+ " Power: " + df.format(climbLeftMotor.get()));
 						System.out.println(df.format(time) +
-								" Right: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight))
+								" Right: Amps: " + df.format(climbRightMotor.getOutputCurrent())
 								+ " Power: " + df.format(climbRightMotor.get()));
 
 						while (!(leftDone && rightDone) && !timedOut) {
+							time = initTimer.get();
+							System.out.println(df.format(time) +
+									" Left:  Amps: " + df.format(climbLeftMotor.getOutputCurrent())
+									+ " Power: " + df.format(climbLeftMotor.get()));
+							System.out.println(df.format(time) +
+									" Right: Amps: " + df.format(climbRightMotor.getOutputCurrent())
+									+ " Power: " + df.format(climbRightMotor.get()));
 
-							if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+							if (!leftDone && (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps)) {
 								climbLeftMotor.set(0.0);
-								rightEncoder.setPosition(0.0);
+								leftEncoder.setPosition(0.0);
 								leftDone = true;
 
 								time = initTimer.get();
 								System.out.println(df.format(time) + " climberInit left done");
 							}
-							if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+							if (!rightDone && (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps)) {
 								climbRightMotor.set(0.0);
-								leftEncoder.setPosition(0.0);
+								rightEncoder.setPosition(0.0);
 								rightDone = true;
 
 								time = initTimer.get();

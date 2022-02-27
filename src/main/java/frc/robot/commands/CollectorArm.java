@@ -6,22 +6,29 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Collector.ArmState;
 
-public class CollectorArmExtend extends CommandBase {
+public class CollectorArm extends CommandBase {
 	/** Creates a new CollectorArmExtend. */
 
 	Collector collector;
+	ArmState armState;
 
-	public CollectorArmExtend(Collector collector) {
+	public CollectorArm(Collector collector, ArmState armState) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.collector = collector;
+		this.armState = armState;
 		addRequirements(collector);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		collector.collectorArmExtend();
+		if (armState == ArmState.DEPLOY) {
+			collector.collectorArmExtend();
+		} else {
+			collector.collectorArmRetract();
+		}
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

@@ -26,7 +26,9 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Climber.LatchState;
 import frc.robot.subsystems.Climber.SwivelState;
+import frc.robot.subsystems.Collector.ArmState;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 
@@ -36,16 +38,14 @@ import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberInit;
+import frc.robot.commands.ClimberLatch;
 import frc.robot.commands.ClimberMidRungClimb;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.DoRumble;
-import frc.robot.commands.CollectorArmExtend;
-import frc.robot.commands.CollectorArmRetract;
+import frc.robot.commands.CollectorArm;
 import frc.robot.commands.CollectorStop;
-import frc.robot.commands.DriveForward;
 import frc.robot.commands.DrivePosition;
 import frc.robot.commands.DriveTrajectory;
-import frc.robot.commands.RamseteCommandOurs;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterPlungerExtend;
 import frc.robot.commands.ShooterPlungerRetract;
@@ -90,16 +90,17 @@ public class RobotContainer {
 	private final ChassisTankDrive modifiedTankDrive = new ChassisTankDrive(chassis,
 			() -> -0.4, () -> -0.4);
 	private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
-			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightY()));
+			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightX()));
 
 	private final ShooterShoot shoot = new ShooterShoot(shooter);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
-	private final ShooterPlungerExtend plungerExtend = new ShooterPlungerExtend(shooter);
-	private final ShooterPlungerRetract plungerRetract = new ShooterPlungerRetract(shooter);
 	private final SHOOT SHOOT = new SHOOT(shooter);
 
 	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
 	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
+	private final ClimberLatch climberOpen = new ClimberLatch(climber, LatchState.OPEN);
+	private final ClimberLatch climberClose = new ClimberLatch(climber, LatchState.CLOSE);
+
 	private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
 	private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
 	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
@@ -111,14 +112,35 @@ public class RobotContainer {
 	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
 	private final CLIMB CLIMB = new CLIMB(climber, chassis);
 
-	private final CollectorArmExtend collectorArmExtend = new CollectorArmExtend(collector);
-	private final CollectorArmRetract collectorArmRetract = new CollectorArmRetract(collector);
+	private final CollectorArm collectorDeploy = new CollectorArm(collector, ArmState.DEPLOY);
+	private final CollectorArm collectorStow = new CollectorArm(collector, ArmState.STOW);
 	private final CollectorStop collectorStop = new CollectorStop(collector);
 
 	private final DoRumble doRumble = new DoRumble(this);
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public static Trajectory BlueRungSideCargoToHub = null;
+	// private String BlueRungSideHubToCargoJSON = "paths/output/BlueRungSideHubToCargo.wpilib.json";
+	// public static Trajectory BlueRungSideHubToCargo = null;
+	// private String unnamedJSON = "paths/output/Unnamed.wpilib.json";
+	// public static Trajectory unnamed = null;
+
+	private String RedTermSideOneCargoJSON = "paths/output/A1A.wpilib.json";
+	public static Trajectory RedTermSideOneCargo = null;
+	private String RedTermSideCargoAndTermJSON = "paths/output/A2TermA.wpilib.json";
+	public static Trajectory RedTermSideCargoAndTerm = null;
+	private String BlueTermSideOneCargoJSON = "paths/output/C7C.wpilib.json";
+	public static Trajectory BlueTermSideOneCargo = null;
+	private String BlueTermSideCargoAndTermJSON = "paths/output/C8TermC.wpilib.json";
+	public static Trajectory BlueTermSideCargoAndTerm = null;
+	private String RedRungSideCrossJSON = "paths/output/H6B.wpilib.json";
+	public static Trajectory RedRungSideCross = null;
+	private String BlueRungSideCrossJSON = "paths/output/M12D.wpilib.json";
+	public static Trajectory BlueRungSideCross = null;
+	private String RedRungSideMidJSON = "paths/output/G4B.wpilib.json";
+	public static Trajectory RedRungSideMid = null;
+	private String BlueRungSideMidJSON = "paths/output/L10D.wpilib.json";
+	public static Trajectory BlueRungSideMid = null;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -150,9 +172,33 @@ public class RobotContainer {
 		shooter.setDefaultCommand(shooterStop);
 
 		try {
-			Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath()
-					.resolve(BlueRungSideCargoToHubJSON);
-			BlueRungSideCargoToHub = TrajectoryUtil.fromPathweaverJson(BlueRungSideCargoToHubPath);
+			// Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath()
+			// 		.resolve(BlueRungSideCargoToHubJSON);
+			
+			Path RedTermSideOneCargoPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(RedTermSideOneCargoJSON);
+			RedTermSideOneCargo = TrajectoryUtil.fromPathweaverJson(RedTermSideOneCargoPath);
+			Path RedTermSideCargoTermPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(RedTermSideCargoAndTermJSON);
+			RedTermSideCargoAndTerm = TrajectoryUtil.fromPathweaverJson(RedTermSideCargoTermPath);
+			Path BlueTermSideOneCargoPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(BlueTermSideOneCargoJSON);
+			BlueTermSideOneCargo = TrajectoryUtil.fromPathweaverJson(BlueTermSideOneCargoPath);
+			Path BlueTermSideCargoTermPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(BlueTermSideCargoAndTermJSON);
+			BlueTermSideCargoAndTerm = TrajectoryUtil.fromPathweaverJson(BlueTermSideCargoTermPath);
+			Path RedRungSideCrossPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(RedRungSideCrossJSON);
+			RedRungSideCross = TrajectoryUtil.fromPathweaverJson(RedRungSideCrossPath);
+			Path BlueRungSideCrossPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(BlueRungSideCrossJSON);
+			BlueRungSideCross = TrajectoryUtil.fromPathweaverJson(BlueRungSideCrossPath);
+			Path RedRungSideMidPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(RedRungSideMidJSON);
+			RedRungSideMid = TrajectoryUtil.fromPathweaverJson(RedRungSideMidPath);
+			Path BlueRungSideMidPath = Filesystem.getDeployDirectory().toPath()
+					.resolve(BlueRungSideMidJSON);
+			BlueRungSideMid = TrajectoryUtil.fromPathweaverJson(BlueRungSideMidPath);
 		} catch (IOException ex) {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
 		}
@@ -176,13 +222,15 @@ public class RobotContainer {
 	 * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		//new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
+		new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
 		new JoystickButton(driver, Button.kX.value).whenPressed(new DrivePosition(chassis, 1.0));
-		new JoystickButton(driver, Button.kA.value).whenPressed(new DriveTrajectory(chassis, chassis.bouncePath1));
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(shoot);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(shooterStop);
+		new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
+		new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
+
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climberOpen);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climberClose);
 
 		new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
@@ -193,12 +241,13 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kB.value).whenPressed(toStow);
 
 		// new JoystickButton(operator, Button..value).whenPressed(toStow);
-		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+		// 
+		new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toHighTravEngage);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toHighTravLatch);
 
-		new JoystickButton(driver, Button.kY.value).whenPressed(new DriveTrajectory(chassis, BlueRungSideCargoToHub));
+		// new JoystickButton(driver, Button.kY.value).whenPressed(new DriveTrajectory(chassis, BlueRungSideCargoToHub));
 	}
 
 	public static Climber getClimber() {

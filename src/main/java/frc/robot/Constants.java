@@ -29,8 +29,8 @@ public final class Constants {
 		public static final int kLeftMasterMotor = 12;
 		public static final int kLeftFollowerMotor = 13;
 
-		public static final int kClimbRightMotor = 20;
-		public static final int kClimbLeftMotor = 21;
+		public static final int kClimbLeftMotor = 20;
+		public static final int kClimbRightMotor = 21;
 
 		public static final int kShooterMotor = 30;
 		public static final int kInjectorMotor = 31;
@@ -41,16 +41,16 @@ public final class Constants {
 	}
 
 	public static final class PneumaticChannelConstants {
-		public static final int kClimbLeftExtend = 0;
-		public static final int kClimbLeftRetract = 1;
-		public static final int kClimbRightExtend = 2;
-		public static final int kClimbRightRetract = 3;
+		public static final int kClimbLeftExtend = 1;
+		public static final int kClimbLeftRetract = 0;
+		public static final int kClimbRightExtend = 7;
+		public static final int kClimbRightRetract = 6;
 
 		public static final int kLatchOpen = 4;
 		public static final int kLatchClose = 5;
 
-		public static final int kCollectorExtend = 6;
-		public static final int kCollectorRetract = 7;
+		public static final int kCollectorExtend = 3;
+		public static final int kCollectorRetract = 2;
 	}
 
 	public static final class DIOChannelConstants {
@@ -67,8 +67,8 @@ public final class Constants {
 	}
 
 	public static final class PDPChannelConstants {
-		public static final int kClimberRight = 13;
-		public static final int kClimberLeft = 14;
+		public static final int kClimberLeft = 13;
+		public static final int kClimberRight = 15;
 	}
 
 	public static final class OIConstants {
@@ -155,21 +155,23 @@ public final class Constants {
 		public static final double kEngageOver = 3.0; // inches avobe top of rung to engage
 
 		public static final double kLowRung = 48.75; // inches above floor per rules
-		public static final double kClearLowRung = kLowRung - kFloor2Hook - kClearUnder; // inches
-		public static final double kEngageLowRung = kLowRung - kFloor2Hook + kEngageOver; // inches
 		public static final double kMidRung = 60.25; // inches aboave floor per rules
-		public static final double kClearMidRung = kMidRung - kFloor2Hook - kClearUnder; // inches
-		public static final double kEngageMidRung = kMidRung - kFloor2Hook + kEngageOver; // inches
-		public static final double kEngageHighTrav = 66.0 - kFloor2Hook; // inches to position for engage
+
+		public static final double kClearLowRung = -(kLowRung - kFloor2Hook - kClearUnder); // inches
+		public static final double kEngageLowRung = -(kLowRung - kFloor2Hook + kEngageOver); // inches
+		
+		public static final double kClearMidRung = -(kMidRung - kFloor2Hook - kClearUnder); // inches
+		public static final double kEngageMidRung = -(kMidRung - kFloor2Hook + kEngageOver); // inches
+		public static final double kEngageHighTrav = -(66.0 - kFloor2Hook); // inches to position for engage
 																			// high/traverse rungs
-		public static final double kLatchHighTrav = 62.0 - kFloor2Hook; // inches to position for latch high/traverse
+		public static final double kLatchHighTrav = -(62.0 - kFloor2Hook); // inches to position for latch high/traverse
 																		// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
 		// public static final double kFullExtendSwivel = 72.92;// inches
-		public static final double kPullUpLatch = 3.0; // inches to latch climber
-		public static final double kPullUpClear = 6.0; // inches to unhook while latched
+		public static final double kPullUpLatch = -(3.0); // inches to latch climber
+		public static final double kPullUpClear = -(6.0); // inches to unhook while latched
 		public static final double kStow = 0.0;
-		public static final double kOneRev = kPulleyCirc;
+		public static final double kOneRev = -kPulleyCirc;
 
 		public static final double kDistanceTolerance = 0.25; // inches
 
