@@ -87,7 +87,6 @@ public class Climber extends SubsystemBase {
 	// ==============================================================
 	// Define local variables
 	private double setPoint = 0;
-	private Chassis chassis = null;
 	private PowerDistribution pdp = null;
 	Timer latchTimer = new Timer();
 	Timer swivelTimer = new Timer();
@@ -109,11 +108,9 @@ public class Climber extends SubsystemBase {
 
 	private LatchState latchState = LatchState.NA;
 
-	public Climber(Chassis chassis) {
+	public Climber() {
 
 		System.out.println("+++++ Climber Constructor starting +++++");
-
-		this.chassis = chassis;
 
 		// ==============================================================
 		// Configure left and right Motors
@@ -149,7 +146,7 @@ public class Climber extends SubsystemBase {
 		// ==============================================================
 		// Initialize devices before starting
 		// climberInit();
-		pdp = chassis.getPDP();
+	//	pdp = chassis.getPDP();
 
 		climberPerpendicular();
 		latchOpen();
@@ -227,7 +224,7 @@ public class Climber extends SubsystemBase {
 
 					if (getLeftLimit()) {
 						climbLeftMotor.set(0.0);
-						rightEncoder.setPosition(0.0);
+						leftEncoder.setPosition(0.0);
 						leftDone = true;
 
 						time = initTimer.get();
@@ -236,7 +233,7 @@ public class Climber extends SubsystemBase {
 
 					if (getRightLimit()) {
 						climbRightMotor.set(0.0);
-						leftEncoder.setPosition(0.0);
+						rightEncoder.setPosition(0.0);
 						rightDone = true;
 
 						time = initTimer.get();
