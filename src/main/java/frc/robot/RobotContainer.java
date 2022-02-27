@@ -64,7 +64,7 @@ import frc.robot.commands.ShooterStop;
 public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private static final Chassis chassis = new Chassis();
-	private static final Climber climber = new Climber(chassis);
+	private static final Climber climber = new Climber();
 	private final Collector collector = new Collector();
 	private final Hopper hopper = new Hopper();
 	private final Shooter shooter = new Shooter();
