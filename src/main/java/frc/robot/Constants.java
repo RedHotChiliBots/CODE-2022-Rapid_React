@@ -54,11 +54,13 @@ public final class Constants {
 	}
 
 	public static final class DIOChannelConstants {
-		public static final int kCollectorEntering = 0;
-		public static final int kHopperEntering = 1;
-		public static final int kHopperExiting = 2;
-		public static final int kInjectorEntering = 3;
-		public static final int kInjectorExiting = 4;
+		public static final int kClimberLeftLimit = 0;
+		public static final int kClimberRightLimit = 1;
+		public static final int kCollectorEntering = 2;
+		public static final int kHopperEntering = 3;
+		public static final int kHopperExiting = 4;
+		public static final int kInjectorEntering = 5;
+		public static final int kInjectorExiting = 6;
 	}
 
 	public static final class PWMChannelConstants {

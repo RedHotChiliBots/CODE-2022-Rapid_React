@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.DIOChannelConstants;
 import frc.robot.Constants.PDPChannelConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.CANidConstants;
@@ -46,6 +48,11 @@ public class Climber extends SubsystemBase {
 			PneumaticsModuleType.CTREPCM,
 			PneumaticChannelConstants.kLatchOpen,
 			PneumaticChannelConstants.kLatchClose);
+
+	// ==============================================================
+	// Define Digital Inputs
+	private final DigitalInput leftLimit = new DigitalInput(DIOChannelConstants.kClimberLeftLimit);
+	private final DigitalInput rightLimit = new DigitalInput(DIOChannelConstants.kClimberRightLimit);
 
 	// ==============================================================
 	// Define Motors
@@ -74,6 +81,8 @@ public class Climber extends SubsystemBase {
 	private final NetworkTableEntry cbRightPower = climberTab.addPersistent("Right Power", 0.0).getEntry();
 	private final NetworkTableEntry cbLeftAmps = climberTab.addPersistent("Left Amps", 0.0).getEntry();
 	private final NetworkTableEntry cbRightAmps = climberTab.addPersistent("Right Amps", 0.0).getEntry();
+	private final NetworkTableEntry cbLeftLimit = climberTab.addPersistent("Left Limit", false).getEntry();
+	private final NetworkTableEntry cbRightLimit = climberTab.addPersistent("Right Limit", false).getEntry();
 
 	// ==============================================================
 	// Define local variables
@@ -166,6 +175,8 @@ public class Climber extends SubsystemBase {
 		cbRightPower.setDouble(climbRightMotor.get());
 		cbLeftAmps.setDouble(pdp.getCurrent(PDPChannelConstants.kClimberLeft));
 		cbRightAmps.setDouble(pdp.getCurrent(PDPChannelConstants.kClimberRight));
+		cbLeftLimit.setBoolean(leftLimit.get());
+		cbRightLimit.setBoolean(rightLimit.get());
 	}
 
 	public SwivelState getSwivelState() {
@@ -186,15 +197,18 @@ public class Climber extends SubsystemBase {
 		climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
 	}
 
-	public void climberInit() {
-		climberInit(false);
+	public boolean getLeftLimit() {
+		return !leftLimit.get();
 	}
 
-	public void climberInit(boolean noWait) {
+	public boolean getRightLimit() {
+		return !rightLimit.get();
+	}
+
+	public void climberInit() {
 		Thread thread = new Thread("ClimberInit") {
 			@Override
 			public void run() {
-				boolean complete = false;
 				boolean timedOut = false;
 				boolean leftDone = false;
 				boolean rightDone = false;
@@ -209,61 +223,37 @@ public class Climber extends SubsystemBase {
 				climbLeftMotor.set(ClimberConstants.kInitSpeed);
 				climbRightMotor.set(ClimberConstants.kInitSpeed);
 
-				while (!complete) {
-					time = initTimer.get();
-					System.out.println(df.format(time) +
-							" Left:  Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft)) + " Power: "
-							+ df.format(climbLeftMotor.get()));
-					System.out.println(df.format(time) +
-							" Right: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight)) + " Power: "
-							+ df.format(climbRightMotor.get()));
+				while (!(leftDone && rightDone) && !timedOut) {
 
-					if (initTimer.hasElapsed(ClimberConstants.kInitDelay) || noWait) {
+					if (getLeftLimit()) {
+						climbLeftMotor.set(0.0);
+						rightEncoder.setPosition(0.0);
+						leftDone = true;
 
 						time = initTimer.get();
-						System.out.println(df.format(time) + " climberInit starting");
-
-						time = initTimer.get();
-						System.out.println(df.format(time) +
-								" Left:  Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft))
-								+ " Power: " + df.format(climbLeftMotor.get()));
-						System.out.println(df.format(time) +
-								" Right: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight))
-								+ " Power: " + df.format(climbRightMotor.get()));
-
-						while (!(leftDone && rightDone) && !timedOut) {
-
-							if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
-								climbLeftMotor.set(0.0);
-								rightEncoder.setPosition(0.0);
-								leftDone = true;
-
-								time = initTimer.get();
-								System.out.println(df.format(time) + " climberInit left done");
-							}
-							if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
-								climbRightMotor.set(0.0);
-								leftEncoder.setPosition(0.0);
-								rightDone = true;
-
-								time = initTimer.get();
-								System.out.println(df.format(time) + " climberInit right done");
-							}
-
-							if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
-								timedOut = true;
-								climbLeftMotor.set(0.0);
-								climbRightMotor.set(0.0);
-
-								time = initTimer.get();
-								System.out.println(df.format(time) + " climberInit safety abort");
-							}
-							yield();
-						}
-						complete = true;
-					} else {
-						yield();
+						System.out.println(df.format(time) + " climberInit left done");
 					}
+
+					if (getRightLimit()) {
+						climbRightMotor.set(0.0);
+						leftEncoder.setPosition(0.0);
+						rightDone = true;
+
+						time = initTimer.get();
+						System.out.println(df.format(time) + " climberInit right done");
+					}
+
+					if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
+						timedOut = true;
+						if (!leftDone)
+							climbLeftMotor.set(0.0);
+						if (!rightDone)
+							climbRightMotor.set(0.0);
+
+						time = initTimer.get();
+						System.out.println(df.format(time) + " climberInit safety abort");
+					}
+					yield();
 				}
 
 				if (!timedOut) {
@@ -281,6 +271,102 @@ public class Climber extends SubsystemBase {
 		};
 		thread.start();
 	}
+
+	// public void climberInit(boolean noWait) {
+	// Thread thread = new Thread("ClimberInit") {
+	// @Override
+	// public void run() {
+	// boolean complete = false;
+	// boolean timedOut = false;
+	// boolean leftDone = false;
+	// boolean rightDone = false;
+	// double time = 0.0;
+	// initTimer.reset();
+
+	// DecimalFormat df = new DecimalFormat("#0.0000");
+	// df.setRoundingMode(RoundingMode.CEILING);
+
+	// System.out.println("climberInit pending start");
+
+	// climbLeftMotor.set(ClimberConstants.kInitSpeed);
+	// climbRightMotor.set(ClimberConstants.kInitSpeed);
+
+	// while (!complete) {
+	// time = initTimer.get();
+	// System.out.println(df.format(time) +
+	// " Left: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft))
+	// + " Power: "
+	// + df.format(climbLeftMotor.get()));
+	// System.out.println(df.format(time) +
+	// " Right: Amps: " +
+	// df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight)) + " Power: "
+	// + df.format(climbRightMotor.get()));
+
+	// if (initTimer.hasElapsed(ClimberConstants.kInitDelay) || noWait) {
+
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit starting");
+
+	// time = initTimer.get();
+	// System.out.println(df.format(time) +
+	// " Left: Amps: " + df.format(pdp.getCurrent(PDPChannelConstants.kClimberLeft))
+	// + " Power: " + df.format(climbLeftMotor.get()));
+	// System.out.println(df.format(time) +
+	// " Right: Amps: " +
+	// df.format(pdp.getCurrent(PDPChannelConstants.kClimberRight))
+	// + " Power: " + df.format(climbRightMotor.get()));
+
+	// while (!(leftDone && rightDone) && !timedOut) {
+
+	// if (climbLeftMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+	// climbLeftMotor.set(0.0);
+	// rightEncoder.setPosition(0.0);
+	// leftDone = true;
+
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit left done");
+	// }
+	// if (climbRightMotor.getOutputCurrent() > ClimberConstants.kMaxAmps) {
+	// climbRightMotor.set(0.0);
+	// leftEncoder.setPosition(0.0);
+	// rightDone = true;
+
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit right done");
+	// }
+
+	// if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
+	// timedOut = true;
+	// climbLeftMotor.set(0.0);
+	// climbRightMotor.set(0.0);
+
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit safety abort");
+	// }
+	// yield();
+	// }
+	// complete = true;
+	// } else {
+	// yield();
+	// }
+	// }
+
+	// if (!timedOut) {
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit configure motors");
+	// // Group the left and right motors
+	// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
+	// motor
+
+	// setPoint = 0.0;
+	// climbPosition(setPoint);
+	// }
+	// time = initTimer.get();
+	// System.out.println(df.format(time) + " climberInit finished");
+	// }
+	// };
+	// thread.start();
+	// }
 
 	public void latchOpen() {
 		latchOpen(false);
