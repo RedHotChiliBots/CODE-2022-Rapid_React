@@ -16,8 +16,8 @@ public class ShooterSpinUpPlunge extends SequentialCommandGroup {
   public ShooterSpinUpPlunge(Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterAtSpeed(shooter),
-    new ShooterPlunge(shooter));
+    addCommands(new ShooterAtSpeed(shooter));
+//    new ShooterPlunge(shooter));
   }
   
 }

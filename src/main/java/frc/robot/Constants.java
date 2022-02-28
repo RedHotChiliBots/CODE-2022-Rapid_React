@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.util.Units;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -66,11 +64,6 @@ public final class Constants {
 	public static final class PWMChannelConstants {
 		public static final int kShooterLeftServo = 0;
 		public static final int kShooterRightServo = 1;
-	}
-
-	public static final class PDPChannelConstants {
-		public static final int kClimberLeft = 13;
-		public static final int kClimberRight = 15;
 	}
 
 	public static final class OIConstants {

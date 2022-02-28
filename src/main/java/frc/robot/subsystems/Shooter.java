@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -76,18 +75,6 @@ public class Shooter extends SubsystemBase {
 	}
 
 	private volatile InjectorState shooterState = InjectorState.NA;
-
-	public enum GuardState {
-		NA, OPEN, CLOSED
-	}
-
-	private volatile GuardState guardState = GuardState.NA;
-
-	public enum PlungerState {
-		NA, READY, ACTIVE
-	}
-
-	private volatile PlungerState plungerState = PlungerState.NA;
 
 	public Shooter() {
 		System.out.println("+++++ Shooter Constructor starting +++++");
