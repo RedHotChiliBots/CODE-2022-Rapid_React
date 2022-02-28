@@ -173,10 +173,10 @@ public class Climber extends SubsystemBase {
 		cbSwivel.setString(swivelState.toString());
 		cbLeftPower.setDouble(climbLeftMotor.get());
 		cbRightPower.setDouble(climbRightMotor.get());
-		cbLeftAmps.setDouble(pdp.getCurrent(PDPChannelConstants.kClimberLeft));
-		cbRightAmps.setDouble(pdp.getCurrent(PDPChannelConstants.kClimberRight));
-		cbLeftLimit.setBoolean(leftLimit.get());
-		cbRightLimit.setBoolean(rightLimit.get());
+		cbLeftAmps.setDouble(climbLeftMotor.getOutputCurrent());
+		cbRightAmps.setDouble(climbRightMotor.getOutputCurrent());
+		cbLeftLimit.setBoolean(getLeftLimit());
+		cbRightLimit.setBoolean(getRightLimit());
 	}
 
 	public SwivelState getSwivelState() {
@@ -224,19 +224,22 @@ public class Climber extends SubsystemBase {
 				climbRightMotor.set(-ClimberConstants.kInitSpeed);
 
 				while (!(leftDone && rightDone) && !timedOut) {
+					System.out.println(df.format(time) + 
+						" LeftPower: " + climbLeftMotor.get() + 
+						" RightPower: " + climbRightMotor.get());
 
-					if (getLeftLimit()) {
+					if (!leftDone && getLeftLimit()) {
 						climbLeftMotor.set(0.0);
-						leftEncoder.setPosition(0.0);
+						leftEncoder.setPosition(-0.5);
 						leftDone = true;
 
 						time = initTimer.get();
 						System.out.println(df.format(time) + " climberInit left done");
 					}
 
-					if (getRightLimit()) {
+					if (!rightDone && getRightLimit()) {
 						climbRightMotor.set(0.0);
-						rightEncoder.setPosition(0.0);
+						rightEncoder.setPosition(-0.5);
 						rightDone = true;
 
 						time = initTimer.get();
