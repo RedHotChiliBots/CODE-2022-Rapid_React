@@ -25,9 +25,9 @@ public class CollectorArm extends CommandBase {
 	@Override
 	public void initialize() {
 		if (armState == ArmState.DEPLOY) {
-			collector.collectorArmExtend();
+			collector.armDeploy();
 		} else {
-			collector.collectorArmRetract();
+			collector.armStow();
 		}
 	}
 

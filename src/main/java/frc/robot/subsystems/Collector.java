@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.concurrent.TimeUnit;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -14,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -119,7 +122,7 @@ public class Collector extends SubsystemBase {
 		// ==============================================================
 		// Initialize devices before starting
 		setCollectorVelocity(0.0);
-		collectorArmRetract();
+		armStow();
 
 		System.out.println("----- Collector Constructor finished -----");
 	}
@@ -176,8 +179,12 @@ public class Collector extends SubsystemBase {
 		collectorState = state;
 	}
 
-	public CollectorState getState() {
+	public CollectorState getCollectorState() {
 		return collectorState;
+	}
+
+	public ArmState getArmState() {
+		return armState;
 	}
 
 	public double getCollectorVelocity() {
@@ -197,19 +204,57 @@ public class Collector extends SubsystemBase {
 		return Math.abs(collectorSetPoint - getCollectorVelocity()) <= CollectorConstants.kVelocityTolerance;
 	}
 
-	public void collectorArmExtend() {
-		collectorArm.set(Value.kForward);
-	}
-
-	public void collectorArmRetract() {
-		collectorArm.set(Value.kReverse);
-	}
-
 	public void setRunning(boolean r) {
 		this.running = r;
 	}
 
 	public boolean isRunning() {
 		return running;
+	}
+
+	public void armDeploy() {
+		armDeploy(false);
+	}
+
+	public void armDeploy(boolean noWait) {
+		Thread thread = new Thread("ArmDeploy") {
+			@Override
+			public void run() {
+
+				collectorArm.set(Value.kForward);
+
+				try {
+					TimeUnit.MILLISECONDS.sleep(CollectorConstants.kArmDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("ArmDeploy sleep exception", true);
+				}
+
+				armState = ArmState.DEPLOY;
+			}
+		};
+		thread.start();
+	}
+
+	public void armStow() {
+		armStow(false);
+	}
+
+	public void armStow(boolean noWait) {
+		Thread thread = new Thread("ArmDeploy") {
+			@Override
+			public void run() {
+
+				collectorArm.set(Value.kReverse);
+
+				try {
+					TimeUnit.MILLISECONDS.sleep(CollectorConstants.kArmDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("ArmStow sleep exception", true);
+				}
+
+				armState = ArmState.STOW;
+			}
+		};
+		thread.start();
 	}
 }

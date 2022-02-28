@@ -225,6 +225,8 @@ public final class Constants {
 		public static final double kCollectorRPMs = kMaxRPM * 0.45;
 
 		public static final double kVelocityTolerance = 100.0; // rpms
+
+		public static final long kArmDelay = 2000;	// milliseconds
 	}
 
 	public static final class HopperConstants {
