@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -16,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
@@ -379,25 +381,16 @@ public class Climber extends SubsystemBase {
 		Thread thread = new Thread("LatchOpen") {
 			@Override
 			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
+				
+				climbLatch.set(Value.kForward);
 
-				while (!complete) {
-					if (!waiting) {
-						climbLatch.set(Value.kForward);
-
-						latchTimer.reset();
-						waiting = true;
-
-					} else {
-						if (latchTimer.hasElapsed(ClimberConstants.kLatchDelay) || noWait) {
-
-							latchState = LatchState.OPEN;
-							waiting = false;
-							complete = true;
-						}
-					}
+				try {
+					TimeUnit.MILLISECONDS.sleep(ClimberConstants.kLatchDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("LatchOpen sleep exception", true);
 				}
+				
+				latchState = LatchState.OPEN;
 			}
 		};
 		thread.start();
@@ -411,25 +404,16 @@ public class Climber extends SubsystemBase {
 		Thread thread = new Thread("LatchClose") {
 			@Override
 			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
 
-				while (!complete) {
-					if (!waiting) {
-						climbLatch.set(Value.kReverse);
+				climbLatch.set(Value.kReverse);
 
-						latchTimer.reset();
-						waiting = true;
-
-					} else {
-						if (latchTimer.hasElapsed(ClimberConstants.kLatchDelay) || noWait) {
-
-							latchState = LatchState.CLOSE;
-							waiting = false;
-							complete = true;
-						}
-					}
+				try {
+					TimeUnit.MILLISECONDS.sleep(ClimberConstants.kLatchDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("LatchClose sleep exception", true);
 				}
+				
+				latchState = LatchState.CLOSE;
 			}
 		};
 		thread.start();
@@ -443,26 +427,17 @@ public class Climber extends SubsystemBase {
 		Thread thread = new Thread("ClimbExtend") {
 			@Override
 			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
 
-				while (!complete) {
-					if (!waiting) {
-						climbLeft.set(Value.kForward);
-						climbRight.set(Value.kForward);
+				climbLeft.set(Value.kForward);
+				climbRight.set(Value.kForward);
 
-						swivelTimer.reset();
-						waiting = true;
-
-					} else {
-						if (swivelTimer.hasElapsed(ClimberConstants.kSwivelDelay) || noWait) {
-
-							swivelState = SwivelState.SWIVEL;
-							waiting = false;
-							complete = true;
-						}
-					}
+				try {
+					TimeUnit.MILLISECONDS.sleep(ClimberConstants.kSwivelDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("ClimbExtend sleep exception", true);
 				}
+				
+				swivelState = SwivelState.SWIVEL;
 			}
 		};
 		thread.start();
@@ -476,26 +451,17 @@ public class Climber extends SubsystemBase {
 		Thread thread = new Thread("ClimberRetract") {
 			@Override
 			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
 
-				while (!complete) {
-					if (!waiting) {
-						climbLeft.set(Value.kReverse);
-						climbRight.set(Value.kReverse);
+				climbLeft.set(Value.kReverse);
+				climbRight.set(Value.kReverse);
 
-						swivelTimer.reset();
-						waiting = true;
-
-					} else {
-						if (swivelTimer.hasElapsed(ClimberConstants.kSwivelDelay) || noWait) {
-
-							swivelState = SwivelState.PERPENDICULAR;
-							waiting = false;
-							complete = true;
-						}
-					}
+				try {
+					TimeUnit.MILLISECONDS.sleep(ClimberConstants.kSwivelDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("ClimbRetract sleep exception", true);
 				}
+				
+				swivelState = SwivelState.PERPENDICULAR;
 			}
 		};
 		thread.start();

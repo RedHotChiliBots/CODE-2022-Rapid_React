@@ -77,7 +77,7 @@ public final class Constants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
 
-		public static final double kRumbleDelay = 1.0;
+		public static final long kRumbleDelay = 1000;	// milliseconds
 	}
 
 	public static final class AnalogIOConstants {
@@ -177,8 +177,8 @@ public final class Constants {
 
 		public static final double kDistanceTolerance = 0.25; // inches
 
-		public static final double kLatchDelay = 1.0; // seconds
-		public static final double kSwivelDelay = 3.0; // seconds
+		public static final long kLatchDelay = 1000; // milliseconds
+		public static final long kSwivelDelay = 3000; // milliseconds
 //		public static final double kInitDelay = 0.25; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 

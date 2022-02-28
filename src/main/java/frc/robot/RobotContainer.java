@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
@@ -278,25 +279,16 @@ public class RobotContainer {
 		Thread thread = new Thread("Rumble") {
 			@Override
 			public void run() {
-				boolean waiting = false;
-				boolean complete = false;
 
-				while (!complete) {
-					if (!waiting) {
-						c.setRumble(t, 1);
+				c.setRumble(t, 1);
 
-						rumbleTimer.reset();
-						waiting = true;
-
-					} else {
-						if (rumbleTimer.hasElapsed(OIConstants.kRumbleDelay)) {
-
-							c.setRumble(t, 0);
-							waiting = false;
-							complete = true;
-						}
-					}
+				try {
+					TimeUnit.MILLISECONDS.sleep(OIConstants.kRumbleDelay);
+				} catch (InterruptedException e) {
+					DriverStation.reportError("Rumble sleep exception", true);
 				}
+				
+				c.setRumble(t, 0);
 			}
 		};
 		thread.start();
