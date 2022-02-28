@@ -13,7 +13,6 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -48,8 +47,6 @@ import frc.robot.commands.CollectorStop;
 import frc.robot.commands.DrivePosition;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.SHOOT;
-import frc.robot.commands.ShooterPlungerExtend;
-import frc.robot.commands.ShooterPlungerRetract;
 import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
 
@@ -79,8 +76,6 @@ public class RobotContainer {
 
 	// Define a chooser for autonomous commands
 	private final SendableChooser<Command> chooser = new SendableChooser<>();
-
-	private Timer rumbleTimer = new Timer();
 
 	// =============================================================
 	// Define Commands here to avoid multiple instantiations
@@ -203,9 +198,6 @@ public class RobotContainer {
 		} catch (IOException ex) {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
 		}
-
-		rumbleTimer.reset();
-		rumbleTimer.start();
 
 		configureButtonBindings();
 	}

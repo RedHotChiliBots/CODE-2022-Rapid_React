@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DIOChannelConstants;
-import frc.robot.Constants.PDPChannelConstants;
 import frc.robot.Constants.PneumaticChannelConstants;
 import frc.robot.Constants.CANidConstants;
 
@@ -89,9 +87,6 @@ public class Climber extends SubsystemBase {
 	// ==============================================================
 	// Define local variables
 	private double setPoint = 0;
-	private PowerDistribution pdp = null;
-	Timer latchTimer = new Timer();
-	Timer swivelTimer = new Timer();
 	Timer initTimer = new Timer();
 
 	public enum SwivelState {
@@ -155,10 +150,6 @@ public class Climber extends SubsystemBase {
 
 		climberPerpendicular();
 		latchOpen();
-		latchTimer.start();
-		latchTimer.reset();
-		swivelTimer.start();
-		swivelTimer.reset();
 		initTimer.start();
 		initTimer.reset();
 

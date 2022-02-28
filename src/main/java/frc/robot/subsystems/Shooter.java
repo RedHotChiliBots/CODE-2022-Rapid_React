@@ -12,7 +12,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,9 +70,6 @@ public class Shooter extends SubsystemBase {
 	private double shootSetPoint = 0.0;
 	private double injectSetPoint = 0.0;
 	private boolean running = false;
-
-	Timer plungerTimer = new Timer();
-	Timer guardTimer = new Timer();
 
 	public enum InjectorState {
 		NA, EMPTY, ENTERING, CONTROLLED
@@ -137,8 +133,6 @@ public class Shooter extends SubsystemBase {
 		// Initialize devices before starting
 		setShootVelocity(0.0);
 		setInjectVelocity(0.0);
-		guardTimer.reset();
-		guardTimer.start();
 
 		System.out.println("----- Shooter Constructor finished -----");
 	}
