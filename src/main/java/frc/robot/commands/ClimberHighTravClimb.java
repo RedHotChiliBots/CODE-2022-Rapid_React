@@ -19,12 +19,16 @@ public class ClimberHighTravClimb extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
+				// Tilt the Climber and extend to Engage High/Traverse Rung
 				new ClimberSwivel(climber, SwivelState.SWIVEL),
 				new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav),
+				// Retract the Climber and Climb until Hooks are engaged
 				new ClimberSwivel(climber, SwivelState.PERPENDICULAR),
 				new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav),
+				// Open Latch and Climb to Rung
 				new ClimberLatch(climber, LatchState.OPEN),
 				new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
+				// Close the Latch and clear Climber Hooks
 				new ClimberLatch(climber, LatchState.CLOSE),
 				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
 	}

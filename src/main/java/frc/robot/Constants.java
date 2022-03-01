@@ -70,7 +70,7 @@ public final class Constants {
 		public static final int kDriverControllerPort = 0;
 		public static final int kOperatorControllerPort = 1;
 
-		public static final long kRumbleDelay = 1000;	// milliseconds
+		public static final long kRumbleDelay = 1000; // milliseconds
 	}
 
 	public static final class AnalogIOConstants {
@@ -154,13 +154,13 @@ public final class Constants {
 
 		public static final double kClearLowRung = -(kLowRung - kFloor2Hook - kClearUnder); // inches
 		public static final double kEngageLowRung = -(kLowRung - kFloor2Hook + kEngageOver); // inches
-		
+
 		public static final double kClearMidRung = -(kMidRung - kFloor2Hook - kClearUnder); // inches
 		public static final double kEngageMidRung = -(kMidRung - kFloor2Hook + kEngageOver); // inches
 		public static final double kEngageHighTrav = -(66.0 - kFloor2Hook); // inches to position for engage
 																			// high/traverse rungs
 		public static final double kLatchHighTrav = -(62.0 - kFloor2Hook); // inches to position for latch high/traverse
-																		// rungs
+																			// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
 		// public static final double kFullExtendSwivel = 72.92;// inches
 		public static final double kPullUpLatch = -(3.0); // inches to latch climber
@@ -172,11 +172,13 @@ public final class Constants {
 
 		public static final long kLatchDelay = 1000; // milliseconds
 		public static final long kSwivelDelay = 3000; // milliseconds
-//		public static final double kInitDelay = 0.25; // seconds
+		// public static final double kInitDelay = 0.25; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 
 		public static final double kMaxAmps = 10.0;
 		public static final double kInitSpeed = 0.3;
+
+		public static final double kMaxPitch = 5.0; // degrees
 	}
 
 	public static final class ShooterConstants {
@@ -226,7 +228,7 @@ public final class Constants {
 
 		public static final double kVelocityTolerance = 100.0; // rpms
 
-		public static final long kArmDelay = 2000;	// milliseconds
+		public static final long kArmDelay = 2000; // milliseconds
 	}
 
 	public static final class HopperConstants {

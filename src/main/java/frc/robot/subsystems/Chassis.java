@@ -441,7 +441,7 @@ public class Chassis extends SubsystemBase {
 
 	public boolean atTarget() {
 		return Math.abs(setPoint - leftEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance &&
-			Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
+				Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
 	}
 
 	public double getLoPressure() {

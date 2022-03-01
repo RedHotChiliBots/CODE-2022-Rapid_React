@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ChassisConstants;
 import frc.robot.subsystems.Chassis;
 
-public class ChasisDriveIntoRung extends CommandBase {
+public class ChassisDriveIntoRung extends CommandBase {
   /** Creates a new ChasisDriveIntoRung. */
   private Chassis chassis;
 
-  public ChasisDriveIntoRung(Chassis chassis) {
+  public ChassisDriveIntoRung(Chassis chassis) {
     this.chassis = chassis;
     addRequirements(chassis);
   }
@@ -29,7 +29,9 @@ public class ChasisDriveIntoRung extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    chassis.drive(0.0, 0.0);
+  }
 
   // Returns true when the command should end.
   @Override
