@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.Map;
+import static java.util.Map.entry;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -126,6 +129,7 @@ public final class Constants {
 		public static final double kRamseteZeta = 0.7;
 	}
 
+
 	public static final class ClimberConstants {
 		public static final double kP = 0.25;
 		public static final double kI = 0.0;
@@ -152,21 +156,20 @@ public final class Constants {
 		public static final double kLowRung = 48.75; // inches above floor per rules
 		public static final double kMidRung = 60.25; // inches aboave floor per rules
 
-		public static final double kClearLowRung = -(kLowRung - kFloor2Hook - kClearUnder); // inches
-		public static final double kEngageLowRung = -(kLowRung - kFloor2Hook + kEngageOver); // inches
-
-		public static final double kClearMidRung = -(kMidRung - kFloor2Hook - kClearUnder); // inches
-		public static final double kEngageMidRung = -(kMidRung - kFloor2Hook + kEngageOver); // inches
-		public static final double kEngageHighTrav = -(66.0 - kFloor2Hook); // inches to position for engage
+		public static final double kClearLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook - ClimberConstants.kClearUnder);
+		public static final double kEngageLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook + ClimberConstants.kEngageOver); // inches
+		public static final double kClearMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook - ClimberConstants.kClearUnder); // inches
+		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook + ClimberConstants.kEngageOver); // inches
+		public static final double kEngageHighTrav = -(66.0 - ClimberConstants.kFloor2Hook); // inches to position for engage
 																			// high/traverse rungs
-		public static final double kLatchHighTrav = -(62.0 - kFloor2Hook); // inches to position for latch high/traverse
+		public static final double kLatchHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch high/traverse
 																			// rungs
-		// public static final double kFullExtendPerpendicular = 66.0; // inches
-		// public static final double kFullExtendSwivel = 72.92;// inches
-		public static final double kPullUpLatch = -(3.0); // inches to latch climber
-		public static final double kPullUpClear = -(6.0); // inches to unhook while latched
+			// public static final double kFullExtendPerpendicular = 66.0; // inches
+			// public static final double kFullExtendSwivel = 72.92;// inches
+		public static final double kPullUpLatch = -(0.0); // inches to latch climber
+		public static final double kPullUpClear = -(3.0); // inches to unhook while latched
 		public static final double kStow = 0.0;
-		public static final double kOneRev = -kPulleyCirc;
+		public static final double kOneRev = -ClimberConstants.kPulleyCirc;
 
 		public static final double kDistanceTolerance = 0.25; // inches
 
@@ -178,7 +181,8 @@ public final class Constants {
 		public static final double kMaxAmps = 10.0;
 		public static final double kInitSpeed = 0.3;
 
-		public static final double kMaxPitch = 5.0; // degrees
+		public static final double kMaxPitch = 2.0; // degrees
+
 	}
 
 	public static final class ShooterConstants {

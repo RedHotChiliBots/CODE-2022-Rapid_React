@@ -92,6 +92,10 @@ public class RobotContainer {
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
 	private final SHOOT SHOOT = new SHOOT(shooter);
 
+	private final CLIMB climb = new CLIMB(climber, chassis);
+	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber, chassis);
+	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber);
+	
 	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
 	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
 	private final ClimberLatch climberOpen = new ClimberLatch(climber, LatchState.OPEN);
@@ -153,9 +157,11 @@ public class RobotContainer {
 
 		// ==============================================================================
 		// Add commands to the autonomous command chooser
-		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
-		chooser.addOption("Arcade Drive", chassisArcadeDrive);
-		chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+		chooser.setDefaultOption("Climb All", climb);
+		chooser.addOption("Climb MidRung", climbMidRung);
+		chooser.addOption("Climb HighRung", climbHighRung);
+		// chooser.addOption("Arcade Drive", chassisArcadeDrive);
+		// chooser.addOption("Modified Tank Drive", modifiedTankDrive);
 		// Put the chooser on the dashboard
 		SmartDashboard.putData(chooser);
 

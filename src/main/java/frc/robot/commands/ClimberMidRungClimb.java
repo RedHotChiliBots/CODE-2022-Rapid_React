@@ -24,9 +24,10 @@ public class ClimberMidRungClimb extends SequentialCommandGroup {
 
 		addCommands(
 			// With latch Open and Climber extended, drive in reverse until Chassis Pitch
+			new ClimberInit(climber),
 			new ClimberLatch(climber, LatchState.OPEN),
 			new ClimberGoTo(climber, ClimberConstants.kEngageMidRung),
-			new ChassisDriveIntoRung(chassis),
+//			new ChassisDriveIntoRung(chassis),
 			// Climb to Rung, Close the Latch, and release the Climber
 			new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
 			new ClimberLatch(climber, LatchState.CLOSE),

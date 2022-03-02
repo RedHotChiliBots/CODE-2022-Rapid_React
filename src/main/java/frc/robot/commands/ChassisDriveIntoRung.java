@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ChassisConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Chassis;
 
 public class ChassisDriveIntoRung extends CommandBase {
@@ -24,18 +24,18 @@ public class ChassisDriveIntoRung extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.driveArcade(0.5, 0.0);
+    chassis.driveArcade(0.0, 0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    chassis.drive(0.0, 0.0);
+    chassis.driveArcade(0.0, 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return chassis.getPitch() > ChassisConstants.kAngleRungAttached;
+    return Math.abs(chassis.getPitch()) > ClimberConstants.kMaxPitch;
   }
 }

@@ -76,6 +76,7 @@ public class Climber extends SubsystemBase {
 	private final NetworkTableEntry cbRightPos = climberTab.addPersistent("Right Position", 0.0).getEntry();
 	private final NetworkTableEntry cbSetPoint = climberTab.addPersistent("PID Setpoint", 0.0).getEntry();
 	private final NetworkTableEntry cbAtTarget = climberTab.addPersistent("At Target", false).getEntry();
+	private final NetworkTableEntry cbClimberState = climberTab.addPersistent("Climber State", "").getEntry();
 	private final NetworkTableEntry cbSwivel = climberTab.addPersistent("Swivel State", "").getEntry();
 	private final NetworkTableEntry cbLeftPower = climberTab.addPersistent("Left Power", 0.0).getEntry();
 	private final NetworkTableEntry cbRightPower = climberTab.addPersistent("Right Power", 0.0).getEntry();
@@ -104,6 +105,13 @@ public class Climber extends SubsystemBase {
 	}
 
 	private LatchState latchState = LatchState.NA;
+
+	public enum ClimberState {
+		INIT,
+		NOTINIT
+	}
+
+	private ClimberState climberState = ClimberState.NOTINIT;
 
 	public Climber() {
 
@@ -163,6 +171,7 @@ public class Climber extends SubsystemBase {
 		cbRightPos.setDouble(rightEncoder.getPosition());
 		cbSetPoint.setDouble(setPoint);
 		cbAtTarget.setBoolean(atTarget());
+		cbClimberState.setString(getClimberState().toString());
 		cbSwivel.setString(swivelState.toString());
 		cbLeftPower.setDouble(climbLeftMotor.get());
 		cbRightPower.setDouble(climbRightMotor.get());
@@ -178,6 +187,10 @@ public class Climber extends SubsystemBase {
 
 	public LatchState getLatchState() {
 		return latchState;
+	}
+
+	public ClimberState getClimberState() {
+		return climberState;
 	}
 
 	public boolean atTarget() {
@@ -260,6 +273,8 @@ public class Climber extends SubsystemBase {
 
 					setPoint = 0.0;
 					climbPosition(setPoint);
+
+					climberState = ClimberState.INIT;
 				}
 				time = initTimer.get();
 				System.out.println(df.format(time) + " climberInit finished");
