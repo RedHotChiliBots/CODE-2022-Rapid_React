@@ -92,9 +92,9 @@ public class RobotContainer {
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
 	private final SHOOT SHOOT = new SHOOT(shooter);
 
-	private final CLIMB climb = new CLIMB(climber, chassis);
+	private final CLIMB climb = new CLIMB(climber);
 	private final ClimberInit climberInit = new ClimberInit(climber);
-	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber, chassis);
+	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber);
 	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber);
 	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
 	private final ClimberGoTo toMidRungEngage = new ClimberGoTo(climber, ClimberConstants.kEngageMidRung);
@@ -109,7 +109,7 @@ public class RobotContainer {
 	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
 	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
 	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav);
-	private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber, chassis);
+	private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber);
 	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
 
 	private final CollectorArm collectorDeploy = new CollectorArm(collector, ArmState.DEPLOY);
