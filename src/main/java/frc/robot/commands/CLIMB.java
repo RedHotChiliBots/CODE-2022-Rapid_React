@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -14,12 +13,12 @@ import frc.robot.subsystems.Climber;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class CLIMB extends SequentialCommandGroup {
   /** Creates a new CLIMB. */
-  public CLIMB(Climber climber, Chassis chassis) {
+  public CLIMB(Climber climber) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         new ClimberInit(climber),
-        new ClimberMidRungClimb(climber, chassis),
+        new ClimberMidRungClimb(climber),
         new ClimberHighTravClimb(climber),
         new ClimberHighTravClimb(climber));
   }

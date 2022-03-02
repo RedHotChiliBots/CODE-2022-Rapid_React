@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.LatchState;
 
@@ -15,7 +14,7 @@ import frc.robot.subsystems.Climber.LatchState;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ClimberMidRungClimb extends SequentialCommandGroup {
 
-	public ClimberMidRungClimb(Climber climber, Chassis chassis) {
+	public ClimberMidRungClimb(Climber climber) {
 
 		/**
 		 * This command assumes robot has cleared the Low Rung and
