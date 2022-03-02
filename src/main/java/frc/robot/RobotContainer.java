@@ -157,11 +157,9 @@ public class RobotContainer {
 
 		// ==============================================================================
 		// Add commands to the autonomous command chooser
-		chooser.setDefaultOption("Climb All", climb);
-		chooser.addOption("Climb MidRung", climbMidRung);
-		chooser.addOption("Climb HighRung", climbHighRung);
-		// chooser.addOption("Arcade Drive", chassisArcadeDrive);
-		// chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
+		chooser.addOption("Arcade Drive", chassisArcadeDrive);
+		chooser.addOption("Modified Tank Drive", modifiedTankDrive);
 		// Put the chooser on the dashboard
 		SmartDashboard.putData(chooser);
 
@@ -234,10 +232,13 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
-		new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
-		new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
-		new JoystickButton(operator, Button.kB.value).whenPressed(toStow);
+		new JoystickButton(operator, Button.kY.value).whenPressed(toStow);
+		new JoystickButton(operator, Button.kA.value).whenPressed(climbMidRung);
+		new JoystickButton(operator, Button.kB.value).whenPressed(climbHighRung);
+
+		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
+		// new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
 
 		// new JoystickButton(operator, Button..value).whenPressed(toStow);
 		// 

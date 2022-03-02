@@ -13,9 +13,9 @@ import frc.robot.subsystems.Climber.LatchState;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimberMidRungClimb extends SequentialCommandGroup {
+public class ClimberSetup extends SequentialCommandGroup {
 
-	public ClimberMidRungClimb(Climber climber, Chassis chassis) {
+	public ClimberSetup(Climber climber) {
 
 		/**
 		 * This command assumes robot has cleared the Low Rung and
@@ -23,10 +23,9 @@ public class ClimberMidRungClimb extends SequentialCommandGroup {
 		 */
 
 		addCommands(
-			// Climb to Rung, Close the Latch, and release the Climber
-			new ClimberInit(climber),
-//			new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
-			new ClimberLatch(climber, LatchState.CLOSE),
-			new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
+			// With latch Open and Climber extended, drive in reverse until Chassis Pitch
+			// new ClimberInit(climber),
+			new ClimberLatch(climber, LatchState.OPEN),
+			new ClimberGoTo(climber, ClimberConstants.kEngageMidRung));
 	}
 }
