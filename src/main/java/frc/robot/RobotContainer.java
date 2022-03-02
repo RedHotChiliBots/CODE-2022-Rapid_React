@@ -40,6 +40,7 @@ import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberInit;
 import frc.robot.commands.ClimberLatch;
 import frc.robot.commands.ClimberMidRungClimb;
+import frc.robot.commands.ClimberSetup;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.DoRumble;
 import frc.robot.commands.CollectorArm;
@@ -94,11 +95,14 @@ public class RobotContainer {
 
 	private final CLIMB climb = new CLIMB(climber);
 	private final ClimberInit climberInit = new ClimberInit(climber);
+	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
+	private final ClimberSetup climbSetup = new ClimberSetup(climber);
+	private final ClimberGoTo toMidRungEngage = new ClimberGoTo(climber, ClimberConstants.kEngageMidRung);
+	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
+	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav);
 	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber);
 	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber);
-	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
-	private final ClimberGoTo toMidRungEngage = new ClimberGoTo(climber, ClimberConstants.kEngageMidRung);
-	
+
 	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
 	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
 	private final ClimberLatch climberOpen = new ClimberLatch(climber, LatchState.OPEN);
@@ -107,10 +111,7 @@ public class RobotContainer {
 	private final ClimberGoTo toClearMidRung = new ClimberGoTo(climber, ClimberConstants.kClearLowRung);
 	private final ClimberGoTo toMidRung = new ClimberGoTo(climber, ClimberConstants.kLowRung);
 	private final ClimberGoTo toOneRev = new ClimberGoTo(climber, ClimberConstants.kOneRev);
-	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
-	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav);
-	private final ClimberMidRungClimb midRungClimb = new ClimberMidRungClimb(climber);
-	private final ClimberHighTravClimb highTravClimb = new ClimberHighTravClimb(climber);
+
 
 	private final CollectorArm collectorDeploy = new CollectorArm(collector, ArmState.DEPLOY);
 	private final CollectorArm collectorStow = new CollectorArm(collector, ArmState.STOW);
@@ -233,16 +234,13 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
 
 		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
-		new JoystickButton(operator, Button.kY.value).whenPressed(toStow);
+		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
 		new JoystickButton(operator, Button.kA.value).whenPressed(climbMidRung);
 		new JoystickButton(operator, Button.kB.value).whenPressed(climbHighRung);
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
-
-		// new JoystickButton(operator, Button..value).whenPressed(toStow);
-		// 
-		new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
+		// new JoystickButton(operator, Button.kY.value).whenPressed(toClearMidRung);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toMidRung);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toHighTravEngage);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toHighTravLatch);
