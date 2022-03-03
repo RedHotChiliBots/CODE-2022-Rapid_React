@@ -16,6 +16,7 @@ public class ClimberLatch extends CommandBase {
 	public ClimberLatch(Climber climber, LatchState state) {
 		this.climber = climber;
 		this.state = state;
+		addRequirements(climber);
 	}
 
 	// Called when the command is initially scheduled.

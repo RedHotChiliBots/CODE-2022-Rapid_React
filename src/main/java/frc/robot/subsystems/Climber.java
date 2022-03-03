@@ -212,14 +212,15 @@ public class Climber extends SubsystemBase {
 	}
 
 	public void climberInit() {
-		Thread thread = new Thread("ClimberInit") {
-			@Override
-			public void run() {
+		// Thread thread = new Thread("ClimberInit") {
+		// 	@Override
+		// 	public void run() {
 				boolean timedOut = false;
 				boolean leftDone = false;
 				boolean rightDone = false;
 				double time = 0.0;
 				initTimer.reset();
+				climberState = ClimberState.NOTINIT;
 
 				DecimalFormat df = new DecimalFormat("#0.0000");
 				df.setRoundingMode(RoundingMode.CEILING);
@@ -230,13 +231,14 @@ public class Climber extends SubsystemBase {
 				climbRightMotor.set(-ClimberConstants.kInitSpeed);
 
 				while (!(leftDone && rightDone) && !timedOut) {
+					time = initTimer.get();
 					System.out.println(df.format(time) + 
 						" LeftPower: " + climbLeftMotor.get() + 
 						" RightPower: " + climbRightMotor.get());
 
 					if (!leftDone && getLeftLimit()) {
 						climbLeftMotor.set(0.0);
-						leftEncoder.setPosition(-0.5);
+						leftEncoder.setPosition(0.0);
 						leftDone = true;
 
 						time = initTimer.get();
@@ -245,7 +247,7 @@ public class Climber extends SubsystemBase {
 
 					if (!rightDone && getRightLimit()) {
 						climbRightMotor.set(0.0);
-						rightEncoder.setPosition(-0.5);
+						rightEncoder.setPosition(0.0);
 						rightDone = true;
 
 						time = initTimer.get();
@@ -262,7 +264,8 @@ public class Climber extends SubsystemBase {
 						time = initTimer.get();
 						System.out.println(df.format(time) + " climberInit safety abort");
 					}
-					yield();
+
+//					yield();
 				}
 
 				if (!timedOut) {
@@ -271,16 +274,13 @@ public class Climber extends SubsystemBase {
 					// Group the left and right motors
 					climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
 
-					setPoint = 0.0;
+					setPoint = -0.125;
 					climbPosition(setPoint);
-
+					
 					climberState = ClimberState.INIT;
 				}
 				time = initTimer.get();
 				System.out.println(df.format(time) + " climberInit finished");
-			}
-		};
-		thread.start();
 	}
 
 	// public void climberInit(boolean noWait) {

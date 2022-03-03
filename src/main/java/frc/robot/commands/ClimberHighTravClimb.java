@@ -27,7 +27,7 @@ public class ClimberHighTravClimb extends SequentialCommandGroup {
 				new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav),
 				// Open Latch and Climb to Rung
 				new ClimberLatch(climber, LatchState.OPEN),
-				new ClimberGoTo(climber, ClimberConstants.kPullUpLatch),
+				new ClimberInit(climber),
 				// Close the Latch and clear Climber Hooks
 				new ClimberLatch(climber, LatchState.CLOSE),
 				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));

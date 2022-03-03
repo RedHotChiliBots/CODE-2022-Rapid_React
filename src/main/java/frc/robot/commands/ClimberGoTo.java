@@ -21,12 +21,12 @@ public class ClimberGoTo extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		climber.climbPosition(pos);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		climber.climbPosition(pos);
 	}
 
 	// Called once the command ends or is interrupted.

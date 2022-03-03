@@ -39,9 +39,13 @@ import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberInit;
 import frc.robot.commands.ClimberLatch;
+import frc.robot.commands.ClimberLatchAndReadyForNext;
+import frc.robot.commands.ClimberUnlatchAndPullUp;
 import frc.robot.commands.ClimberMidRungClimb;
+import frc.robot.commands.ClimberPerpAndLatchHighTrav;
 import frc.robot.commands.ClimberSetup;
 import frc.robot.commands.ClimberSwivel;
+import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
 import frc.robot.commands.DoRumble;
 import frc.robot.commands.CollectorArm;
 import frc.robot.commands.CollectorStop;
@@ -220,12 +224,12 @@ public class RobotContainer {
 	 * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
-		new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-		new JoystickButton(driver, Button.kX.value).whenPressed(new DrivePosition(chassis, 1.0));
+		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
+		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
+		// new JoystickButton(driver, Button.kX.value).whenPressed(new DrivePosition(chassis, 1.0));
 
-		new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
-		new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
+		// new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
+		// new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
 
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climberOpen);
 		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climberClose);
@@ -237,6 +241,12 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
 		new JoystickButton(operator, Button.kA.value).whenPressed(climbMidRung);
 		new JoystickButton(operator, Button.kB.value).whenPressed(climbHighRung);
+
+		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberSwivelAndEngageHighTrav(climber));
+		new JoystickButton(driver, Button.kB.value).whenPressed(new ClimberPerpAndLatchHighTrav(climber));
+		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberUnlatchAndPullUp(climber));
+		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimberLatchAndReadyForNext(climber));
+
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);

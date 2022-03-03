@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.ClimberState;
 
-public class ClimberInit extends CommandBase {
+public class ClimberPauseForINIT extends CommandBase {
 
   Climber climber = null;
 
-  public ClimberInit(Climber climber) {
+  public ClimberPauseForINIT(Climber climber) {
     this.climber = climber;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
@@ -21,9 +21,6 @@ public class ClimberInit extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-//    if (climber.getClimberState() != ClimberState.INIT) {
-      climber.climberInit();
-//    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
