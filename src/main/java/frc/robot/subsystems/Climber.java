@@ -96,7 +96,7 @@ public class Climber extends SubsystemBase {
 		SWIVEL
 	}
 
-	private SwivelState swivelState = SwivelState.NA;
+	private volatile SwivelState swivelState = SwivelState.NA;
 
 	public enum LatchState {
 		NA,
@@ -104,14 +104,14 @@ public class Climber extends SubsystemBase {
 		CLOSE
 	}
 
-	private LatchState latchState = LatchState.NA;
+	private volatile LatchState latchState = LatchState.NA;
 
 	public enum ClimberState {
 		INIT,
 		NOTINIT
 	}
 
-	private ClimberState climberState = ClimberState.NOTINIT;
+	private volatile ClimberState climberState = ClimberState.NOTINIT;
 
 	public Climber() {
 
