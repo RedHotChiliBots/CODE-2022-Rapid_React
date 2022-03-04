@@ -118,15 +118,15 @@ public class Chassis extends SubsystemBase {
 	private final NetworkTableEntry sbAngle = chassisTab.addPersistent("Angle", 0).getEntry();
 	private final NetworkTableEntry sbHeading = chassisTab.addPersistent("Heading", 0).getEntry();
 
+	private final NetworkTableEntry sbX = chassisTab.addPersistent("Pose X", 0).getEntry();
+	private final NetworkTableEntry sbY = chassisTab.addPersistent("Pose Y", 0).getEntry();
+	private final NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
+
+	private final NetworkTableEntry sbSetPt = chassisTab.addPersistent("Setpoint", 0.0).getEntry();
+
 	private final ShuffleboardTab pneumaticsTab = Shuffleboard.getTab("Pneumatics");
 	private final NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
 	private final NetworkTableEntry sbLoPressure = pneumaticsTab.addPersistent("Lo Pressure", 0).getEntry();
-
-	private NetworkTableEntry sbX = chassisTab.addPersistent("Pose X", 0).getEntry();
-	private NetworkTableEntry sbY = chassisTab.addPersistent("Pose Y", 0).getEntry();
-	private NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
-
-	private NetworkTableEntry sbSetPt = chassisTab.addPersistent("Setpoint", 0.0).getEntry();
 
 	public Chassis() {
 		System.out.println("+++++ Chassis Constructor starting +++++");
@@ -299,10 +299,6 @@ public class Chassis extends SubsystemBase {
 		sbDeg.setDouble(deg);
 	}
 
-	public PowerDistribution getPDP() {
-		return pdp;
-	}
-
 	public DifferentialDriveOdometry getOdometry() {
 		return odometry;
 	}
@@ -315,20 +311,18 @@ public class Chassis extends SubsystemBase {
 		return kinematics;
 	}
 
-	public SparkMaxPIDController getLeftPID() {
-		return leftPIDController;
-	}
-
-	public SparkMaxPIDController getRightPID() {
-		return rightPIDController;
-	}
-
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
 		return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
 	}
 
 	public double getDuration(Trajectory t) {
 		return t.getTotalTimeSeconds();
+	}
+
+	public void resetFieldPosition(double x, double y) {
+		ahrs.zeroYaw();
+		resetEncoders();
+		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
 	}
 
 	/**
@@ -340,10 +334,6 @@ public class Chassis extends SubsystemBase {
 	public double getPitch() {
 		return ahrs.getPitch();
 	}
-
-	// public void driveTankVolts(double left, double right) {
-	// diffDrive.tankDrive(left, right);
-	// }
 
 	public void driveTankVolts(double leftVolts, double rightVolts) {
 		leftMaster.setVoltage(leftVolts);
@@ -359,12 +349,6 @@ public class Chassis extends SubsystemBase {
 		diffDrive.arcadeDrive(-spd, rot);
 	}
 
-	public void resetFieldPosition(double x, double y) {
-		ahrs.zeroYaw();
-		resetEncoders();
-		odometry.resetPosition(new Pose2d(x, y, getAngle()), getAngle());
-	}
-
 	/**
 	 * Returns the "fused" (9-axis) heading.
 	 * 
@@ -376,26 +360,10 @@ public class Chassis extends SubsystemBase {
 		return ahrs.getFusedHeading();
 	}
 
-	/**
-	 * Returns the angle of the robot as a Rotation2d.
-	 *
-	 * @return The angle of the robot.
-	 */
-	// public Rotation2d getAngle() {
-	// // Negating the angle because WPILib gyros are CW positive.
-	// return Rotation2d.fromDegrees(-ahrs.getYaw());
-	// }
-
 	public Rotation2d getAngle() {
 		// Negating the angle because WPILib gyros are CW positive.
 		return ahrs.getRotation2d();
 	}
-
-	/**
-	 * Sets the desired wheel speeds.
-	 *
-	 * @param speeds The desired wheel speeds.
-	 */
 
 	/**
 	 * Drives the robot with the given linear velocity and angular velocity.
