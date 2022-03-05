@@ -23,7 +23,7 @@ public class ClimberMidRungClimb extends SequentialCommandGroup {
 
 		addCommands(
 			// Climb to Rung, Close the Latch, and release the Climber
-			new ClimberInit(climber),
+			new ClimberLeftInit(climber),
 			new ClimberLatch(climber, LatchState.CLOSE),
 			new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
 	}

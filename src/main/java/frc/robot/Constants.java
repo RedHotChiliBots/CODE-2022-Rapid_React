@@ -131,8 +131,8 @@ public final class Constants {
 
 
 	public static final class ClimberConstants {
-		public static final double kP = 0.25;
-		public static final double kI = 0.0;
+		public static final double kP = 0.35;
+		public static final double kI = 0.0000;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.0;
@@ -162,7 +162,7 @@ public final class Constants {
 		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook + ClimberConstants.kEngageOver); // inches
 		public static final double kEngageHighTrav = -(68.0 - ClimberConstants.kFloor2Hook); // inches to position for engage
 																			// high/traverse rungs
-		public static final double kLatchHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch high/traverse
+		public static final double kHookHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch high/traverse
 																			// rungs
 			// public static final double kFullExtendPerpendicular = 66.0; // inches
 			// public static final double kFullExtendSwivel = 72.92;// inches
@@ -179,7 +179,7 @@ public final class Constants {
 		public static final double kInitSafety = 10.0; // seconds
 
 		public static final double kMaxAmps = 10.0;
-		public static final double kInitSpeed = 0.5;
+		public static final double kInitSpeed = 0.4;
 
 		public static final double kMaxPitch = 2.0; // degrees
 

@@ -38,11 +38,12 @@ import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighTravClimb;
 import frc.robot.commands.ClimberInit;
+import frc.robot.commands.ClimberLeftInit;
 import frc.robot.commands.ClimberLatch;
 import frc.robot.commands.ClimberLatchAndReadyForNext;
 import frc.robot.commands.ClimberUnlatchAndPullUp;
 import frc.robot.commands.ClimberMidRungClimb;
-import frc.robot.commands.ClimberPerpAndLatchHighTrav;
+import frc.robot.commands.ClimberPerpAndHookHighTrav;
 import frc.robot.commands.ClimberSetup;
 import frc.robot.commands.ClimberSwivel;
 import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
@@ -103,7 +104,7 @@ public class RobotContainer {
 	private final ClimberSetup climbSetup = new ClimberSetup(climber);
 	private final ClimberGoTo toMidRungEngage = new ClimberGoTo(climber, ClimberConstants.kEngageMidRung);
 	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
-	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kLatchHighTrav);
+	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kHookHighTrav);
 	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber);
 	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber);
 
@@ -243,7 +244,7 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kB.value).whenPressed(climbHighRung);
 
 		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberSwivelAndEngageHighTrav(climber));
-		new JoystickButton(driver, Button.kB.value).whenPressed(new ClimberPerpAndLatchHighTrav(climber));
+		new JoystickButton(driver, Button.kB.value).whenPressed(new ClimberPerpAndHookHighTrav(climber));
 		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberUnlatchAndPullUp(climber));
 		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimberLatchAndReadyForNext(climber));
 

@@ -131,14 +131,14 @@ public class Climber extends SubsystemBase {
 		climbLeftMotor.setInverted(true);
 		climbRightMotor.setInverted(true);
 
-		//climbRightMotor.setInverted(true);
+		// climbRightMotor.setInverted(true);
 
 		// // Group the left and right motors
 		// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
 		// motor
 
 		// ==============================================================
-		// Configure left and right Encoders		
+		// Configure left and right Encoders
 		leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 		rightEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
 
@@ -154,7 +154,7 @@ public class Climber extends SubsystemBase {
 		// ==============================================================
 		// Initialize devices before starting
 		// climberInit();
-	//	pdp = chassis.getPDP();
+		// pdp = chassis.getPDP();
 
 		climberPerpendicular();
 		latchOpen();
@@ -193,6 +193,10 @@ public class Climber extends SubsystemBase {
 		return climberState;
 	}
 
+	public void setClimberState(ClimberState state) {
+		climberState = state;
+	}
+
 	public boolean atTarget() {
 		return Math.abs(setPoint - leftEncoder.getPosition()) <= ClimberConstants.kDistanceTolerance;
 	}
@@ -201,6 +205,22 @@ public class Climber extends SubsystemBase {
 		this.setPoint = setPoint;
 		cbSetPoint.setDouble(setPoint);
 		climbPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+	}
+
+	public CANSparkMax getLeftMotor() {
+		return climbLeftMotor;
+	}
+
+	public CANSparkMax getRightMotor() {
+		return climbRightMotor;
+	}
+
+	public RelativeEncoder getLeftEncoder() {
+		return leftEncoder;
+	}
+
+	public RelativeEncoder getRightEncoder() {
+		return rightEncoder;
 	}
 
 	public boolean getLeftLimit() {
@@ -213,74 +233,74 @@ public class Climber extends SubsystemBase {
 
 	public void climberInit() {
 		// Thread thread = new Thread("ClimberInit") {
-		// 	@Override
-		// 	public void run() {
-				boolean timedOut = false;
-				boolean leftDone = false;
-				boolean rightDone = false;
-				double time = 0.0;
-				initTimer.reset();
-				climberState = ClimberState.NOTINIT;
+		// @Override
+		// public void run() {
+		boolean timedOut = false;
+		boolean leftDone = false;
+		boolean rightDone = false;
+		double time = 0.0;
+		initTimer.reset();
+		climberState = ClimberState.NOTINIT;
 
-				DecimalFormat df = new DecimalFormat("#0.0000");
-				df.setRoundingMode(RoundingMode.CEILING);
+		DecimalFormat df = new DecimalFormat("#0.0000");
+		df.setRoundingMode(RoundingMode.CEILING);
 
-				System.out.println("climberInit pending start");
+		System.out.println("climberInit pending start");
 
-				climbLeftMotor.set(ClimberConstants.kInitSpeed);
-				climbRightMotor.set(-ClimberConstants.kInitSpeed);
+		climbLeftMotor.set(ClimberConstants.kInitSpeed);
+		climbRightMotor.set(-ClimberConstants.kInitSpeed);
 
-				while (!(leftDone && rightDone) && !timedOut) {
-					time = initTimer.get();
-					System.out.println(df.format(time) + 
-						" LeftPower: " + climbLeftMotor.get() + 
-						" RightPower: " + climbRightMotor.get());
+		while (!(leftDone && rightDone) && !timedOut) {
+			time = initTimer.get();
+			System.out.println(df.format(time) +
+					" LeftPower: " + climbLeftMotor.get() +
+					" RightPower: " + climbRightMotor.get());
 
-					if (!leftDone && getLeftLimit()) {
-						climbLeftMotor.set(0.0);
-						leftEncoder.setPosition(0.0);
-						leftDone = true;
+			if (!leftDone && getLeftLimit()) {
+				climbLeftMotor.set(0.0);
+				leftEncoder.setPosition(0.0);
+				leftDone = true;
 
-						time = initTimer.get();
-						System.out.println(df.format(time) + " climberInit left done");
-					}
-
-					if (!rightDone && getRightLimit()) {
-						climbRightMotor.set(0.0);
-						rightEncoder.setPosition(0.0);
-						rightDone = true;
-
-						time = initTimer.get();
-						System.out.println(df.format(time) + " climberInit right done");
-					}
-
-					if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
-						timedOut = true;
-						if (!leftDone)
-							climbLeftMotor.set(0.0);
-						if (!rightDone)
-							climbRightMotor.set(0.0);
-
-						time = initTimer.get();
-						System.out.println(df.format(time) + " climberInit safety abort");
-					}
-
-//					yield();
-				}
-
-				if (!timedOut) {
-					time = initTimer.get();
-					System.out.println(df.format(time) + " climberInit configure motors");
-					// Group the left and right motors
-					climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
-
-					setPoint = -0.125;
-					climbPosition(setPoint);
-					
-					climberState = ClimberState.INIT;
-				}
 				time = initTimer.get();
-				System.out.println(df.format(time) + " climberInit finished");
+				System.out.println(df.format(time) + " climberInit left done");
+			}
+
+			if (!rightDone && getRightLimit()) {
+				climbRightMotor.set(0.0);
+				rightEncoder.setPosition(0.0);
+				rightDone = true;
+
+				time = initTimer.get();
+				System.out.println(df.format(time) + " climberInit right done");
+			}
+
+			if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
+				timedOut = true;
+				if (!leftDone)
+					climbLeftMotor.set(0.0);
+				if (!rightDone)
+					climbRightMotor.set(0.0);
+
+				time = initTimer.get();
+				System.out.println(df.format(time) + " climberInit safety abort");
+			}
+
+			// yield();
+		}
+
+		if (!timedOut) {
+			time = initTimer.get();
+			System.out.println(df.format(time) + " climberInit configure motors");
+			// Group the left and right motors
+			climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+
+			setPoint = 0.0;
+			climbPosition(setPoint);
+
+			climberState = ClimberState.INIT;
+		}
+		time = initTimer.get();
+		System.out.println(df.format(time) + " climberInit finished");
 	}
 
 	// public void climberInit(boolean noWait) {
@@ -387,7 +407,7 @@ public class Climber extends SubsystemBase {
 		Thread thread = new Thread("LatchOpen") {
 			@Override
 			public void run() {
-				
+
 				climbLatch.set(Value.kForward);
 
 				try {
@@ -395,7 +415,7 @@ public class Climber extends SubsystemBase {
 				} catch (InterruptedException e) {
 					DriverStation.reportError("LatchOpen sleep exception", true);
 				}
-				
+
 				latchState = LatchState.OPEN;
 			}
 		};
@@ -418,7 +438,7 @@ public class Climber extends SubsystemBase {
 				} catch (InterruptedException e) {
 					DriverStation.reportError("LatchClose sleep exception", true);
 				}
-				
+
 				latchState = LatchState.CLOSE;
 			}
 		};
@@ -442,7 +462,7 @@ public class Climber extends SubsystemBase {
 				} catch (InterruptedException e) {
 					DriverStation.reportError("ClimbExtend sleep exception", true);
 				}
-				
+
 				swivelState = SwivelState.SWIVEL;
 			}
 		};
@@ -466,7 +486,7 @@ public class Climber extends SubsystemBase {
 				} catch (InterruptedException e) {
 					DriverStation.reportError("ClimbRetract sleep exception", true);
 				}
-				
+
 				swivelState = SwivelState.PERPENDICULAR;
 			}
 		};

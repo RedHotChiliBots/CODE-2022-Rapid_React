@@ -4,41 +4,29 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.ClimberState;
 
-public class ClimberInit extends CommandBase {
-
-  Climber climber = null;
-
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ClimberInit extends SequentialCommandGroup {
+  /** Creates a new CLIMB. */
   public ClimberInit(Climber climber) {
-    this.climber = climber;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-  }
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+ //     new SequentialCommandGroup(
+   addCommands(
+        new ParallelCommandGroup(
+          new ClimberLeftInit(climber),
+          new ClimberRightInit(climber)),
+        new ClimberResetEncoder(climber));
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-//    if (climber.getClimberState() != ClimberState.INIT) {
-      climber.climberInit();
-//    }
-  }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return climber.getClimberState() == ClimberState.INIT;
+        // new ClimberLeftInit(climber),
+        // new ClimberMidRungClimb(climber),
+        // new ClimberHighTravClimb(climber),
+        // new ClimberHighTravClimb(climber));
   }
 }
