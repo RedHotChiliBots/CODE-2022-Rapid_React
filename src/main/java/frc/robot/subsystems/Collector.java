@@ -80,7 +80,7 @@ public class Collector extends SubsystemBase {
 		STOW
 	}
 
-	private ArmState armState = ArmState.NA;
+	private volatile ArmState armState = ArmState.NA;
 
 	public enum CollectorState {
 		NA,
@@ -88,7 +88,7 @@ public class Collector extends SubsystemBase {
 		ENTERING
 	}
 
-	private CollectorState collectorState = CollectorState.NA;
+	private volatile CollectorState collectorState = CollectorState.NA;
 
 	public Collector() {
 		System.out.println("+++++ Collector Constructor starting +++++");

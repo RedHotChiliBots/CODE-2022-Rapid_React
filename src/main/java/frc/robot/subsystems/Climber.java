@@ -43,7 +43,6 @@ public class Climber extends SubsystemBase {
 			PneumaticsModuleType.CTREPCM,
 			PneumaticChannelConstants.kClimbLeftExtend,
 			PneumaticChannelConstants.kClimbLeftRetract);
-
 	private final DoubleSolenoid climbLatch = new DoubleSolenoid(
 			PneumaticsModuleType.CTREPCM,
 			PneumaticChannelConstants.kLatchOpen,
@@ -96,7 +95,7 @@ public class Climber extends SubsystemBase {
 		SWIVEL
 	}
 
-	private SwivelState swivelState = SwivelState.NA;
+	private volatile SwivelState swivelState = SwivelState.NA;
 
 	public enum LatchState {
 		NA,
@@ -104,14 +103,14 @@ public class Climber extends SubsystemBase {
 		CLOSE
 	}
 
-	private LatchState latchState = LatchState.NA;
+	private volatile LatchState latchState = LatchState.NA;
 
 	public enum ClimberState {
 		INIT,
 		NOTINIT
 	}
 
-	private ClimberState climberState = ClimberState.NOTINIT;
+	private volatile ClimberState climberState = ClimberState.NOTINIT;
 
 	public Climber() {
 
@@ -131,12 +130,6 @@ public class Climber extends SubsystemBase {
 		climbLeftMotor.setInverted(true);
 		climbRightMotor.setInverted(true);
 
-		// climbRightMotor.setInverted(true);
-
-		// // Group the left and right motors
-		// climbRightMotor.follow(climbLeftMotor, true); // invert direction of right
-		// motor
-
 		// ==============================================================
 		// Configure left and right Encoders
 		leftEncoder.setPositionConversionFactor(ClimberConstants.kPosFactorIPC);
@@ -153,11 +146,9 @@ public class Climber extends SubsystemBase {
 
 		// ==============================================================
 		// Initialize devices before starting
-		// climberInit();
-		// pdp = chassis.getPDP();
-
+		climberInit();
 		climberPerpendicular();
-		latchOpen();
+		latchClose();
 		initTimer.start();
 		initTimer.reset();
 
