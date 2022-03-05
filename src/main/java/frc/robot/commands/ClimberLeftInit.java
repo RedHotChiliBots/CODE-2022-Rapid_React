@@ -13,46 +13,46 @@ import frc.robot.subsystems.Climber;
 
 public class ClimberLeftInit extends CommandBase {
 
-  Climber climber = null;
+	Climber climber = null;
 
-  CANSparkMax leftMotor = null;
-  RelativeEncoder leftEncoder = null;
+	CANSparkMax leftMotor = null;
+	RelativeEncoder leftEncoder = null;
 
-  public ClimberLeftInit(Climber climber) {
-    this.climber = climber;
-    // Use addRequirements() here to declare subsystem dependencies.
-//    addRequirements(climber);
-  }
+	public ClimberLeftInit(Climber climber) {
+		this.climber = climber;
+		// Use addRequirements() here to declare subsystem dependencies.
+		// addRequirements(climber);
+	}
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+	// Called when the command is initially scheduled.
+	@Override
+	public void initialize() {
 
-    leftMotor = climber.getLeftMotor();
-    leftEncoder = climber.getLeftEncoder();
+		leftMotor = climber.getLeftMotor();
+		leftEncoder = climber.getLeftEncoder();
 
 		System.out.println("climberInit left start");
-  }
+	}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override
+	public void execute() {
 		leftMotor.set(ClimberConstants.kInitSpeed);
-  }
+	}
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-				leftMotor.set(0.0);
-				leftEncoder.setPosition(0.0);
+	// Called once the command ends or is interrupted.
+	@Override
+	public void end(boolean interrupted) {
+		leftMotor.set(0.0);
+		leftEncoder.setPosition(0.0);
 
-				System.out.println("climberInit left done");
-  }
+		System.out.println("climberInit left done");
+	}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-//    return climber.getClimberState() == ClimberState.INIT;
-    return climber.getLeftLimit();
-  }
+	// Returns true when the command should end.
+	@Override
+	public boolean isFinished() {
+		// return climber.getClimberState() == ClimberState.INIT;
+		return climber.getLeftLimit();
+	}
 }

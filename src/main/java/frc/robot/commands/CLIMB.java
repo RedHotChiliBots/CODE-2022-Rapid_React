@@ -12,14 +12,14 @@ import frc.robot.subsystems.Climber;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class CLIMB extends SequentialCommandGroup {
-  /** Creates a new CLIMB. */
-  public CLIMB(Climber climber) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new ClimberInit(climber),
-        new ClimberMidRungClimb(climber),
-        new ClimberHighTravClimb(climber),
-        new ClimberHighTravClimb(climber));
-  }
+	/** Creates a new CLIMB. */
+	public CLIMB(Climber climber) {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(
+				new ClimberInit(climber),
+				new ClimberMidRungClimb(climber),
+				new ClimberHighTravClimb(climber),
+				new ClimberHighTravClimb(climber));
+	}
 }
