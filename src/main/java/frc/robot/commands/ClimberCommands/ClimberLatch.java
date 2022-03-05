@@ -2,31 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.SwivelState;
+import frc.robot.subsystems.Climber.LatchState;
 
-public class ClimberSwivel extends CommandBase {
-	private Climber climber = null;
-	private SwivelState state = null;
+public class ClimberLatch extends CommandBase {
 
-	public ClimberSwivel(Climber climber, SwivelState state) {
+	Climber climber = null;
+	LatchState state = null;
+
+	public ClimberLatch(Climber climber, LatchState state) {
 		this.climber = climber;
 		this.state = state;
-
 		addRequirements(climber);
-		// Use addRequirements() here to declare subsystem dependencies.
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		if (state == SwivelState.SWIVEL) {
-			climber.climberSwivel();
+		if (state == LatchState.OPEN) {
+			climber.latchOpen();
 		} else {
-			climber.climberPerpendicular();
+			climber.latchClose();
 		}
 	}
 
@@ -45,12 +44,12 @@ public class ClimberSwivel extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		boolean status = false;
-		if (state == SwivelState.SWIVEL) {
-			if (climber.getSwivelState() == SwivelState.SWIVEL) {
+		if (state == LatchState.OPEN) {
+			if (climber.getLatchState() == LatchState.OPEN) {
 				status = true;
 			}
 		} else {
-			if (climber.getSwivelState() == SwivelState.PERPENDICULAR) {
+			if (climber.getLatchState() == LatchState.CLOSE) {
 				status = true;
 			}
 		}

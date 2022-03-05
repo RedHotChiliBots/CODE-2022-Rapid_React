@@ -31,24 +31,14 @@ public class Shooter extends SubsystemBase {
 	private final CANSparkMax shootMotor = new CANSparkMax(
 			CANidConstants.kShooterMotor,
 			MotorType.kBrushless);
-	private final CANSparkMax injectorMotor = new CANSparkMax(
-			CANidConstants.kInjectorMotor,
-			MotorType.kBrushless);
 
 	// ==============================================================
 	// Define PID Controller
 	private final SparkMaxPIDController shootPIDController = shootMotor.getPIDController();
-	private final SparkMaxPIDController injectPIDController = injectorMotor.getPIDController();
 
 	// ==============================================================
 	// Define Encoder
 	private final RelativeEncoder shootEncoder = shootMotor.getEncoder();
-	private final RelativeEncoder injectEncoder = injectorMotor.getEncoder();
-
-	// ==============================================================
-	// Define Digital Inputs
-	private final DigitalInput injectorEntering = new DigitalInput(DIOChannelConstants.kInjectorEntering);
-	private final DigitalInput injectorExiting = new DigitalInput(DIOChannelConstants.kInjectorExiting);
 
 	// ==============================================================
 	// Define Library
@@ -67,14 +57,7 @@ public class Shooter extends SubsystemBase {
 	// ==============================================================
 	// Define local variables
 	private double shootSetPoint = 0.0;
-	private double injectSetPoint = 0.0;
 	private boolean running = false;
-
-	public enum InjectorState {
-		NA, EMPTY, ENTERING, CONTROLLED
-	}
-
-	private volatile InjectorState shooterState = InjectorState.NA;
 
 	public Shooter() {
 		System.out.println("+++++ Shooter Constructor starting +++++");
@@ -85,25 +68,14 @@ public class Shooter extends SubsystemBase {
 		shootMotor.clearFaults();
 		shootMotor.setIdleMode(IdleMode.kBrake);
 
-		injectorMotor.restoreFactoryDefaults();
-		injectorMotor.clearFaults();
-		injectorMotor.setIdleMode(IdleMode.kBrake);
-
 		// ==============================================================
 		// Configure PID Controller
-		injectPIDController.setP(ShooterConstants.kShootP);
-		injectPIDController.setI(ShooterConstants.kShootI);
-		injectPIDController.setD(ShooterConstants.kShootD);
-		injectPIDController.setIZone(ShooterConstants.kShootIz);
-		injectPIDController.setFF(ShooterConstants.kShootFF);
-		injectPIDController.setOutputRange(ShooterConstants.kShootMinOutput, ShooterConstants.kShootMaxOutput);
-
-		shootPIDController.setP(ShooterConstants.kInjectP);
-		shootPIDController.setI(ShooterConstants.kInjectI);
-		shootPIDController.setD(ShooterConstants.kInjectD);
-		shootPIDController.setIZone(ShooterConstants.kInjectIz);
-		shootPIDController.setFF(ShooterConstants.kInjectFF);
-		shootPIDController.setOutputRange(ShooterConstants.kInjectMinOutput, ShooterConstants.kInjectMaxOutput);
+		shootPIDController.setP(ShooterConstants.kShootP);
+		shootPIDController.setI(ShooterConstants.kShootI);
+		shootPIDController.setD(ShooterConstants.kShootD);
+		shootPIDController.setIZone(ShooterConstants.kShootIz);
+		shootPIDController.setFF(ShooterConstants.kShootFF);
+		shootPIDController.setOutputRange(ShooterConstants.kShootMinOutput, ShooterConstants.kShootMaxOutput);
 
 		// ==============================================================
 		// Display PID coefficients on SmartDashboard
@@ -119,7 +91,6 @@ public class Shooter extends SubsystemBase {
 		// ==============================================================
 		// Initialize devices before starting
 		setShootVelocity(0.0);
-		setInjectVelocity(0.0);
 
 		System.out.println("----- Shooter Constructor finished -----");
 	}
@@ -160,33 +131,10 @@ public class Shooter extends SubsystemBase {
 		sbShootVel.setDouble(getShootVelocity());
 		sbSetPoint.setDouble(shootSetPoint);
 		sbAtTarget.setBoolean(atShootTarget());
-		sbShooterState.setString(shooterState.toString());
-		sbEntering.setBoolean(isEntering());
-		sbExiting.setBoolean(isExiting());
-	}
-
-	public boolean isEntering() {
-		return injectorEntering.get();
-	}
-
-	public boolean isExiting() {
-		return injectorExiting.get();
-	}
-
-	public void setInjectorState(InjectorState state) {
-		shooterState = state;
-	}
-
-	public InjectorState getInjectorState() {
-		return shooterState;
 	}
 
 	public double getShootVelocity() {
 		return shootEncoder.getVelocity();
-	}
-
-	public double getInjectVelocity() {
-		return injectEncoder.getVelocity();
 	}
 
 	public void setShootVelocity(double rpm) {
@@ -194,17 +142,8 @@ public class Shooter extends SubsystemBase {
 		shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
 	}
 
-	public void setInjectVelocity(double rpm) {
-		this.injectSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxInjectRPM, ShooterConstants.kMinInjectRPM);
-		injectPIDController.setReference(injectSetPoint, ControlType.kVelocity);
-	}
-
 	public void stopShoot() {
 		setShootVelocity(0.0);
-	}
-
-	public void stopInject() {
-		setInjectVelocity(0.0);
 	}
 
 	public void setRunning(boolean r) {
@@ -217,9 +156,5 @@ public class Shooter extends SubsystemBase {
 
 	public boolean atShootTarget() {
 		return Math.abs(shootSetPoint - getShootVelocity()) <= ShooterConstants.kShootVelocityTolerance;
-	}
-
-	public boolean atInjectTarget() {
-		return Math.abs(shootSetPoint - getInjectVelocity()) <= ShooterConstants.kInjectVelocityTolerance;
 	}
 }

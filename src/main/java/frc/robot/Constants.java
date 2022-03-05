@@ -34,7 +34,7 @@ public final class Constants {
 		public static final int kClimbRightMotor = 21;
 
 		public static final int kShooterMotor = 30;
-		public static final int kInjectorMotor = 31;
+		public static final int kFeederMotor = 31;
 
 		public static final int kCollectorMotor = 40;
 
@@ -60,8 +60,8 @@ public final class Constants {
 		public static final int kCollectorEntering = 2;
 		public static final int kHopperEntering = 3;
 		public static final int kHopperExiting = 4;
-		public static final int kInjectorEntering = 5;
-		public static final int kInjectorExiting = 6;
+		public static final int kFeederEntering = 5;
+		public static final int kFeederExiting = 6;
 	}
 
 	public static final class PWMChannelConstants {
@@ -129,7 +129,6 @@ public final class Constants {
 		public static final double kRamseteZeta = 0.7;
 	}
 
-
 	public static final class ClimberConstants {
 		public static final double kP = 0.35;
 		public static final double kI = 0.0000;
@@ -156,16 +155,22 @@ public final class Constants {
 		public static final double kLowRung = 48.75; // inches above floor per rules
 		public static final double kMidRung = 60.25; // inches aboave floor per rules
 
-		public static final double kClearLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook - ClimberConstants.kClearUnder);
-		public static final double kEngageLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook + ClimberConstants.kEngageOver); // inches
-		public static final double kClearMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook - ClimberConstants.kClearUnder); // inches
-		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook + ClimberConstants.kEngageOver); // inches
-		public static final double kEngageHighTrav = -(68.0 - ClimberConstants.kFloor2Hook); // inches to position for engage
-																			// high/traverse rungs
-		public static final double kHookHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch high/traverse
-																			// rungs
-			// public static final double kFullExtendPerpendicular = 66.0; // inches
-			// public static final double kFullExtendSwivel = 72.92;// inches
+		public static final double kClearLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook
+				- ClimberConstants.kClearUnder);
+		public static final double kEngageLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook
+				+ ClimberConstants.kEngageOver); // inches
+		public static final double kClearMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook
+				- ClimberConstants.kClearUnder); // inches
+		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook
+				+ ClimberConstants.kEngageOver); // inches
+		public static final double kEngageHighTrav = -(68.0 - ClimberConstants.kFloor2Hook); // inches to position for
+																																													// engage
+		// high/traverse rungs
+		public static final double kHookHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch
+																																												// high/traverse
+		// rungs
+		// public static final double kFullExtendPerpendicular = 66.0; // inches
+		// public static final double kFullExtendSwivel = 72.92;// inches
 		public static final double kPullUpLatch = -(0.0); // inches to latch climber
 		public static final double kPullUpClear = -(3.0); // inches to unhook while latched
 		public static final double kStow = 0.0;
@@ -173,8 +178,8 @@ public final class Constants {
 
 		public static final double kDistanceTolerance = 0.125; // inches
 
-		public static final long kLatchDelay = 1000; // milliseconds
-		public static final long kSwivelDelay = 3000; // milliseconds
+		public static final long kLatchDelay = 500; // milliseconds
+		public static final long kSwivelDelay = 1000; // milliseconds
 		// public static final double kInitDelay = 0.25; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 
@@ -194,25 +199,13 @@ public final class Constants {
 		public static final double kShootMinOutput = -1.0;
 		public static final double kShootMaxOutput = 1.0;
 
-		public static final double kInjectP = 0.00008;
-		public static final double kInjectI = 0.0000004;
-		public static final double kInjectD = 0.0;
-		public static final double kInjectIz = 0.0;
-		public static final double kInjectFF = 0.0;
-		public static final double kInjectMinOutput = -1.0;
-		public static final double kInjectMaxOutput = 1.0;
-
 		public static final double kStopRPMs = 0.0;
 		public static final double kMinShootRPM = -4540.0;
 		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
-		public static final double kMinInjectRPM = -4540.0;
-		public static final double kMaxInjectRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
 		public static final double kShooterShootRPMs = kMaxShootRPM * 0.45;
-		public static final double kInjectorerShootRPMs = kMaxShootRPM * 0.45;
 
 		public static final double kShootVelocityTolerance = 100.0; // rpms
-		public static final double kInjectVelocityTolerance = 100.0; // rpms
 	}
 
 	public static final class CollectorConstants {
@@ -251,5 +244,22 @@ public final class Constants {
 		public static final double kHopperRPMs = kMaxRPM * 0.45;
 
 		public static final double kVelocityTolerance = 100.0; // rpms
+	}
+
+	public static class FeederConstants {
+		public static final double kFeederP = 0.00008;
+		public static final double kFeederI = 0.0000004;
+		public static final double kFeederD = 0.0;
+		public static final double kFeederIz = 0.0;
+		public static final double kFeederFF = 0.0;
+		public static final double kFeederMinOutput = -1.0;
+		public static final double kFeederMaxOutput = 1.0;
+
+		public static final double kMinFeederRPM = -4540.0;
+		public static final double kMaxFeederRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+
+		public static final double kFeederShootRPMs = kMaxFeederRPM * 0.45;
+
+		public static final double kFeederVelocityTolerance = 100.0; // rpms
 	}
 }

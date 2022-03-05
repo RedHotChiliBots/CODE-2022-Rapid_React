@@ -2,40 +2,58 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClimberCommands;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.ClimberState;
 
-public class ClimberPauseForINIT extends CommandBase {
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.subsystems.Climber;
+
+public class ClimberRightInit extends CommandBase {
 
 	Climber climber = null;
 
-	public ClimberPauseForINIT(Climber climber) {
+	CANSparkMax rightMotor = null;
+	RelativeEncoder rightEncoder = null;
+
+	public ClimberRightInit(Climber climber) {
 		this.climber = climber;
 		// Use addRequirements() here to declare subsystem dependencies.
-		addRequirements(climber);
+		// addRequirements(climber);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+
+		rightMotor = climber.getRightMotor();
+		rightEncoder = climber.getRightEncoder();
+
+		System.out.println("climberInit right start");
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
+		rightMotor.set(-ClimberConstants.kInitSpeed);
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
+		rightMotor.set(0.0);
+		rightEncoder.setPosition(0.0);
+
+		System.out.println("climberInit right done");
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return climber.getClimberState() == ClimberState.INIT;
+		// return climber.getClimberState() == ClimberState.INIT;
+		return climber.getRightLimit();
 	}
 }

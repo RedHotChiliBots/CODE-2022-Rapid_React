@@ -165,6 +165,20 @@ public class Hopper extends SubsystemBase {
     hopperState = state;
   }
 
+	public void hopperSensorState() {
+		if(isEntering() == false && isExiting() == false) {
+			setHopperState(HopperState.EMPTY);
+		} else if (isEntering() == true && isExiting() == false) {
+			setHopperState(HopperState.ENTERING);
+		} else if (isEntering() == false && isExiting() == true) {
+			setHopperState(HopperState.EXITING);
+		} else if (isEntering() == true && isExiting() == true) {
+			setHopperState(HopperState.CONTROLLED);
+		} else {
+			setHopperState(HopperState.NA);
+		}
+	}
+
   public HopperState getHopperState() {
     return hopperState;
   }

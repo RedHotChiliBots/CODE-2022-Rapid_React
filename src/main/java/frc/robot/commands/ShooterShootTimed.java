@@ -6,17 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Shooter.InjectorState;
+import frc.robot.subsystems.Feeder.FeederState;
 import frc.robot.RobotContainer;
 
 public class ShooterShootTimed extends CommandBase {
 	private Shooter shooter = null;
 	private RobotContainer robotContainer = null;
+	private Feeder feeder = null;
 
-	public ShooterShootTimed(Shooter shooter, RobotContainer robotContainer) {
+	public ShooterShootTimed(Shooter shooter, Feeder feeder, RobotContainer robotContainer) {
 		this.shooter = shooter;
+		this.feeder = feeder;
 		this.robotContainer = robotContainer;
 		// Use addRequirements() here to declare subsystem dependencies.
 	}
@@ -34,7 +36,7 @@ public class ShooterShootTimed extends CommandBase {
 		if (shooter.atShootTarget()
 				// && shooter.getGuardState() == GuardState.CLOSED
 				// && shooter.getPlungerState() == PlungerState.READY
-				&& shooter.getInjectorState() == InjectorState.CONTROLLED) {
+				&& feeder.getFeederState() == FeederState.CONTROLLED) {
 
 			// shooter.plungerPlunge();
 		} else {

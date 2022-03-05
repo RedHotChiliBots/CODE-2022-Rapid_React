@@ -31,30 +31,29 @@ import frc.robot.subsystems.Climber.SwivelState;
 import frc.robot.subsystems.Collector.ArmState;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
-
-import frc.robot.commands.CLIMB;
-import frc.robot.commands.ChassisArcadeDrive;
-import frc.robot.commands.ChassisTankDrive;
-import frc.robot.commands.ClimberGoTo;
-import frc.robot.commands.ClimberHighTravClimb;
-import frc.robot.commands.ClimberInit;
-import frc.robot.commands.ClimberLeftInit;
-import frc.robot.commands.ClimberLatch;
-import frc.robot.commands.ClimberLatchAndReadyForNext;
-import frc.robot.commands.ClimberUnlatchAndPullUp;
-import frc.robot.commands.ClimberMidRungClimb;
-import frc.robot.commands.ClimberPerpAndHookHighTrav;
-import frc.robot.commands.ClimberSetup;
-import frc.robot.commands.ClimberSwivel;
-import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
 import frc.robot.commands.DoRumble;
 import frc.robot.commands.CollectorArm;
 import frc.robot.commands.CollectorStop;
-import frc.robot.commands.DrivePosition;
-import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
+import frc.robot.commands.ClimberCommands.CLIMB;
+import frc.robot.commands.ClimberCommands.ClimberGoTo;
+import frc.robot.commands.ClimberCommands.ClimberHighTravClimb;
+import frc.robot.commands.ClimberCommands.ClimberInit;
+import frc.robot.commands.ClimberCommands.ClimberLatch;
+import frc.robot.commands.ClimberCommands.ClimberLatchAndReadyForNext;
+import frc.robot.commands.ClimberCommands.ClimberLeftInit;
+import frc.robot.commands.ClimberCommands.ClimberMidRungClimb;
+import frc.robot.commands.ClimberCommands.ClimberPerpAndHookHighTrav;
+import frc.robot.commands.ClimberCommands.ClimberSetup;
+import frc.robot.commands.ClimberCommands.ClimberSwivel;
+import frc.robot.commands.ClimberCommands.ClimberSwivelAndEngageHighTrav;
+import frc.robot.commands.ClimberCommands.ClimberUnlatchAndPullUp;
+import frc.robot.commands.DriveCommands.ChassisArcadeDrive;
+import frc.robot.commands.DriveCommands.ChassisTankDrive;
+import frc.robot.commands.DriveCommands.DrivePosition;
+import frc.robot.commands.DriveCommands.DriveTrajectory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -242,6 +241,8 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
 		new JoystickButton(operator, Button.kA.value).whenPressed(climbMidRung);
 		new JoystickButton(operator, Button.kB.value).whenPressed(climbHighRung);
+
+		new JoystickButton(driver, Button.kStart.value).whenPressed(new CLIMB(climber));
 
 		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberSwivelAndEngageHighTrav(climber));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new ClimberPerpAndHookHighTrav(climber));

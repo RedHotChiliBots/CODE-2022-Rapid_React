@@ -4,25 +4,19 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Chassis;
+import frc.robot.Constants.HopperConstants;
+import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Hopper.HopperState;
 
-public class ChassisArcadeDrive extends CommandBase {
-  /** Creates a new ChassisArcadeDrive. */
+public class HopperTakeInCargo extends CommandBase {
+  /** Creates a new HopperTakeInCargo. */
+	private Hopper hopper = null;
 
-  private Chassis chassis;
-  private DoubleSupplier spd;
-  private DoubleSupplier rot;
-
-  
-  public ChassisArcadeDrive(Chassis chassis, DoubleSupplier spd, DoubleSupplier rot) {
+  public HopperTakeInCargo(Hopper hopper) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.chassis = chassis;
-    this.spd = spd;
-    this.rot = rot;
-    addRequirements(chassis);
+		this.hopper = hopper;
+		addRequirements(hopper);
   }
 
   // Called when the command is initially scheduled.
@@ -32,16 +26,21 @@ public class ChassisArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.driveArcade(spd.getAsDouble(), rot.getAsDouble());
-  }
+		hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+		hopper.setRunning(true);
+		hopper.hopperSensorState();
+	}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+		hopper.setRunning(false);
+		hopper.hopperSensorState();
+	}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return hopper.getHopperState() == HopperState.CONTROLLED;
   }
 }

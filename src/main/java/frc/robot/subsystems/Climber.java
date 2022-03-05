@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 import com.revrobotics.CANSparkMax;
@@ -146,7 +144,7 @@ public class Climber extends SubsystemBase {
 
 		// ==============================================================
 		// Initialize devices before starting
-		climberInit();
+//		climberInit();
 		climberPerpendicular();
 		latchClose();
 		initTimer.start();
@@ -222,77 +220,77 @@ public class Climber extends SubsystemBase {
 		return !rightLimit.get();
 	}
 
-	public void climberInit() {
-		// Thread thread = new Thread("ClimberInit") {
-		// @Override
-		// public void run() {
-		boolean timedOut = false;
-		boolean leftDone = false;
-		boolean rightDone = false;
-		double time = 0.0;
-		initTimer.reset();
-		climberState = ClimberState.NOTINIT;
+	// public void climberInit() {
+	// 	// Thread thread = new Thread("ClimberInit") {
+	// 	// @Override
+	// 	// public void run() {
+	// 	boolean timedOut = false;
+	// 	boolean leftDone = false;
+	// 	boolean rightDone = false;
+	// 	double time = 0.0;
+	// 	initTimer.reset();
+	// 	climberState = ClimberState.NOTINIT;
 
-		DecimalFormat df = new DecimalFormat("#0.0000");
-		df.setRoundingMode(RoundingMode.CEILING);
+	// 	DecimalFormat df = new DecimalFormat("#0.0000");
+	// 	df.setRoundingMode(RoundingMode.CEILING);
 
-		System.out.println("climberInit pending start");
+	// 	System.out.println("climberInit pending start");
 
-		climbLeftMotor.set(ClimberConstants.kInitSpeed);
-		climbRightMotor.set(-ClimberConstants.kInitSpeed);
+	// 	climbLeftMotor.set(ClimberConstants.kInitSpeed);
+	// 	climbRightMotor.set(-ClimberConstants.kInitSpeed);
 
-		while (!(leftDone && rightDone) && !timedOut) {
-			time = initTimer.get();
-			System.out.println(df.format(time) +
-					" LeftPower: " + climbLeftMotor.get() +
-					" RightPower: " + climbRightMotor.get());
+	// 	while (!(leftDone && rightDone) && !timedOut) {
+	// 		time = initTimer.get();
+	// 		System.out.println(df.format(time) +
+	// 				" LeftPower: " + climbLeftMotor.get() +
+	// 				" RightPower: " + climbRightMotor.get());
 
-			if (!leftDone && getLeftLimit()) {
-				climbLeftMotor.set(0.0);
-				leftEncoder.setPosition(0.0);
-				leftDone = true;
+	// 		if (!leftDone && getLeftLimit()) {
+	// 			climbLeftMotor.set(0.0);
+	// 			leftEncoder.setPosition(0.0);
+	// 			leftDone = true;
 
-				time = initTimer.get();
-				System.out.println(df.format(time) + " climberInit left done");
-			}
+	// 			time = initTimer.get();
+	// 			System.out.println(df.format(time) + " climberInit left done");
+	// 		}
 
-			if (!rightDone && getRightLimit()) {
-				climbRightMotor.set(0.0);
-				rightEncoder.setPosition(0.0);
-				rightDone = true;
+	// 		if (!rightDone && getRightLimit()) {
+	// 			climbRightMotor.set(0.0);
+	// 			rightEncoder.setPosition(0.0);
+	// 			rightDone = true;
 
-				time = initTimer.get();
-				System.out.println(df.format(time) + " climberInit right done");
-			}
+	// 			time = initTimer.get();
+	// 			System.out.println(df.format(time) + " climberInit right done");
+	// 		}
 
-			if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
-				timedOut = true;
-				if (!leftDone)
-					climbLeftMotor.set(0.0);
-				if (!rightDone)
-					climbRightMotor.set(0.0);
+	// 		if (initTimer.hasElapsed(ClimberConstants.kInitSafety)) {
+	// 			timedOut = true;
+	// 			if (!leftDone)
+	// 				climbLeftMotor.set(0.0);
+	// 			if (!rightDone)
+	// 				climbRightMotor.set(0.0);
 
-				time = initTimer.get();
-				System.out.println(df.format(time) + " climberInit safety abort");
-			}
+	// 			time = initTimer.get();
+	// 			System.out.println(df.format(time) + " climberInit safety abort");
+	// 		}
 
-			// yield();
-		}
+	// 		// yield();
+	// 	}
 
-		if (!timedOut) {
-			time = initTimer.get();
-			System.out.println(df.format(time) + " climberInit configure motors");
-			// Group the left and right motors
-			climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
+	// 	if (!timedOut) {
+	// 		time = initTimer.get();
+	// 		System.out.println(df.format(time) + " climberInit configure motors");
+	// 		// Group the left and right motors
+	// 		climbRightMotor.follow(climbLeftMotor, true); // invert direction of right motor
 
-			setPoint = 0.0;
-			climbPosition(setPoint);
+	// 		setPoint = 0.0;
+	// 		climbPosition(setPoint);
 
-			climberState = ClimberState.INIT;
-		}
-		time = initTimer.get();
-		System.out.println(df.format(time) + " climberInit finished");
-	}
+	// 		climberState = ClimberState.INIT;
+	// 	}
+	// 	time = initTimer.get();
+	// 	System.out.println(df.format(time) + " climberInit finished");
+	// }
 
 	// public void climberInit(boolean noWait) {
 	// Thread thread = new Thread("ClimberInit") {

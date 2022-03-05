@@ -2,21 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.Chassis;
+import frc.robot.Constants.ClimberConstants;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.SwivelState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BlueFourCargoAutonTrajPath extends SequentialCommandGroup {
-  /** Creates a new BlueFourCargoAutonTrajPath. */
-  public BlueFourCargoAutonTrajPath(Chassis chassis) {
+public class ClimberPerpAndHookHighTrav extends SequentialCommandGroup {
+  /** Creates a new ClimberPerpAndLatchHighTrav. */
+  public ClimberPerpAndHookHighTrav(Climber climber) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DriveTrajectory(chassis, RobotContainer.BlueTermSideOneCargo),
-    new DriveTrajectory(chassis, RobotContainer.BlueTermSideCargoAndTerm));
+    addCommands(
+        new ClimberSwivel(climber, SwivelState.PERPENDICULAR),
+        new ClimberGoTo(climber, ClimberConstants.kHookHighTrav));
   }
 }
