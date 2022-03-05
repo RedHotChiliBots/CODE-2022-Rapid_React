@@ -17,7 +17,7 @@ public class CLIMB extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new ClimberLeftInit(climber),
+        new ClimberInit(climber),
         new ClimberMidRungClimb(climber),
         new ClimberHighTravClimb(climber),
         new ClimberHighTravClimb(climber));

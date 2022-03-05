@@ -18,7 +18,7 @@ public class ClimberUnlatchAndPullUp extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new ClimberLatch(climber, LatchState.OPEN),
-        new ClimberLeftInit(climber),
+        new ClimberInit(climber),
         new ClimberLatch(climber, LatchState.CLOSE),
         new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
   }

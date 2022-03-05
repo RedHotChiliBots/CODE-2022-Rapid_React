@@ -4,22 +4,18 @@
 
 package frc.robot.commands;
 
-import java.text.DecimalFormat;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.ClimberState;
 
 public class ClimberResetEncoder extends CommandBase {
 
   Climber climber = null;
-  DecimalFormat df = new DecimalFormat("#0.0000");
-  double time = 0.0;
-  Timer initTimer = new Timer();
+
   CANSparkMax leftMotor = null;
   RelativeEncoder leftEncoder = null;
   CANSparkMax rightMotor = null;
@@ -37,8 +33,7 @@ public class ClimberResetEncoder extends CommandBase {
     this.leftMotor = climber.getLeftMotor();
     this.rightMotor = climber.getRightMotor();
 
-    time = initTimer.get();
-    System.out.println(df.format(time) + " climberInit configure motors");
+    System.out.println("climberInit configure motors");
     // Group the left and right motors
     rightMotor.follow(leftMotor, true); // invert direction of right motor
 

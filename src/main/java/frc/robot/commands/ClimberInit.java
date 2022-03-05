@@ -22,11 +22,5 @@ public class ClimberInit extends SequentialCommandGroup {
           new ClimberLeftInit(climber),
           new ClimberRightInit(climber)),
         new ClimberResetEncoder(climber));
-
-
-        // new ClimberLeftInit(climber),
-        // new ClimberMidRungClimb(climber),
-        // new ClimberHighTravClimb(climber),
-        // new ClimberHighTravClimb(climber));
   }
 }
