@@ -55,7 +55,7 @@ public final class Constants {
 	public static final class DIOChannelConstants {
 		public static final int kClimberLeftLimit = 0;
 		public static final int kClimberRightLimit = 1;
-		public static final int kCollectorEntering = 2;
+		public static final int kCollectorExiting = 2;
 		public static final int kHopperEntering = 3;
 		public static final int kHopperExiting = 4;
 		public static final int kFeederEntering = 5;

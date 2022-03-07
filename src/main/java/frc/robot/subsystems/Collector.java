@@ -54,7 +54,7 @@ public class Collector extends SubsystemBase {
 
 	// ==============================================================
 	// Define Digital Inputs
-	private final DigitalInput collectorEntering = new DigitalInput(DIOChannelConstants.kCollectorEntering);
+	private final DigitalInput collectorExiting = new DigitalInput(DIOChannelConstants.kCollectorExiting);
 
 	// ==============================================================
 	// Define Library
@@ -67,7 +67,7 @@ public class Collector extends SubsystemBase {
 	private final NetworkTableEntry sbSetPoint = collectorTab.addPersistent("Collector SetPoint", 0).getEntry();
 	private final NetworkTableEntry sbAtTarget = collectorTab.addPersistent("At Target", false).getEntry();
 	private final NetworkTableEntry sbCollectorState = collectorTab.addPersistent("Collector State", "").getEntry();
-	private final NetworkTableEntry sbEntering = collectorTab.addPersistent("Entering", false).getEntry();
+	private final NetworkTableEntry sbExiting = collectorTab.addPersistent("Exiting", false).getEntry();
 
 	// ==============================================================
 	// Define Local Variables
@@ -168,11 +168,11 @@ public class Collector extends SubsystemBase {
 		sbSetPoint.setDouble(collectorSetPoint);
 		sbAtTarget.setBoolean(atTarget());
 		sbCollectorState.setString(collectorState.toString());
-		sbEntering.setBoolean(isEntering());
+		sbExiting.setBoolean(isExiting());
 	}
 
-	public boolean isEntering() {
-		return collectorEntering.get();
+	public boolean isExiting() {
+		return collectorExiting.get();
 	}
 
 	public void setCollectorState(CollectorState state) {
