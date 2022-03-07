@@ -66,6 +66,7 @@ public class Shooter extends SubsystemBase {
 		// Configure Motors
 		shootMotor.restoreFactoryDefaults();
 		shootMotor.clearFaults();
+		shootMotor.setInverted(true);
 		shootMotor.setIdleMode(IdleMode.kBrake);
 
 		// ==============================================================

@@ -32,13 +32,11 @@ public final class Constants {
 
 		public static final int kClimbLeftMotor = 20;
 		public static final int kClimbRightMotor = 21;
-
-		public static final int kShooterMotor = 30;
-		public static final int kFeederMotor = 31;
-
+		
 		public static final int kCollectorMotor = 40;
-
 		public static final int kHopperMotor = 50;
+		public static final int kFeederMotor = 30;
+		public static final int kShooterMotor = 31;
 	}
 
 	public static final class PneumaticChannelConstants {
@@ -190,24 +188,6 @@ public final class Constants {
 
 	}
 
-	public static final class ShooterConstants {
-		public static final double kShootP = 0.00008;
-		public static final double kShootI = 0.0000004;
-		public static final double kShootD = 0.0;
-		public static final double kShootIz = 0.0;
-		public static final double kShootFF = 0.0;
-		public static final double kShootMinOutput = -1.0;
-		public static final double kShootMaxOutput = 1.0;
-
-		public static final double kStopRPMs = 0.0;
-		public static final double kMinShootRPM = -4540.0;
-		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
-
-		public static final double kShooterShootRPMs = kMaxShootRPM * 0.45;
-
-		public static final double kShootVelocityTolerance = 100.0; // rpms
-	}
-
 	public static final class CollectorConstants {
 		public static final double kP = 0.00008;
 		public static final double kI = 0.0000004;
@@ -258,8 +238,26 @@ public final class Constants {
 		public static final double kMinFeederRPM = -4540.0;
 		public static final double kMaxFeederRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kFeederShootRPMs = kMaxFeederRPM * 0.45;
+		public static final double kFeederRPMs = kMaxFeederRPM * 0.25;
 
 		public static final double kFeederVelocityTolerance = 100.0; // rpms
+	}
+
+	public static final class ShooterConstants {
+		public static final double kShootP = 0.00008;
+		public static final double kShootI = 0.0000004;
+		public static final double kShootD = 0.0;
+		public static final double kShootIz = 0.0;
+		public static final double kShootFF = 0.0;
+		public static final double kShootMinOutput = -1.0;
+		public static final double kShootMaxOutput = 1.0;
+
+		public static final double kStopRPMs = 0.0;
+		public static final double kMinShootRPM = -4540.0;
+		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+
+		public static final double kShooterRPMs = kMaxShootRPM * 0.45;
+
+		public static final double kShootVelocityTolerance = 100.0; // rpms
 	}
 }

@@ -63,6 +63,7 @@ public class Feeder extends SubsystemBase {
 		feederMotor.restoreFactoryDefaults();
 		feederMotor.clearFaults();
 		feederMotor.setIdleMode(IdleMode.kBrake);
+		feederMotor.setInverted(true);
 
 		// ==============================================================
 		// Configure PID Controller

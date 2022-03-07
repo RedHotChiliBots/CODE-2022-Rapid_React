@@ -5,38 +5,40 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.FeederConstants;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Feeder.FeederState;
+import frc.robot.subsystems.Hopper;
 
-public class FeederShoot extends CommandBase {
-  /** Creates a new FeederShoot. */
-	private Feeder feeder = null;
+public class HopperStop extends CommandBase {
+  /** Creates a new HopperStop. */
 
-  public FeederShoot(Feeder feeder) {
+  private final Hopper hopper;
+
+  public HopperStop(Hopper hopper) {
     // Use addRequirements() here to declare subsystem dependencies.
-		this.feeder = feeder;
-		addRequirements(feeder);
+    this.hopper = hopper;
+    addRequirements(hopper);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-		feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
-		feeder.feederSensorState();
-	}
+    hopper.stopHopper();
+    hopper.setRunning(false);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return feeder.getFeederState() == FeederState.EMPTY;
+    return false;
   }
 }

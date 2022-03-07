@@ -71,7 +71,7 @@ public class Hopper extends SubsystemBase {
     EXITING
   }
 
-  private HopperState hopperState = HopperState.NA;
+  private volatile HopperState hopperState = HopperState.NA;
 
   public Hopper() {
     System.out.println("+++++ Hopper Constructor starting +++++");

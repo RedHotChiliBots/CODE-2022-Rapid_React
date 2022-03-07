@@ -16,7 +16,7 @@ public class SHOOT extends ParallelRaceGroup {
   public SHOOT(Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterShoot(shooter),
+    addCommands(new ShooterRun(shooter),
     new ShooterSpinUpPlunge(shooter));
   }
  
