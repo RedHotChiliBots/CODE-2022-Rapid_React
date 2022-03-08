@@ -58,6 +58,7 @@ public class Shooter extends SubsystemBase {
 	// Define local variables
 	private double shootSetPoint = 0.0;
 	private boolean running = false;
+	private boolean shootNow = false;
 
 	public Shooter() {
 		System.out.println("+++++ Shooter Constructor starting +++++");
@@ -153,6 +154,14 @@ public class Shooter extends SubsystemBase {
 
 	public boolean isRunning() {
 		return running;
+	}
+
+	public void setShootNow(boolean s) {
+		this.shootNow = s;
+	}
+
+	public boolean isShootNow() {
+		return shootNow;
 	}
 
 	public boolean atShootTarget() {

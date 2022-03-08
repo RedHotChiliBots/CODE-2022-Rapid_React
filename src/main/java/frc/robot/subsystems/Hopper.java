@@ -145,7 +145,9 @@ public class Hopper extends SubsystemBase {
 
     // ==============================================================
     // Update Shuffleboard Tab with dynamic data
-    sbHopperVel.setDouble(getHopperVelocity());
+    hopperSensorState();
+		
+		sbHopperVel.setDouble(getHopperVelocity());
     sbSetPoint.setDouble(hopperSetPoint);
     sbAtTarget.setBoolean(atTarget());
     sbHopperState.setString(hopperState.toString());

@@ -40,6 +40,7 @@ import frc.robot.commands.HopperStop;
 import frc.robot.commands.CollectorArm;
 import frc.robot.commands.CollectorStop;
 import frc.robot.commands.SHOOT;
+import frc.robot.commands.ShootNow;
 import frc.robot.commands.ShooterRun;
 import frc.robot.commands.ShooterStop;
 import frc.robot.commands.ClimberCommands.CLIMB;
@@ -99,11 +100,13 @@ public class RobotContainer {
 	private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
 			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightX()));
 
-	private final HopperRun hopperRun = new HopperRun(hopper);
+	private final HopperRun hopperRun = new HopperRun(hopper, feeder, collector);
 	private final HopperStop hopperStop = new HopperStop(hopper);
 	
-	private final FeederRun feederRun = new FeederRun(feeder);
+	private final FeederRun feederRun = new FeederRun(feeder, shooter);
 	private final FeederStop feederStop = new FeederStop(feeder);
+
+	private final ShootNow shootNow = new ShootNow(shooter);
 	
 	private final ShooterRun shooterRun = new ShooterRun(shooter);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
@@ -257,10 +260,11 @@ public class RobotContainer {
 
 		new JoystickButton(driver, Button.kStart.value).whenPressed(new ShooterRun(shooter));
 		new JoystickButton(driver, Button.kBack.value).whenPressed(new ShooterStop(shooter));
-		new JoystickButton(driver, Button.kA.value).whenPressed(new FeederRun(feeder));
+		new JoystickButton(driver, Button.kA.value).whenPressed(new FeederRun(feeder, shooter));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new FeederStop(feeder));
-		new JoystickButton(driver, Button.kX.value).whenPressed(new HopperRun(hopper));
+		new JoystickButton(driver, Button.kX.value).whenPressed(new HopperRun(hopper, feeder, collector));
 		new JoystickButton(driver, Button.kY.value).whenPressed(new HopperStop(hopper));
+		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ShootNow(shooter));
 
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);

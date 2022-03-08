@@ -81,7 +81,9 @@ public class Feeder extends SubsystemBase {
 
   @Override
   public void periodic() {
-    sbSetPoint.setDouble(feederSetPoint);
+		feederSensorState();
+    
+		sbSetPoint.setDouble(feederSetPoint);
 		sbFeederVel.setDouble(getFeederVelocity());
 		sbAtTarget.setBoolean(atFeederTarget());
 		sbShooterState.setString(feederState.toString());

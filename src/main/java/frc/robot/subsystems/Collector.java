@@ -85,7 +85,7 @@ public class Collector extends SubsystemBase {
 	public enum CollectorState {
 		NA,
 		EMPTY,
-		ENTERING
+		EXITING
 	}
 
 	private volatile CollectorState collectorState = CollectorState.NA;
@@ -162,6 +162,8 @@ public class Collector extends SubsystemBase {
 		// collectorPIDController.setOutputRange(min, max);
 		// }
 
+		collectorSensorState();
+
 		// ==============================================================
 		// Update Shuffleboard Tab with dynamic data
 		sbCollectorVel.setDouble(getCollectorVelocity());
@@ -185,6 +187,14 @@ public class Collector extends SubsystemBase {
 
 	public ArmState getArmState() {
 		return armState;
+	}
+
+	public void collectorSensorState() {
+		if (isExiting()) {
+			setCollectorState(CollectorState.EXITING);
+		} else {
+			setCollectorState(CollectorState.EMPTY);
+		}
 	}
 
 	public double getCollectorVelocity() {

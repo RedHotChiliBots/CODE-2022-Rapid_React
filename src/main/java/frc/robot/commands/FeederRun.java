@@ -7,15 +7,19 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.FeederConstants;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Feeder.FeederState;
 
 public class FeederRun extends CommandBase {
   /** Creates a new FeederShoot. */
 
   private final Feeder feeder;
+	private final Shooter shooter;
 
-  public FeederRun(Feeder feeder) {
+  public FeederRun(Feeder feeder, Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.feeder = feeder;
+		this.shooter = shooter;
     addRequirements(feeder);
   }
 
@@ -29,7 +33,19 @@ public class FeederRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+		if(feeder.getFeederState() == FeederState.ENTERING || feeder.getFeederState() == FeederState.EXITING) {
+			feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
+    	feeder.setRunning(true);
+		} else if(feeder.getFeederState() == FeederState.CONTROLLED) {
+			if(shooter.atShootTarget() && shooter.isShootNow()) {
+				feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
+    		feeder.setRunning(true);
+			} else {
+				feeder.stopFeeder();
+			}
+		} else if(feeder.getFeederState() == FeederState.EMPTY) {
+			feeder.stopFeeder();
+		}
   }
 
   // Called once the command ends or is interrupted.

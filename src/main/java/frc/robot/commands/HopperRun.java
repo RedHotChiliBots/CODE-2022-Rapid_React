@@ -6,30 +6,51 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HopperConstants;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Collector.CollectorState;
+import frc.robot.subsystems.Feeder.FeederState;
+import frc.robot.subsystems.Hopper.HopperState;
 
 public class HopperRun extends CommandBase {
   /** Creates a new HopperShoot. */
 
   private final Hopper hopper;
+	private final Feeder feeder;
+	private final Collector collector;
 
-  public HopperRun(Hopper hopper) {
+  public HopperRun(Hopper hopper, Feeder feeder, Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hopper = hopper;
+		this.feeder = feeder;
+		this.collector = collector;
     addRequirements(hopper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    hopper.setRunning(true);
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // hopper.setRunning(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+		if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
+			hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+		} else if(hopper.getHopperState() == HopperState.CONTROLLED) {
+			if(feeder.getFeederState() == FeederState.CONTROLLED) {
+				hopper.stopHopper();
+			} else {
+				hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+			}
+		} else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
+			hopper.stopHopper();
+		} else if(collector.getCollectorState() == CollectorState.EXITING) {
+			hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+		}
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +63,6 @@ public class HopperRun extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !hopper.isRunning();
+    return false;
   }
 }
