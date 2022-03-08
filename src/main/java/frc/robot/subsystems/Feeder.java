@@ -92,11 +92,11 @@ public class Feeder extends SubsystemBase {
   }
 
 	public boolean isEntering() {
-		return feederEntering.get();
+		return !feederEntering.get();
 	}
 
 	public boolean isExiting() {
-		return feederExiting.get();
+		return !feederExiting.get();
 	}
 
 	public void setFeederState(FeederState state) {

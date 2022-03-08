@@ -156,11 +156,11 @@ public class Hopper extends SubsystemBase {
   }
 
   public boolean isEntering() {
-    return hopperEntering.get();
+    return !hopperEntering.get();
   }
 
   public boolean isExiting() {
-    return hopperExiting.get();
+    return !hopperExiting.get();
   }
 
   public void setHopperState(HopperState state) {

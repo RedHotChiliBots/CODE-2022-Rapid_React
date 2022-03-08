@@ -174,7 +174,7 @@ public class Collector extends SubsystemBase {
 	}
 
 	public boolean isExiting() {
-		return collectorExiting.get();
+		return !collectorExiting.get();
 	}
 
 	public void setCollectorState(CollectorState state) {

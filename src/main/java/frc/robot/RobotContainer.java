@@ -106,12 +106,12 @@ public class RobotContainer {
 	private final FeederRun feederRun = new FeederRun(feeder, shooter);
 	private final FeederStop feederStop = new FeederStop(feeder);
 
-	private final ShootNow shootNow = new ShootNow(shooter);
+	private final ShootNow shootNow = new ShootNow(shooter, hopper, feeder);
 	
-	private final ShooterRun shooterRun = new ShooterRun(shooter);
+	private final ShooterRun shooterRun = new ShooterRun(shooter, hopper, feeder);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
 	
-	private final SHOOT SHOOT = new SHOOT(shooter);
+	private final SHOOT SHOOT = new SHOOT(shooter, hopper, feeder);
 
 	private final CLIMB climb = new CLIMB(climber);
 	private final ClimberInit climberInit = new ClimberInit(climber);
@@ -258,13 +258,13 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
 		new JoystickButton(operator, Button.kA.value).whenPressed(climb);
 
-		new JoystickButton(driver, Button.kStart.value).whenPressed(new ShooterRun(shooter));
+		new JoystickButton(driver, Button.kStart.value).whenPressed(shooterRun);
 		new JoystickButton(driver, Button.kBack.value).whenPressed(new ShooterStop(shooter));
 		new JoystickButton(driver, Button.kA.value).whenPressed(new FeederRun(feeder, shooter));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new FeederStop(feeder));
 		new JoystickButton(driver, Button.kX.value).whenPressed(new HopperRun(hopper, feeder, collector));
 		new JoystickButton(driver, Button.kY.value).whenPressed(new HopperStop(hopper));
-		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ShootNow(shooter));
+		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ShootNow(shooter, hopper, feeder));
 
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
