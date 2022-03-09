@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Feeder;
@@ -18,6 +19,7 @@ public class ShooterRun extends CommandBase {
   private final Shooter shooter;
   private final Hopper hopper;
   private final Feeder feeder;
+  private Timer timer = new Timer();
 
   public ShooterRun(Shooter shooter, Hopper hopper, Feeder feeder) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,12 +34,15 @@ public class ShooterRun extends CommandBase {
   public void initialize() {
     shooter.setShootVelocity(ShooterConstants.kShooterRPMs);
     shooter.setRunning(true);
+    timer.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if(hopper.getHopperState() == HopperState.EMPTY && feeder.getFeederState() == FeederState.EMPTY) {
+      timer.start();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +55,6 @@ public class ShooterRun extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return hopper.getHopperState() == HopperState.EMPTY && feeder.getFeederState() == FeederState.EMPTY;
+    return timer.get() > ShooterConstants.kTimeShootAfterEmpty;
   }
 }

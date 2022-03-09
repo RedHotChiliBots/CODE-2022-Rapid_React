@@ -33,16 +33,16 @@ public class FeederRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-		if(feeder.getFeederState() == FeederState.ENTERING || feeder.getFeederState() == FeederState.EXITING) {
-			feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
-    	feeder.setRunning(true);
-		} else if(feeder.getFeederState() == FeederState.CONTROLLED) {
+    if(feeder.getFeederState() == FeederState.CONTROLLED) {
 			if(shooter.atShootTarget() && shooter.isShootNow()) {
 				feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
     		feeder.setRunning(true);
 			} else {
 				feeder.stopFeeder();
 			}
+		}else if(feeder.getFeederState() == FeederState.ENTERING || feeder.getFeederState() == FeederState.EXITING) {
+			feeder.setFeederVelocity(FeederConstants.kFeederRPMs);
+    	feeder.setRunning(true);
 		} else if(feeder.getFeederState() == FeederState.EMPTY) {
 			feeder.stopFeeder();
 		}

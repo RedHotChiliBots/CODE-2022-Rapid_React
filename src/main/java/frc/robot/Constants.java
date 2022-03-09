@@ -240,7 +240,7 @@ public final class Constants {
 
 		public static final double kFeederRPMs = kMaxFeederRPM * 0.25;
 
-		public static final double kFeederVelocityTolerance = 100.0; // rpms
+		public static final double kFeederVelocityTolerance = 5.0; // rpms
 	}
 
 	public static final class ShooterConstants {
@@ -259,5 +259,7 @@ public final class Constants {
 		public static final double kShooterRPMs = kMaxShootRPM * 0.45;
 
 		public static final double kShootVelocityTolerance = 100.0; // rpms
+
+		public static final double kTimeShootAfterEmpty = 2.0;
 	}
 }

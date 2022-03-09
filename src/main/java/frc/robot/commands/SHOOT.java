@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,10 +15,10 @@ import frc.robot.subsystems.Shooter;
 public class SHOOT extends ParallelRaceGroup {
   /** Creates a new SHOOT. */
   
-  public SHOOT(Shooter shooter) {
+  public SHOOT(Shooter shooter, Hopper hopper, Feeder feeder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterRun(shooter),
+    addCommands(new ShooterRun(shooter, hopper, feeder),
     new ShooterSpinUpPlunge(shooter));
   }
  

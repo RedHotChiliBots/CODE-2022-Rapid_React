@@ -5,6 +5,7 @@
 package frc.robot.commands.ClimberCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Climber.LatchState;
@@ -27,6 +28,7 @@ public class ClimberHighTravClimb extends SequentialCommandGroup {
 				new ClimberGoTo(climber, ClimberConstants.kHookHighTrav),
 				// Open Latch and Climb to Rung
 				new ClimberLatch(climber, LatchState.OPEN),
+				new WaitCommand(3.0),
 				new ClimberInit(climber),
 				// Close the Latch and clear Climber Hooks
 				new ClimberLatch(climber, LatchState.CLOSE),

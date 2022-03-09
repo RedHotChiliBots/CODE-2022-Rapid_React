@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
@@ -16,6 +18,7 @@ public class ShootNow extends CommandBase {
 	private final Shooter shooter;
   private final Hopper hopper;
   private final Feeder feeder;
+  private Timer timer = new Timer();
 
   public ShootNow(Shooter shooter, Hopper hopper, Feeder feeder) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,11 +31,16 @@ public class ShootNow extends CommandBase {
   @Override
   public void initialize() {
 		shooter.setShootNow(true);
+    timer.reset();
 	}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(hopper.getHopperState() == HopperState.EMPTY && feeder.getFeederState() == FeederState.EMPTY) {
+      timer.start();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -43,6 +51,6 @@ public class ShootNow extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return hopper.getHopperState() == HopperState.EMPTY && feeder.getFeederState() == FeederState.EMPTY;
+    return timer.get() > ShooterConstants.kTimeShootAfterEmpty;
   }
 }

@@ -2,25 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.DriveCommands;
+package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
-public class ChassisTankDrive extends CommandBase {
-  /** Creates a new ChassisTankDrive. */
+public class ChassisArcadeDrive extends CommandBase {
+  /** Creates a new ChassisArcadeDrive. */
 
   private Chassis chassis;
-  private DoubleSupplier left;
-  private DoubleSupplier right;
+  private DoubleSupplier spd;
+  private DoubleSupplier rot;
 
-  public ChassisTankDrive(Chassis chassis, DoubleSupplier left, DoubleSupplier right) {
+  
+  public ChassisArcadeDrive(Chassis chassis, DoubleSupplier spd, DoubleSupplier rot) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.chassis = chassis;
-    this.left = left;
-    this.right = right;
+    this.spd = spd;
+    this.rot = rot;
     addRequirements(chassis);
   }
 
@@ -31,7 +32,7 @@ public class ChassisTankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.driveTank(left.getAsDouble(), right.getAsDouble());
+    chassis.driveArcade(spd.getAsDouble(), rot.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
