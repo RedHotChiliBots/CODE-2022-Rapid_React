@@ -39,6 +39,10 @@ import frc.robot.commands.FeederRun;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.HopperRun;
 import frc.robot.commands.HopperStop;
+import frc.robot.commands.REDFOURCARGOAUTON;
+import frc.robot.commands.REDONECARGOAUTON;
+import frc.robot.commands.BLUEFOURCARGOAUTON;
+import frc.robot.commands.BLUEONECARGOAUTON;
 import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.CollectorArm;
@@ -192,7 +196,7 @@ public class RobotContainer {
 		hopper.setDefaultCommand(hopperStop);
 		feeder.setDefaultCommand(feederStop);
 		shooter.setDefaultCommand(shooterStop);
-
+	
 		try {
 			// Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath()
 			// 		.resolve(BlueRungSideCargoToHubJSON);
@@ -226,6 +230,18 @@ public class RobotContainer {
 		}
 
 		configureButtonBindings();
+
+		final REDONECARGOAUTON redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		final REDFOURCARGOAUTON redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		final BLUEONECARGOAUTON blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		final BLUEFOURCARGOAUTON blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+
+		// =============================================================
+		// Build chooser for autonomous commands
+		chooser.addOption("Red One Cargo", redOneCargoAuton);
+		chooser.addOption("Blue One Cargo", redFourCargoAuton);
+		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
+		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
 	}
 
 	// private final DriveTrajectory blueRungSideCargoToHubCommand = new

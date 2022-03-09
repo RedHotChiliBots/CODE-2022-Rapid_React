@@ -15,13 +15,13 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class REDONECARGOAUTON extends SequentialCommandGroup {
+public class BLUEONECARGOAUTON extends SequentialCommandGroup {
   /** Creates a new REDONECARGOAUTON. */
-  public REDONECARGOAUTON(Chassis chassis, Collector collector, 
+  public BLUEONECARGOAUTON(Chassis chassis, Collector collector, 
   Hopper hopper, Feeder feeder, Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, feeder, shooter),
+    addCommands(new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueTermSideOneCargo, collector, hopper, feeder, shooter),
     new ShooterRun(shooter, hopper, feeder),
     new ShootNow(shooter, hopper, feeder));
   }
