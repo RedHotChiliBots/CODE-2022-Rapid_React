@@ -166,6 +166,11 @@ public class RobotContainer {
 	private String BlueRungSideMidJSON = "paths/output/L10D.wpilib.json";
 	public static Trajectory BlueRungSideMid = null;
 
+	final REDONECARGOAUTON redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+	final REDFOURCARGOAUTON redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+	final BLUEONECARGOAUTON blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+	final BLUEFOURCARGOAUTON blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
@@ -183,8 +188,15 @@ public class RobotContainer {
 		// ==============================================================================
 		// Add commands to the autonomous command chooser
 		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
-		chooser.addOption("Arcade Drive", chassisArcadeDrive);
-		chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+		// chooser.addOption("Arcade Drive", chassisArcadeDrive);
+		// chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+
+		// =============================================================
+		// Build chooser for autonomous commands
+		chooser.addOption("Red One Cargo", redOneCargoAuton);
+		chooser.addOption("Blue One Cargo", redFourCargoAuton);
+		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
+		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
 		// Put the chooser on the dashboard
 		SmartDashboard.putData(chooser);
 
@@ -230,18 +242,6 @@ public class RobotContainer {
 		}
 
 		configureButtonBindings();
-
-		final REDONECARGOAUTON redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		final REDFOURCARGOAUTON redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		final BLUEONECARGOAUTON blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		final BLUEFOURCARGOAUTON blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
-
-		// =============================================================
-		// Build chooser for autonomous commands
-		chooser.addOption("Red One Cargo", redOneCargoAuton);
-		chooser.addOption("Blue One Cargo", redFourCargoAuton);
-		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
-		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
 	}
 
 	// private final DriveTrajectory blueRungSideCargoToHubCommand = new

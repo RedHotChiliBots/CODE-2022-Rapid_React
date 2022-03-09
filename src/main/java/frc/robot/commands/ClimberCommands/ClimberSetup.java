@@ -23,7 +23,7 @@ public class ClimberSetup extends SequentialCommandGroup {
 
 		addCommands(
 			// With latch Open and Climber extended, drive in reverse until Chassis Pitch
-			// new ClimberInit(climber),
+			new ClimberInit(climber),
 			new ClimberLatch(climber, LatchState.OPEN),
 			new ClimberGoTo(climber, ClimberConstants.kEngageMidRung));
 	}

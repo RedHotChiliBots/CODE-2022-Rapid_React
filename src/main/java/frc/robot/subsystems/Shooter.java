@@ -11,7 +11,6 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
@@ -21,7 +20,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 import frc.robot.Library;
 import frc.robot.Constants.CANidConstants;
-import frc.robot.Constants.DIOChannelConstants;
+
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
