@@ -41,29 +41,33 @@ import frc.robot.commands.HopperRun;
 import frc.robot.commands.HopperStop;
 import frc.robot.commands.REDFOURCARGOAUTON;
 import frc.robot.commands.REDONECARGOAUTON;
+import frc.robot.commands.REDONECARGOMIDAUTON;
 import frc.robot.commands.BLUEFOURCARGOAUTON;
 import frc.robot.commands.BLUEONECARGOAUTON;
+import frc.robot.commands.BLUEONECARGOMIDAUTON;
 import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
+import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
+import frc.robot.commands.ClimberUnlatchAndPullUp;
 import frc.robot.commands.CollectorArm;
+import frc.robot.commands.CollectorCollect;
 import frc.robot.commands.CollectorStop;
 import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShootNow;
 import frc.robot.commands.ShooterRun;
 import frc.robot.commands.ShooterStop;
-import frc.robot.commands.ClimberCommands.CLIMB;
-import frc.robot.commands.ClimberCommands.ClimberGoTo;
-import frc.robot.commands.ClimberCommands.ClimberHighTravClimb;
-import frc.robot.commands.ClimberCommands.ClimberInit;
-import frc.robot.commands.ClimberCommands.ClimberLatch;
-import frc.robot.commands.ClimberCommands.ClimberLatchAndReadyForNext;
-import frc.robot.commands.ClimberCommands.ClimberLeftInit;
-import frc.robot.commands.ClimberCommands.ClimberMidRungClimb;
-import frc.robot.commands.ClimberCommands.ClimberPerpAndHookHighTrav;
-import frc.robot.commands.ClimberCommands.ClimberSetup;
-import frc.robot.commands.ClimberCommands.ClimberSwivel;
-import frc.robot.commands.ClimberCommands.ClimberSwivelAndEngageHighTrav;
-import frc.robot.commands.ClimberCommands.ClimberUnlatchAndPullUp;
+import frc.robot.commands.CLIMB;
+import frc.robot.commands.ChassisMonitorPitch;
+import frc.robot.commands.ClimberGoTo;
+import frc.robot.commands.ClimberHighTravClimb;
+import frc.robot.commands.ClimberInit;
+import frc.robot.commands.ClimberLatch;
+import frc.robot.commands.ClimberLatchAndReadyForNext;
+import frc.robot.commands.ClimberLeftInit;
+import frc.robot.commands.ClimberMidRungClimb;
+import frc.robot.commands.ClimberPerpAndHookHighTrav;
+import frc.robot.commands.ClimberSetup;
+import frc.robot.commands.ClimberSwivel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -77,7 +81,7 @@ import frc.robot.commands.ClimberCommands.ClimberUnlatchAndPullUp;
 public class RobotContainer {
 	// The robot's subsystems and commands are defined here...
 	private static final Chassis chassis = new Chassis();
-	private static final Climber climber = new Climber();
+	private static final Climber climber = new Climber(chassis);
 	private final Collector collector = new Collector();
 	private final Hopper hopper = new Hopper();
 	private final Feeder feeder = new Feeder();
@@ -106,26 +110,28 @@ public class RobotContainer {
 
 	private final HopperRun hopperRun = new HopperRun(hopper, feeder, collector);
 	private final HopperStop hopperStop = new HopperStop(hopper);
-	
+
 	private final FeederRun feederRun = new FeederRun(feeder, shooter);
 	private final FeederStop feederStop = new FeederStop(feeder);
 
 	private final ShootNow shootNow = new ShootNow(shooter, hopper, feeder);
-	
+
 	private final ShooterRun shooterRun = new ShooterRun(shooter, hopper, feeder);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
-	
+
 	private final SHOOT SHOOT = new SHOOT(shooter, hopper, feeder);
 
-	private final CLIMB climb = new CLIMB(climber);
+	private final CLIMB climb = new CLIMB(climber, chassis);
 	private final ClimberInit climberInit = new ClimberInit(climber);
 	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
-	private final ClimberSetup climbSetup = new ClimberSetup(climber);
+	private final ClimberSetup climbSetup = new ClimberSetup(climber, collector);
 	private final ClimberGoTo toMidRungEngage = new ClimberGoTo(climber, ClimberConstants.kEngageMidRung);
 	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
 	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kHookHighTrav);
 	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber);
-	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber);
+	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber, chassis);
+
+	private final ChassisMonitorPitch chassisMonitorPitch = new ChassisMonitorPitch(chassis);
 
 	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
 	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
@@ -139,12 +145,14 @@ public class RobotContainer {
 	private final CollectorArm collectorDeploy = new CollectorArm(collector, ArmState.DEPLOY);
 	private final CollectorArm collectorStow = new CollectorArm(collector, ArmState.STOW);
 	private final CollectorStop collectorStop = new CollectorStop(collector);
+	private final CollectorCollect collectorCollect = new CollectorCollect(collector);
 
 	private final DoRumble doRumble = new DoRumble(this);
 
 	private String BlueRungSideCargoToHubJSON = "paths/output/BlueRungSideCargoToHub.wpilib.json";
 	public static Trajectory BlueRungSideCargoToHub = null;
-	// private String BlueRungSideHubToCargoJSON = "paths/output/BlueRungSideHubToCargo.wpilib.json";
+	// private String BlueRungSideHubToCargoJSON =
+	// "paths/output/BlueRungSideHubToCargo.wpilib.json";
 	// public static Trajectory BlueRungSideHubToCargo = null;
 	// private String unnamedJSON = "paths/output/Unnamed.wpilib.json";
 	// public static Trajectory unnamed = null;
@@ -157,19 +165,17 @@ public class RobotContainer {
 	public static Trajectory BlueTermSideOneCargo = null;
 	private String BlueTermSideCargoAndTermJSON = "paths/output/C8TermC.wpilib.json";
 	public static Trajectory BlueTermSideCargoAndTerm = null;
-	private String RedRungSideCrossJSON = "paths/output/H6B.wpilib.json";
-	public static Trajectory RedRungSideCross = null;
-	private String BlueRungSideCrossJSON = "paths/output/M12D.wpilib.json";
-	public static Trajectory BlueRungSideCross = null;
 	private String RedRungSideMidJSON = "paths/output/G4B.wpilib.json";
 	public static Trajectory RedRungSideMid = null;
 	private String BlueRungSideMidJSON = "paths/output/L10D.wpilib.json";
 	public static Trajectory BlueRungSideMid = null;
 
-	final REDONECARGOAUTON redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-	final REDFOURCARGOAUTON redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
-	final BLUEONECARGOAUTON blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-	final BLUEFOURCARGOAUTON blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+	public final REDONECARGOAUTON redOneCargoAuton;
+	public final REDONECARGOMIDAUTON redOneCargoMidAuton;
+	public final REDFOURCARGOAUTON redFourCargoAuton;
+	public final BLUEONECARGOAUTON blueOneCargoAuton;
+	public final BLUEFOURCARGOAUTON blueFourCargoAuton;
+	public final BLUEONECARGOMIDAUTON blueOneCargoMidAuton;
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -185,34 +191,21 @@ public class RobotContainer {
 		SmartDashboard.putData("Hopper", hopper);
 		SmartDashboard.putData("Feeder", feeder);
 
-		// ==============================================================================
-		// Add commands to the autonomous command chooser
-		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
-		// chooser.addOption("Arcade Drive", chassisArcadeDrive);
-		// chooser.addOption("Modified Tank Drive", modifiedTankDrive);
-
-		// =============================================================
-		// Build chooser for autonomous commands
-		chooser.addOption("Red One Cargo", redOneCargoAuton);
-		chooser.addOption("Blue One Cargo", redFourCargoAuton);
-		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
-		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
-		// Put the chooser on the dashboard
-		SmartDashboard.putData(chooser);
-
 		// =============================================================
 		// Configure default commands for each subsystem
-		chassis.setDefaultCommand(chassisTankDrive);
+		chassis.setDefaultCommand(chassisArcadeDrive);
 		// climber.setDefaultCommand(climberStop);
 		collector.setDefaultCommand(collectorStop);
-		hopper.setDefaultCommand(hopperStop);
-		feeder.setDefaultCommand(feederStop);
+		// hopper.setDefaultCommand(hopperStop);
+		hopper.setDefaultCommand(hopperRun);
+		// feeder.setDefaultCommand(feederRun);
+		// feeder.setDefaultCommand(feederStop);
 		shooter.setDefaultCommand(shooterStop);
-	
+
 		try {
 			// Path BlueRungSideCargoToHubPath = Filesystem.getDeployDirectory().toPath()
-			// 		.resolve(BlueRungSideCargoToHubJSON);
-			
+			// .resolve(BlueRungSideCargoToHubJSON);
+
 			Path RedTermSideOneCargoPath = Filesystem.getDeployDirectory().toPath()
 					.resolve(RedTermSideOneCargoJSON);
 			RedTermSideOneCargo = TrajectoryUtil.fromPathweaverJson(RedTermSideOneCargoPath);
@@ -225,12 +218,6 @@ public class RobotContainer {
 			Path BlueTermSideCargoTermPath = Filesystem.getDeployDirectory().toPath()
 					.resolve(BlueTermSideCargoAndTermJSON);
 			BlueTermSideCargoAndTerm = TrajectoryUtil.fromPathweaverJson(BlueTermSideCargoTermPath);
-			Path RedRungSideCrossPath = Filesystem.getDeployDirectory().toPath()
-					.resolve(RedRungSideCrossJSON);
-			RedRungSideCross = TrajectoryUtil.fromPathweaverJson(RedRungSideCrossPath);
-			Path BlueRungSideCrossPath = Filesystem.getDeployDirectory().toPath()
-					.resolve(BlueRungSideCrossJSON);
-			BlueRungSideCross = TrajectoryUtil.fromPathweaverJson(BlueRungSideCrossPath);
 			Path RedRungSideMidPath = Filesystem.getDeployDirectory().toPath()
 					.resolve(RedRungSideMidJSON);
 			RedRungSideMid = TrajectoryUtil.fromPathweaverJson(RedRungSideMidPath);
@@ -240,6 +227,33 @@ public class RobotContainer {
 		} catch (IOException ex) {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
 		}
+
+		redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		// redCrossAuton = new REDCROSSAUTON(chassis, collector, hopper, feeder,
+		// shooter);
+		redOneCargoMidAuton = new REDONECARGOMIDAUTON(chassis, collector, hopper, feeder, shooter);
+		redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
+		blueOneCargoMidAuton = new BLUEONECARGOMIDAUTON(chassis, collector, hopper, feeder, shooter);
+
+		// ==============================================================================
+		// Add commands to the autonomous command chooser
+		chooser.setDefaultOption("Tank Drive", chassisTankDrive);
+		// chooser.addOption("Arcade Drive", chassisArcadeDrive);
+		// chooser.addOption("Modified Tank Drive", modifiedTankDrive);
+
+		// =============================================================
+		// Build chooser for autonomous commands
+		chooser.addOption("Red One Cargo", redOneCargoAuton);
+		chooser.addOption("Blue One Cargo", redFourCargoAuton);
+		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
+		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
+		chooser.addOption("Red One Cargo Not In Middle", redOneCargoMidAuton);
+		chooser.addOption("Blue One Cargo Not In Middle", blueOneCargoMidAuton);
+
+		// Put the chooser on the dashboard
+		SmartDashboard.putData(chooser);
 
 		configureButtonBindings();
 	}
@@ -259,29 +273,42 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-		// new JoystickButton(driver, Button.kX.value).whenPressed(new DrivePosition(chassis, 1.0));
+		// new JoystickButton(driver, Button.kX.value).whenPressed(new
+		// DrivePosition(chassis, 1.0));
 
 		// new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
 		// new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climberOpen);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climberClose);
+		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(climberOpen);
+		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
 
-		new JoystickButton(operator, Button.kStart.value).whenPressed(swivel);
-		new JoystickButton(operator, Button.kBack.value).whenPressed(perpendicular);
+		new JoystickButton(driver, Button.kStart.value).whenPressed(swivel);
+		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
 
-		new JoystickButton(operator, Button.kX.value).whenPressed(climberInit);
+		new JoystickButton(operator, Button.kX.value).whenPressed(climbMidRung);
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
-		new JoystickButton(operator, Button.kA.value).whenPressed(climb);
+		new JoystickButton(operator, Button.kB.value).whenPressed(climb);
+		new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
 
-		new JoystickButton(driver, Button.kStart.value).whenPressed(shooterRun);
-		new JoystickButton(driver, Button.kBack.value).whenPressed(new ShooterStop(shooter));
-		new JoystickButton(driver, Button.kA.value).whenPressed(new FeederRun(feeder, shooter));
-		new JoystickButton(driver, Button.kB.value).whenPressed(new FeederStop(feeder));
-		new JoystickButton(driver, Button.kX.value).whenPressed(new HopperRun(hopper, feeder, collector));
-		new JoystickButton(driver, Button.kY.value).whenPressed(new HopperStop(hopper));
-		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ShootNow(shooter, hopper, feeder));
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
 
+		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
+
+		new JoystickButton(driver, Button.kY.value).whenPressed(shooterRun);
+		// new JoystickButton(driver, Button.kBack.value).whenPressed(new
+		// ShooterStop(shooter));
+		// new JoystickButton(driver, Button.kY.value).whenPressed(new FeederRun(feeder,
+		// shooter));
+		new JoystickButton(driver, Button.kX.value).whenPressed(new FeederStop(feeder));
+		// new JoystickButton(driver, Button.kB.value).whenPressed(new HopperRun(hopper,
+		// feeder, collector));
+		// new JoystickButton(driver, Button.kA.value).whenPressed(new
+		// HopperStop(hopper));
+		new JoystickButton(driver, Button.kB.value).whenPressed(new ShootNow(shooter, hopper, feeder));
+
+		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberInit(climber));
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);
@@ -290,7 +317,8 @@ public class RobotContainer {
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toHighTravEngage);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(toHighTravLatch);
 
-		// new JoystickButton(driver, Button.kY.value).whenPressed(new DriveTrajectory(chassis, BlueRungSideCargoToHub));
+		// new JoystickButton(driver, Button.kY.value).whenPressed(new
+		// DriveTrajectory(chassis, BlueRungSideCargoToHub));
 	}
 
 	public static Climber getClimber() {
@@ -329,7 +357,7 @@ public class RobotContainer {
 				} catch (InterruptedException e) {
 					DriverStation.reportError("Rumble sleep exception", true);
 				}
-				
+
 				c.setRumble(t, 0);
 			}
 		};

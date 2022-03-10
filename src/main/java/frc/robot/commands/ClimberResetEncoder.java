@@ -2,23 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ClimberCommands;
+package frc.robot.commands;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ClimberConstants;
-import frc.robot.subsystems.Climber;
 
-public class ClimberLeftInit extends CommandBase {
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.ClimberState;
+
+public class ClimberResetEncoder extends CommandBase {
 
 	Climber climber = null;
 
 	CANSparkMax leftMotor = null;
 	RelativeEncoder leftEncoder = null;
+	CANSparkMax rightMotor = null;
+	RelativeEncoder rightEncoder = null;
 
-	public ClimberLeftInit(Climber climber) {
+	public ClimberResetEncoder(Climber climber) {
 		this.climber = climber;
 		// Use addRequirements() here to declare subsystem dependencies.
 		// addRequirements(climber);
@@ -27,32 +30,33 @@ public class ClimberLeftInit extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		this.leftMotor = climber.getLeftMotor();
+		this.rightMotor = climber.getRightMotor();
 
-		leftMotor = climber.getLeftMotor();
-		leftEncoder = climber.getLeftEncoder();
+		System.out.println("climberInit configure motors");
+		// Group the left and right motors
+		rightMotor.follow(leftMotor, true); // invert direction of right motor
 
-		System.out.println("climberInit left start");
+		climber.climbPosition(0.0);
+
+		climber.setClimberState(ClimberState.INIT);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		leftMotor.set(ClimberConstants.kInitSpeed);
 	}
 
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		leftMotor.set(0.0);
-		leftEncoder.setPosition(0.0);
 
-		System.out.println("climberInit left done");
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
 		// return climber.getClimberState() == ClimberState.INIT;
-		return climber.getLeftLimit();
+		return true;
 	}
 }

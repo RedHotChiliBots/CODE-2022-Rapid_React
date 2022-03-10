@@ -2,25 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ClimberCommands;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.ClimberState;
 
-public class ClimberPauseForINIT extends CommandBase {
+public class ClimberGoTo extends CommandBase {
 
-	Climber climber = null;
+	private Climber climber = null;
 
-	public ClimberPauseForINIT(Climber climber) {
+	private double pos = 0;
+
+	public ClimberGoTo(Climber climber, double pos) {
 		this.climber = climber;
-		// Use addRequirements() here to declare subsystem dependencies.
+		this.pos = pos;
 		addRequirements(climber);
 	}
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		climber.climbPosition(pos);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +38,6 @@ public class ClimberPauseForINIT extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return climber.getClimberState() == ClimberState.INIT;
+		return climber.atTarget();
 	}
 }

@@ -164,7 +164,7 @@ public final class Constants {
 		public static final double kEngageHighTrav = -(68.0 - ClimberConstants.kFloor2Hook); // inches to position for
 																																													// engage
 		// high/traverse rungs
-		public static final double kHookHighTrav = -(62.0 - ClimberConstants.kFloor2Hook); // inches to position for latch
+		public static final double kHookHighTrav = -(61.0 - ClimberConstants.kFloor2Hook); // inches to position for latch
 																																												// high/traverse
 		// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
@@ -201,9 +201,9 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kCollectorRPMs = kMaxRPM * 0.45;
+		public static final double kCollectorRPMs = kMaxRPM * 1.0;
 
-		public static final double kVelocityTolerance = 100.0; // rpms
+		public static final double kVelocityTolerance = 50.0; // rpms
 
 		public static final long kArmDelay = 2000; // milliseconds
 	}
@@ -223,7 +223,7 @@ public final class Constants {
 
 		public static final double kHopperRPMs = kMaxRPM * 0.45;
 
-		public static final double kVelocityTolerance = 100.0; // rpms
+		public static final double kVelocityTolerance = 50.0; // rpms
 	}
 
 	public static class FeederConstants {

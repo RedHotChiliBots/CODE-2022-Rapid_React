@@ -81,6 +81,8 @@ public class Climber extends SubsystemBase {
 	private final NetworkTableEntry cbRightAmps = climberTab.addPersistent("Right Amps", 0.0).getEntry();
 	private final NetworkTableEntry cbLeftLimit = climberTab.addPersistent("Left Limit", false).getEntry();
 	private final NetworkTableEntry cbRightLimit = climberTab.addPersistent("Right Limit", false).getEntry();
+	private final NetworkTableEntry cbPitch = climberTab.addPersistent("Pitch", 0.0).getEntry();
+	private final NetworkTableEntry cbIsPitchIncreasing = climberTab.addPersistent("Is Pitch Increasing", false).getEntry();
 
 	// ==============================================================
 	// Define local variables
@@ -110,10 +112,13 @@ public class Climber extends SubsystemBase {
 
 	private volatile ClimberState climberState = ClimberState.NOTINIT;
 
-	public Climber() {
+	Chassis chassis = null;
+
+	public Climber(Chassis chassis) {
 
 		System.out.println("+++++ Climber Constructor starting +++++");
 
+		this.chassis = chassis;
 		// ==============================================================
 		// Configure left and right Motors
 		climbLeftMotor.restoreFactoryDefaults();
@@ -168,6 +173,8 @@ public class Climber extends SubsystemBase {
 		cbRightAmps.setDouble(climbRightMotor.getOutputCurrent());
 		cbLeftLimit.setBoolean(getLeftLimit());
 		cbRightLimit.setBoolean(getRightLimit());
+		cbPitch.setDouble(chassis.getPitch());
+		cbIsPitchIncreasing.setBoolean(chassis.getIsPitchIncreasing());
 	}
 
 	public SwivelState getSwivelState() {

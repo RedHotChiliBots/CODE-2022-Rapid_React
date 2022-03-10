@@ -98,6 +98,7 @@ public class Collector extends SubsystemBase {
 		collectorMotor.restoreFactoryDefaults();
 		collectorMotor.clearFaults();
 		collectorMotor.setIdleMode(IdleMode.kBrake);
+		collectorMotor.setInverted(true);
 
 		// ==============================================================
 		// Configure PID Controller

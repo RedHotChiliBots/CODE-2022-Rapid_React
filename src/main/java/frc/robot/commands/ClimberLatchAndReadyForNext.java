@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ClimberCommands;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants;
@@ -13,12 +13,12 @@ import frc.robot.subsystems.Climber.LatchState;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ClimberLatchAndReadyForNext extends SequentialCommandGroup {
-  /** Creates a new ClimberLatchAndReadyForNext. */
-  public ClimberLatchAndReadyForNext(Climber climber) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-        new ClimberLatch(climber, LatchState.CLOSE),
-        new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
-  }
+	/** Creates a new ClimberLatchAndReadyForNext. */
+	public ClimberLatchAndReadyForNext(Climber climber) {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(
+				new ClimberLatch(climber, LatchState.CLOSE),
+				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));
+	}
 }

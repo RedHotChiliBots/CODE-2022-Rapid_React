@@ -101,9 +101,18 @@ public class Chassis extends SubsystemBase {
 	private final PowerDistribution pdp = new PowerDistribution();
 	private final Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
 
+	// ==============================================================
 	// Identify compressor hi and lo sensors
 	private final AnalogInput hiPressureSensor = new AnalogInput(AnalogIOConstants.kHiPressureChannel);
 	private final AnalogInput loPressureSensor = new AnalogInput(AnalogIOConstants.kLoPressureChannel);
+
+	// ==============================================================
+	// Define local variables
+	private double currPitch = 0.0;
+	private double lastPitch = 0.0;
+	private double maxPitch = Integer.MIN_VALUE;
+	private double minPitch = Integer.MAX_VALUE;
+	private boolean isPitchIncreasing = false;
 
 	// ==============================================================
 	// Define Shuffleboard data
@@ -202,19 +211,19 @@ public class Chassis extends SubsystemBase {
 		// Create config for trajectory
 		config = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(kinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint)
-						.setReversed(false);
+				// Add kinematics to ensure max speed is actually obeyed
+				.setKinematics(kinematics)
+				// Apply the voltage constraint
+				.addConstraint(autoVoltageConstraint)
+				.setReversed(false);
 
 		configReversed = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(kinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint)
-						.setReversed(true);
+				// Add kinematics to ensure max speed is actually obeyed
+				.setKinematics(kinematics)
+				// Apply the voltage constraint
+				.addConstraint(autoVoltageConstraint)
+				.setReversed(true);
 
 		straight = TrajectoryGenerator.generateTrajectory(
 				new Pose2d(0, 0, new Rotation2d(0)),
@@ -297,6 +306,8 @@ public class Chassis extends SubsystemBase {
 		sbX.setDouble(x);
 		sbY.setDouble(y);
 		sbDeg.setDouble(deg);
+
+		setIsPitchIncreasing();
 	}
 
 	public DifferentialDriveOdometry getOdometry() {
@@ -332,7 +343,29 @@ public class Chassis extends SubsystemBase {
 	 * @return The current pitch value in degrees (-180 to 180).
 	 */
 	public double getPitch() {
-		return ahrs.getPitch();
+		return ahrs.getRoll() + 3.5;
+	}
+
+	public void setIsPitchIncreasing() {
+		lastPitch = currPitch;
+		currPitch = getPitch();
+		if (currPitch > maxPitch)
+			maxPitch = currPitch;
+		if (currPitch < minPitch)
+			minPitch = currPitch;
+		isPitchIncreasing = (currPitch > lastPitch) ? true : false;
+	}
+
+	public double getMinPitch() {
+		return minPitch;
+	}
+
+	public double getMaxPitch() {
+		return maxPitch;
+	}
+
+	public boolean getIsPitchIncreasing() {
+		return isPitchIncreasing;
 	}
 
 	public void driveTankVolts(double leftVolts, double rightVolts) {
