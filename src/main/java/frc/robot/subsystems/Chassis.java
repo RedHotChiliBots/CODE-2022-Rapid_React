@@ -72,6 +72,7 @@ public class Chassis extends SubsystemBase {
 	private final SparkMaxPIDController rightPIDController = rightMaster.getPIDController();
 
 	private double setPoint = 0;
+	private int smartMotionSlotID = 0;
 
 	// ==============================================================
 	// Define autonomous support functions
@@ -187,6 +188,16 @@ public class Chassis extends SubsystemBase {
 		rightPIDController.setIZone(ChassisConstants.kIz);
 		rightPIDController.setFF(ChassisConstants.kFF);
 		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
+
+		leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
+		leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
+		leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
+		leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
+
+		rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
+		rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
+		rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
+		rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
 
 		// ==============================================================
 		// Configure encoders

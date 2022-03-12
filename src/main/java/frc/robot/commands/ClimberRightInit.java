@@ -45,7 +45,7 @@ public class ClimberRightInit extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		rightMotor.set(0.0);
-		rightEncoder.setPosition(0.0);
+		rightEncoder.setPosition(-0.375);
 
 		System.out.println("climberInit right done");
 	}

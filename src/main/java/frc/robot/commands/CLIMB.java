@@ -19,7 +19,7 @@ public class CLIMB extends SequentialCommandGroup {
 		addCommands(
 				// new ClimberInit(climber),
 				new ClimberMidRungClimb(climber),
-				new ClimberHighTravClimb(climber, chassis),
 				new ClimberHighTravClimb(climber, chassis));
+				// new ClimberHighTravClimb(climber, chassis));
 	}
 }

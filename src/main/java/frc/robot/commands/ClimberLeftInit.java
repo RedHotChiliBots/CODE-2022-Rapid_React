@@ -44,7 +44,7 @@ public class ClimberLeftInit extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		leftMotor.set(0.0);
-		leftEncoder.setPosition(0.0);
+		leftEncoder.setPosition(-0.375);
 
 		System.out.println("climberInit left done");
 	}

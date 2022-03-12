@@ -64,6 +64,7 @@ import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterRun;
 import frc.robot.commands.ShooterStop;
 import frc.robot.commands.ShooterSuckIn;
+import frc.robot.commands.TAKEIN;
 import frc.robot.commands.CLIMB;
 import frc.robot.commands.ChassisMonitorPitch;
 import frc.robot.commands.ClimberGoTo;
@@ -308,8 +309,9 @@ public class RobotContainer {
 		// new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
 
 		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(climberOpen);
-		// new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
-		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(new FeederSuckIn(feeder));
+		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
+		// new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(new
+		// FeederSuckIn(feeder, hopper, collector));
 
 		new JoystickButton(driver, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
@@ -319,17 +321,20 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kB.value).whenPressed(climb);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
 		new JoystickButton(operator, Button.kX.value).whenPressed(new SHOOT(shooter, hopper, feeder));
-		new JoystickButton(operator, Button.kA.value).whenPressed(new ShooterSuckIn(shooter));
+		new JoystickButton(operator, Button.kA.value).whenPressed(new TAKEIN(shooter, feeder, hopper, collector));
 
 		// new JoystickButton(operator, Button.kX.value).whenPressed(shooterRun);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(new
 		// FeederShoot(feeder, hopper, shooter));
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climbMidRung);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climbHighRung);
 
-		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
-		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
+
+		// new JoystickButton(operator,
+		// Button.kStart.value).whenPressed(collectorCollect);
+		// new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
 
 		// new JoystickButton(operator, Button.kStart.value).whenPressed(new
 		// ShooterStop(shooter));

@@ -84,12 +84,17 @@ public final class Constants {
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
 		public static final double kP = 0.5;
-		public static final double kI = 0.00005;
+		public static final double kI = 0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
-		public static final double kFF = 0.0;
+		public static final double kFF = 0.0000156;
 		public static final double kMinOutput = -0.5;
 		public static final double kMaxOutput = 0.5;
+		public static final double maxRPM = 5700;
+		public static final double maxVel = 2000;
+		public static final double minVel = 1000;
+		public static final double allowedErr = 0.0;
+		public static final double maxAcc = 1500;
 
 		public static final double kMetersPerInch = 0.0254;
 		public static final double kTrackWidth = 26.341 * kMetersPerInch; // meters
@@ -146,7 +151,7 @@ public final class Constants {
 
 		// all climber measurements are from floor to underside of hook and floor to top
 		// of rung
-		public static final double kFloor2Hook = 10.4 + 34.03; // inches from floor to top of outer climber tube
+		public static final double kFloor2Hook = 10.4 + 33.5; // inches from floor to top of outer climber tube
 		public static final double kClearUnder = 3.0; // inches below top of rung to clear
 		public static final double kEngageOver = 3.0; // inches avobe top of rung to engage
 
@@ -161,7 +166,7 @@ public final class Constants {
 				- ClimberConstants.kClearUnder); // inches
 		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook
 				+ ClimberConstants.kEngageOver); // inches
-		public static final double kEngageHighTrav = -(68.0 - ClimberConstants.kFloor2Hook); // inches to position for
+		public static final double kEngageHighTrav = -(67.0 - ClimberConstants.kFloor2Hook); // inches to position for
 																																													// engage
 		// high/traverse rungs
 		public static final double kHookHighTrav = -(61.0 - ClimberConstants.kFloor2Hook); // inches to position for latch
