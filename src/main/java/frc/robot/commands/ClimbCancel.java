@@ -5,42 +5,30 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.Climber;
 
-public class DrivePosition extends CommandBase {
-  /** Creates a new DrivePosition. */
-
-  Chassis chassis = null;
-  double setPoint = 0.0;
-
-  public DrivePosition(Chassis chassis, double setPoint) {
+public class ClimbCancel extends CommandBase {
+  /** Creates a new ClimbCancel. */
+  public ClimbCancel(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.chassis = chassis;
-    this.setPoint = setPoint;
-    addRequirements(chassis);
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    chassis.resetEncoders();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    chassis.drivePosition(-setPoint);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    chassis.drive(0.0, 0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return chassis.atTarget();
+    return false;
   }
 }

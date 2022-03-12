@@ -5,9 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
@@ -15,18 +13,13 @@ import frc.robot.subsystems.Shooter;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class REDONECARGOAUTON extends SequentialCommandGroup {
-  /** Creates a new REDONECARGOAUTON. */
-  public REDONECARGOAUTON(Chassis chassis, Collector collector, 
-  Hopper hopper, Feeder feeder, Shooter shooter) {
+public class AUTONTAXI extends SequentialCommandGroup {
+  /** Creates a new AUTONTAXI. */
+  public AUTONTAXI(Chassis chassis, Shooter shooter, Hopper hopper, Feeder feeder) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-			new ShooterRun(shooter, hopper, feeder),
-      new FeederShoot(feeder, hopper, shooter),
-			new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, feeder, shooter),
-    	new ShooterRun(shooter, hopper, feeder),
-    	new FeederShoot(feeder, hopper, shooter),
-      new ShooterStop(shooter));
+    addCommands(new SHOOT(shooter, hopper, feeder),
+		new DrivePosition(chassis, 3.0)
+		);
   }
 }

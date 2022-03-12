@@ -162,8 +162,8 @@ public class Chassis extends SubsystemBase {
 		rightMaster.clearFaults();
 		rightFollower.clearFaults();
 
-		rightMaster.setIdleMode(IdleMode.kBrake);
-		rightFollower.setIdleMode(IdleMode.kBrake);
+		rightMaster.setIdleMode(IdleMode.kCoast);
+		rightFollower.setIdleMode(IdleMode.kCoast);
 
 		rightMaster.setInverted(true);
 		rightFollower.setInverted(true);

@@ -35,6 +35,7 @@ public class ClimberHighTravClimb extends SequentialCommandGroup {
 				// add command to wait for chassis pitch to be optimal for rung catch
 				// new ChassisMonitorPitch(chassis),
 				new ClimberInit(climber),
+				new WaitCommand(1.0),
 				// Close the Latch and clear Climber Hooks
 				new ClimberLatch(climber, LatchState.CLOSE),
 				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));

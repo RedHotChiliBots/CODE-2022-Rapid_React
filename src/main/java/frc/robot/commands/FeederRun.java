@@ -58,6 +58,6 @@ public class FeederRun extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !feeder.isRunning();
+    return false;
   }
 }

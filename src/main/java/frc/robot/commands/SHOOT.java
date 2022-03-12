@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
@@ -13,13 +14,13 @@ import frc.robot.subsystems.Shooter;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SHOOT extends ParallelRaceGroup {
-  /** Creates a new SHOOT. */
-  
-  public SHOOT(Shooter shooter, Hopper hopper, Feeder feeder) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterRun(shooter, hopper, feeder),
-    new ShooterSpinUpPlunge(shooter));
-  }
- 
+	/** Creates a new SHOOT. */
+
+	public SHOOT(Shooter shooter, Hopper hopper, Feeder feeder) {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(new ShooterRun(shooter, hopper, feeder),
+				new FeederShoot(feeder, hopper, shooter));
+	}
+
 }

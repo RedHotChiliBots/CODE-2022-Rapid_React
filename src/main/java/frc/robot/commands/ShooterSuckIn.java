@@ -5,42 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Chassis;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Shooter;
 
-public class DrivePosition extends CommandBase {
-  /** Creates a new DrivePosition. */
+public class ShooterSuckIn extends CommandBase {
+  /** Creates a new ShooterSuckIn. */
 
-  Chassis chassis = null;
-  double setPoint = 0.0;
-
-  public DrivePosition(Chassis chassis, double setPoint) {
+	Shooter shooter = null;
+  public ShooterSuckIn(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.chassis = chassis;
-    this.setPoint = setPoint;
-    addRequirements(chassis);
+		this.shooter = shooter;
+		addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    chassis.resetEncoders();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.drivePosition(-setPoint);
-  }
+		shooter.setShootVelocity(-ShooterConstants.kShooterSuckRPMS);
+	}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    chassis.drive(0.0, 0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return chassis.atTarget();
+    return false;
   }
 }

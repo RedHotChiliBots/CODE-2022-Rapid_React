@@ -16,13 +16,17 @@ import frc.robot.subsystems.Shooter;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class REDONECARGOMIDAUTON extends SequentialCommandGroup {
-  /** Creates a new REDONECARGOAUTON. */
-  public REDONECARGOMIDAUTON(Chassis chassis, Collector collector, 
-  Hopper hopper, Feeder feeder, Shooter shooter) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, feeder, shooter),
-    new ShooterRun(shooter, hopper, feeder),
-    new ShootNow(shooter, hopper, feeder));
-  }
+	/** Creates a new REDONECARGOAUTON. */
+	public REDONECARGOMIDAUTON(Chassis chassis, Collector collector,
+			Hopper hopper, Feeder feeder, Shooter shooter) {
+		// Add your commands in the addCommands() call, e.g.
+		// addCommands(new FooCommand(), new BarCommand());
+		addCommands(
+				new ShooterRun(shooter, hopper, feeder),
+				new FeederShoot(feeder, hopper, shooter),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, feeder, shooter),
+				new ShooterRun(shooter, hopper, feeder),
+				new FeederShoot(feeder, hopper, shooter),
+				new ShooterStop(shooter));
+	}
 }

@@ -32,7 +32,7 @@ public final class Constants {
 
 		public static final int kClimbLeftMotor = 20;
 		public static final int kClimbRightMotor = 21;
-		
+
 		public static final int kCollectorMotor = 40;
 		public static final int kHopperMotor = 50;
 		public static final int kFeederMotor = 30;
@@ -83,13 +83,13 @@ public final class Constants {
 
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
-		public static final double kP = 0.0005;
-		public static final double kI = 0.0;
+		public static final double kP = 0.5;
+		public static final double kI = 0.00005;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.0;
-		public static final double kMinOutput = -1.0;
-		public static final double kMaxOutput = 1.0;
+		public static final double kMinOutput = -0.5;
+		public static final double kMaxOutput = 0.5;
 
 		public static final double kMetersPerInch = 0.0254;
 		public static final double kTrackWidth = 26.341 * kMetersPerInch; // meters
@@ -256,10 +256,11 @@ public final class Constants {
 		public static final double kMinShootRPM = -4540.0;
 		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kShooterRPMs = kMaxShootRPM * 0.45;
+		public static final double kShooterRPMs = kMaxShootRPM * 0.8;
+		public static final double kShooterSuckRPMS = kMaxShootRPM * 0.3;
 
 		public static final double kShootVelocityTolerance = 100.0; // rpms
 
-		public static final double kTimeShootAfterEmpty = 2.0;
+		public static final double kTimeShootAfterEmpty = 3.0;
 	}
 }
