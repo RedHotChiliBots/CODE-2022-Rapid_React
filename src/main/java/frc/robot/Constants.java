@@ -83,13 +83,13 @@ public final class Constants {
 
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
-		public static final double kP = 0.5;
-		public static final double kI = 0.0;
+		public static final double kP = 5e-5;	//0.5;
+		public static final double kI = 1e-6;	//0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
-		public static final double kFF = 0.0000156;
-		public static final double kMinOutput = -0.5;
-		public static final double kMaxOutput = 0.5;
+		public static final double kFF = 0.000156;
+		public static final double kMinOutput = -1.0;	//-0.5;
+		public static final double kMaxOutput = 1.0;	//0.5;
 		public static final double maxRPM = 5700;
 		public static final double maxVel = 2000;
 		public static final double minVel = 1000;

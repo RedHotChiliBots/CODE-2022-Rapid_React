@@ -71,9 +71,6 @@ public class Chassis extends SubsystemBase {
 	private final SparkMaxPIDController leftPIDController = leftMaster.getPIDController();
 	private final SparkMaxPIDController rightPIDController = rightMaster.getPIDController();
 
-	private double setPoint = 0;
-	private int smartMotionSlotID = 0;
-
 	// ==============================================================
 	// Define autonomous support functions
 	public DifferentialDriveKinematics kinematics;
@@ -114,6 +111,8 @@ public class Chassis extends SubsystemBase {
 	private double maxPitch = Integer.MIN_VALUE;
 	private double minPitch = Integer.MAX_VALUE;
 	private boolean isPitchIncreasing = false;
+	private double setPoint = 0.0;
+	private int smartMotionSlotID = 0;
 
 	// ==============================================================
 	// Define Shuffleboard data
@@ -153,8 +152,8 @@ public class Chassis extends SubsystemBase {
 		leftMaster.clearFaults();
 		leftFollower.clearFaults();
 
-		leftMaster.setIdleMode(IdleMode.kBrake);
-		leftFollower.setIdleMode(IdleMode.kBrake);
+		leftMaster.setIdleMode(IdleMode.kCoast);
+		leftFollower.setIdleMode(IdleMode.kCoast);
 
 		// Configure the right side motors, master and follower
 		rightMaster.restoreFactoryDefaults();
@@ -447,8 +446,8 @@ public class Chassis extends SubsystemBase {
 
 	public void drivePosition(double setPoint) {
 		this.setPoint = setPoint;
-		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
-		rightPIDController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+		rightPIDController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
 	}
 
 	public boolean atTarget() {

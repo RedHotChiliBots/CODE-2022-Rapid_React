@@ -302,8 +302,6 @@ public class RobotContainer {
 	private void configureButtonBindings() {
 		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
-		// new JoystickButton(driver, Button.kX.value).whenPressed(new
-		// DrivePosition(chassis, 1.0));
 
 		// new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
 		// new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
@@ -330,6 +328,7 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climbMidRung);
 		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climbHighRung);
 
+		new JoystickButton(operator, Button.kStart.value).whenPressed(new DrivePosition(chassis, 1.0));
 		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
 
 		// new JoystickButton(operator,
