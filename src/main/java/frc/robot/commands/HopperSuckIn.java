@@ -35,29 +35,29 @@ public class HopperSuckIn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-		if(feeder.getFeederState() == FeederState.CONTROLLED) {
-      if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.stopHopper();
-      } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-        hopper.setHopperVelocity(-HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.stopHopper();
-      }else if(collector.getCollectorState() == CollectorState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-        hopper.stopHopper();
-      }
-    } else {
-      if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(collector.getCollectorState() == CollectorState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-        hopper.stopHopper();
-      }
-    }
+		// if(feeder.getFeederState() == FeederState.CONTROLLED) {
+    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.stopHopper();
+    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
+    //     hopper.setHopperVelocity(-HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.stopHopper();
+    //   }else if(collector.getCollectorState() == CollectorState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
+    //     hopper.stopHopper();
+    //   }
+    // } else {
+    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(collector.getCollectorState() == CollectorState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
+    //     hopper.stopHopper();
+    //   }
+    // }
 	}
 
   // Called once the command ends or is interrupted.

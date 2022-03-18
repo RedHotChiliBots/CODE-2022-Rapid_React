@@ -17,18 +17,18 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class REDFOURCARGOAUTON extends SequentialCommandGroup {
 	/** Creates a new RedFourCargoAutonTrajPath. */
-	public REDFOURCARGOAUTON(Chassis chassis, Collector collector, Hopper hopper, Feeder feeder, Shooter shooter) {
+	public REDFOURCARGOAUTON(Chassis chassis, Collector collector, Hopper hopper, Shooter shooter) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
-				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, feeder, shooter),
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
-				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideCargoAndTerm, collector, hopper, feeder, shooter),
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				// new FeederShoot(feeder, hopper, shooter),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				// new FeederShoot(feeder, hopper, shooter),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideCargoAndTerm, collector, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				// new FeederShoot(feeder, hopper, shooter),
 				new ShooterStop(shooter));
 	}
 }

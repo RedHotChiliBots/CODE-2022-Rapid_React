@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Climber.ClimberState;
 import frc.robot.subsystems.Climber.LatchState;
 import frc.robot.subsystems.Collector.ArmState;
-import frc.robot.subsystems.Collector.CollectorState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

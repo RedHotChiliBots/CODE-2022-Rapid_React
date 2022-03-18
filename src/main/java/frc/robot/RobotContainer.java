@@ -93,7 +93,7 @@ public class RobotContainer {
 	private static final Climber climber = new Climber(chassis);
 	private final Collector collector = new Collector();
 	private final Hopper hopper = new Hopper();
-	private final Feeder feeder = new Feeder();
+	// private final Feeder feeder = new Feeder();
 	private final Shooter shooter = new Shooter();
 
 	// =============================================================
@@ -117,16 +117,16 @@ public class RobotContainer {
 	private final ChassisArcadeDrive chassisArcadeDrive = new ChassisArcadeDrive(chassis,
 			() -> getJoystick(driver.getLeftY()), () -> getJoystick(driver.getRightX()));
 
-	private final HopperRun hopperRun = new HopperRun(hopper, feeder, collector);
+	private final HopperRun hopperRun = new HopperRun(hopper, collector);
 	private final HopperStop hopperStop = new HopperStop(hopper);
 
-	private final FeederRun feederRun = new FeederRun(feeder, shooter);
-	private final FeederStop feederStop = new FeederStop(feeder);
+	// private final FeederRun feederRun = new FeederRun(feeder, shooter);
+	// private final FeederStop feederStop = new FeederStop(feeder);
 
-	private final ShooterRun shooterRun = new ShooterRun(shooter, hopper, feeder);
+	private final ShooterRun shooterRun = new ShooterRun(shooter, hopper);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
 
-	private final SHOOT SHOOT = new SHOOT(shooter, hopper, feeder);
+	private final SHOOT SHOOT = new SHOOT(shooter, hopper);
 
 	private final CLIMB climb = new CLIMB(climber, chassis);
 	private final ClimberInit climberInit = new ClimberInit(climber);
@@ -204,7 +204,7 @@ public class RobotContainer {
 		SmartDashboard.putData("Climber", climber);
 		SmartDashboard.putData("Collector", collector);
 		SmartDashboard.putData("Hopper", hopper);
-		SmartDashboard.putData("Feeder", feeder);
+		// SmartDashboard.putData("Feeder", feeder);
 
 		// =============================================================
 		// Configure default commands for each subsystem
@@ -213,7 +213,7 @@ public class RobotContainer {
 		collector.setDefaultCommand(collectorStop);
 		// hopper.setDefaultCommand(hopperStop);
 		hopper.setDefaultCommand(hopperRun);
-		feeder.setDefaultCommand(feederRun);
+		// feeder.setDefaultCommand(feederRun);
 		// feeder.setDefaultCommand(feederStop);
 		shooter.setDefaultCommand(shooterStop);
 
@@ -249,14 +249,14 @@ public class RobotContainer {
 			DriverStation.reportError("Unable to open trajectory: " + BlueRungSideCargoToHubJSON, ex.getStackTrace());
 		}
 
-		redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		redOneCargoMidAuton = new REDONECARGOMIDAUTON(chassis, collector, hopper, feeder, shooter);
-		redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, feeder, shooter);
-		blueOneCargoMidAuton = new BLUEONECARGOMIDAUTON(chassis, collector, hopper, feeder, shooter);
-		blueAutonShootToTerm = new BLUEAUTONSHOOTTOTERM(chassis, hopper, feeder, shooter);
-		redAutonShootToTerm = new REDAUTONSHOOTTOTERM(chassis, hopper, feeder, shooter);
+		redOneCargoAuton = new REDONECARGOAUTON(chassis, collector, hopper, shooter);
+		redOneCargoMidAuton = new REDONECARGOMIDAUTON(chassis, collector, hopper, shooter);
+		redFourCargoAuton = new REDFOURCARGOAUTON(chassis, collector, hopper, shooter);
+		blueOneCargoAuton = new BLUEONECARGOAUTON(chassis, collector, hopper, shooter);
+		blueFourCargoAuton = new BLUEFOURCARGOAUTON(chassis, collector, hopper, shooter);
+		blueOneCargoMidAuton = new BLUEONECARGOMIDAUTON(chassis, collector, hopper, shooter);
+		blueAutonShootToTerm = new BLUEAUTONSHOOTTOTERM(chassis, hopper, shooter);
+		redAutonShootToTerm = new REDAUTONSHOOTTOTERM(chassis, hopper, shooter);
 		blueNotCenterToTerm = new BLUENOTCENTERTOTERM(chassis);
 		redNotCenterToTerm = new REDNOTCENTERRUNGSIDETOTERM(chassis);
 
@@ -279,7 +279,8 @@ public class RobotContainer {
 		chooser.addOption("Blue Not Center To Term", blueNotCenterToTerm);
 		chooser.addOption("Red Not Center To Term", redNotCenterToTerm);
 		chooser.addOption("Shoot", SHOOT);
-		chooser.addOption("Shoot and Taxi", new AUTONTAXI(chassis, shooter, hopper, feeder));
+		chooser.addOption("Shoot and Taxi", new AUTONTAXI(chassis, shooter, hopper));
+		chooser.addOption("Taxi", new DrivePosition(chassis, 3.0));
 
 		// Put the chooser on the dashboard
 		SmartDashboard.putData(chooser);
@@ -318,22 +319,24 @@ public class RobotContainer {
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
 		new JoystickButton(operator, Button.kB.value).whenPressed(climb);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
-		new JoystickButton(operator, Button.kX.value).whenPressed(new SHOOT(shooter, hopper, feeder));
-		new JoystickButton(operator, Button.kA.value).whenPressed(new TAKEIN(shooter, feeder, hopper, collector));
+		new JoystickButton(operator, Button.kX.value).whenPressed(new SHOOT(shooter, hopper));
+		new JoystickButton(operator, Button.kA.value).whenPressed(new TAKEIN(shooter, hopper, collector));
 
 		// new JoystickButton(operator, Button.kX.value).whenPressed(shooterRun);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(new
 		// FeederShoot(feeder, hopper, shooter));
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climbMidRung);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climbHighRung);
+		// new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climbMidRung);
+		// new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climbHighRung);
 
-		new JoystickButton(operator, Button.kStart.value).whenPressed(new DrivePosition(chassis, 1.0));
-		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
 
-		// new JoystickButton(operator,
-		// Button.kStart.value).whenPressed(collectorCollect);
-		// new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
+//		new JoystickButton(operator, Button.kStart.value).whenPressed(new DrivePosition(chassis, 1.0));
+//		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
+
+		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
 
 		// new JoystickButton(operator, Button.kStart.value).whenPressed(new
 		// ShooterStop(shooter));

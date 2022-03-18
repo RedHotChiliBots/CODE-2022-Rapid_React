@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.util.Map;
-import static java.util.Map.entry;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -83,8 +81,8 @@ public final class Constants {
 
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
-		public static final double kP = 5e-5;	//0.5;
-		public static final double kI = 1e-6;	//0.0;
+		public static final double kP = 0.2;	//5e-5;	//0.5;
+		public static final double kI = 1e-3;	//1e-6;	//0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.000156;
@@ -93,7 +91,7 @@ public final class Constants {
 		public static final double maxRPM = 5700;
 		public static final double maxVel = 2000;
 		public static final double minVel = 1000;
-		public static final double allowedErr = 0.0;
+		public static final double allowedErr = 100.0;
 		public static final double maxAcc = 1500;
 
 		public static final double kMetersPerInch = 0.0254;
@@ -141,7 +139,7 @@ public final class Constants {
 		public static final double kMinOutput = -1.0;
 		public static final double kMaxOutput = 1.0;
 
-		public static final double kRopeDia = 0.125; // inches add to Circ calc
+		public static final double kRopeDia = 0.0625; // inches add to Circ calc
 		public static final double kPulleyCirc = Math.PI * ((20.2 / 25.4) + kRopeDia); // inches
 		public static final int kEncoderResolution = 1; // not used, NEO's native units are rotations
 		public static final int kGearBoxRatio = 12;
@@ -203,8 +201,8 @@ public final class Constants {
 		public static final double kMaxOutput = 0.5;
 
 		public static final double kStopRPMs = 0.0;
-		public static final double kMinRPM = -4540.0;
-		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
+		public static final double kMinRPM = -5700.0;
+		public static final double kMaxRPM = 5700.0; // 2800 rpm when prototype tested 1-18-22
 
 		public static final double kCollectorRPMs = kMaxRPM * 1.0;
 

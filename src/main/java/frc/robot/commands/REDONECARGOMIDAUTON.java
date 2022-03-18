@@ -18,15 +18,15 @@ import frc.robot.subsystems.Shooter;
 public class REDONECARGOMIDAUTON extends SequentialCommandGroup {
 	/** Creates a new REDONECARGOAUTON. */
 	public REDONECARGOMIDAUTON(Chassis chassis, Collector collector,
-			Hopper hopper, Feeder feeder, Shooter shooter) {
+			Hopper hopper, Shooter shooter) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
-				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, feeder, shooter),
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				// new FeederShoot(feeder, hopper, shooter),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				// new FeederShoot(feeder, hopper, shooter),
 				new ShooterStop(shooter));
 	}
 }

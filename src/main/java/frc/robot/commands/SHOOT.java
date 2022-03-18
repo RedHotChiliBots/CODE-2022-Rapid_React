@@ -16,11 +16,11 @@ import frc.robot.subsystems.Shooter;
 public class SHOOT extends ParallelRaceGroup {
 	/** Creates a new SHOOT. */
 
-	public SHOOT(Shooter shooter, Hopper hopper, Feeder feeder) {
+	public SHOOT(Shooter shooter, Hopper hopper) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter));
+		addCommands(new ShooterRun(shooter, hopper));
+				// new FeederShoot(hopper, shooter));
 	}
 
 }

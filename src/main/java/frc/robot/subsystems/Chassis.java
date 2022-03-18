@@ -9,9 +9,10 @@ import java.util.List;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.AnalogIOConstants;
 import frc.robot.Constants.CANidConstants;
 import frc.robot.Constants.ChassisConstants;
@@ -113,6 +115,8 @@ public class Chassis extends SubsystemBase {
 	private boolean isPitchIncreasing = false;
 	private double setPoint = 0.0;
 	private int smartMotionSlotID = 0;
+	private double leftError = 0.0;
+	private double rightError = 0.0;
 
 	// ==============================================================
 	// Define Shuffleboard data
@@ -132,6 +136,9 @@ public class Chassis extends SubsystemBase {
 	private final NetworkTableEntry sbDeg = chassisTab.addPersistent("Pose Deg", 0).getEntry();
 
 	private final NetworkTableEntry sbSetPt = chassisTab.addPersistent("Setpoint", 0.0).getEntry();
+	private final NetworkTableEntry sbLeftErr = chassisTab.addPersistent("Left Error", 0.0).getEntry();
+	private final NetworkTableEntry sbRightErr = chassisTab.addPersistent("Right Error", 0.0).getEntry();
+	private final NetworkTableEntry sbAtTgt = chassisTab.addPersistent("At Target", false).getEntry();
 
 	private final ShuffleboardTab pneumaticsTab = Shuffleboard.getTab("Pneumatics");
 	private final NetworkTableEntry sbHiPressure = pneumaticsTab.addPersistent("Hi Pressure", 0).getEntry();
@@ -180,7 +187,7 @@ public class Chassis extends SubsystemBase {
 		leftPIDController.setIZone(ChassisConstants.kIz);
 		leftPIDController.setFF(ChassisConstants.kFF);
 		leftPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
-
+		
 		rightPIDController.setP(ChassisConstants.kP);
 		rightPIDController.setI(ChassisConstants.kI);
 		rightPIDController.setD(ChassisConstants.kD);
@@ -188,15 +195,17 @@ public class Chassis extends SubsystemBase {
 		rightPIDController.setFF(ChassisConstants.kFF);
 		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
-		leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
-		leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
-		leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
-		leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
+		// leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
+		// leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
+		// leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
+		// leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
+//		leftPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, smartMotionSlotID);
 
-		rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
-		rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
-		rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
-		rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
+		// rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
+		// rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
+		// rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
+		// rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
+//		rightPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, smartMotionSlotID);
 
 		// ==============================================================
 		// Configure encoders
@@ -278,8 +287,8 @@ public class Chassis extends SubsystemBase {
 		sbLeftVel.setDouble(leftEncoder.getVelocity());
 		sbRightPos.setDouble(rightEncoder.getPosition());
 		sbRightVel.setDouble(rightEncoder.getVelocity());
-		sbLeftPow.setDouble(leftMaster.get());
-		sbRightPow.setDouble(rightMaster.get());
+		sbLeftPow.setDouble(leftMaster.getAppliedOutput());
+		sbRightPow.setDouble(rightMaster.getAppliedOutput());
 
 		sbPitch.setDouble(getPitch());
 		sbAngle.setDouble(getAngle().getDegrees());
@@ -289,6 +298,9 @@ public class Chassis extends SubsystemBase {
 		sbLoPressure.setDouble(getLoPressure());
 
 		sbSetPt.setDouble(setPoint);
+		sbLeftErr.setDouble(leftError);
+		sbRightErr.setDouble(rightError);
+		sbAtTgt.setBoolean(atTarget());
 
 		// // Update field position - for autonomous
 		// resetOdometry(BlueSideRung.getInitialPose());
@@ -446,13 +458,15 @@ public class Chassis extends SubsystemBase {
 
 	public void drivePosition(double setPoint) {
 		this.setPoint = setPoint;
-		leftPIDController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
-		rightPIDController.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
+		leftPIDController.setReference(setPoint, ControlType.kPosition);
+		rightPIDController.setReference(setPoint, ControlType.kPosition);
 	}
 
 	public boolean atTarget() {
-		return Math.abs(setPoint - leftEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance &&
-				Math.abs(setPoint - rightEncoder.getPosition()) <= ChassisConstants.kDistanceTolerance;
+		leftError = Math.abs(setPoint - leftEncoder.getPosition());
+		rightError = Math.abs(setPoint - rightEncoder.getPosition());
+		return leftError <= ChassisConstants.kDistanceTolerance && rightError <= ChassisConstants.kDistanceTolerance;
+			
 	}
 
 	public double getLoPressure() {

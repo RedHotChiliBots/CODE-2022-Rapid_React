@@ -15,10 +15,10 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class TAKEIN extends ParallelCommandGroup {
   /** Creates a new TAKEIN. */
-  public TAKEIN(Shooter shooter, Feeder feeder, Hopper hopper, Collector collector) {
+  public TAKEIN(Shooter shooter, Hopper hopper, Collector collector) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterSuckIn(shooter),
-		new FeederSuckIn(feeder, hopper, collector));
+    addCommands(new ShooterSuckIn(shooter));
+		// new FeederSuckIn(feeder, hopper, collector));
   }
 }

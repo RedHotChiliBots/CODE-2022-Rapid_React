@@ -17,13 +17,13 @@ public class HopperRun extends CommandBase {
   /** Creates a new HopperShoot. */
 
   private final Hopper hopper;
-	private final Feeder feeder;
+	// private final Feeder feeder;
 	private final Collector collector;
 
-  public HopperRun(Hopper hopper, Feeder feeder, Collector collector) {
+  public HopperRun(Hopper hopper, /*Feeder feeder,*/ Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hopper = hopper;
-		this.feeder = feeder;
+		//this.feeder = feeder;
 		this.collector = collector;
     addRequirements(hopper);
   }
@@ -38,29 +38,37 @@ public class HopperRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(feeder.getFeederState() == FeederState.CONTROLLED) {
-      if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.stopHopper();
-      } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.stopHopper();
-      }else if(collector.getCollectorState() == CollectorState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-        hopper.stopHopper();
-      }
-    } else {
-      if(hopper.getHopperState() == HopperState.CONTROLLED) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(collector.getCollectorState() == CollectorState.EXITING) {
-        hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-      } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-        hopper.stopHopper();
-      }
-    }
+    // if(feeder.getFeederState() == FeederState.CONTROLLED) {
+    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.stopHopper();
+    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.stopHopper();
+    //   }else if(collector.getCollectorState() == CollectorState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
+    //     hopper.stopHopper();
+    //   }
+    // } else {
+    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(collector.getCollectorState() == CollectorState.EXITING) {
+    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
+    //     hopper.stopHopper();
+    //   }
+    // }
+
+		if(hopper.isExiting()) {
+			hopper.stopHopper();
+		} else if(collector.isExiting()) {
+			hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+		} else if(hopper.isMid()) {
+			hopper.stopHopper();
+		} 
 	
   }
 

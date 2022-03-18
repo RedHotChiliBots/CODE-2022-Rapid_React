@@ -16,11 +16,11 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class REDAUTONSHOOTTOTERM extends SequentialCommandGroup {
 	/** Creates a new BLUEAUTONSHOOTTOTERM. */
-	public REDAUTONSHOOTTOTERM(Chassis chassis, Hopper hopper, Feeder feeder, Shooter shooter) {
+	public REDAUTONSHOOTTOTERM(Chassis chassis, Hopper hopper, Shooter shooter) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new SHOOT(shooter, hopper, feeder),
+				new SHOOT(shooter, hopper),
 				new DriveTrajectory(chassis, RobotContainer.RedTermSideCargoAndTerm),
 				new ShooterStop(shooter));
 	}

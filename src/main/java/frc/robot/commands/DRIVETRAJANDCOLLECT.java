@@ -18,10 +18,10 @@ import frc.robot.subsystems.Shooter;
 public class DRIVETRAJANDCOLLECT extends ParallelCommandGroup {
   /** Creates a new DRIVETRAJANDCOLLECT. */
   public DRIVETRAJANDCOLLECT(Chassis chassis, Trajectory trajectory, Collector collector, 
-      Hopper hopper, Feeder feeder, Shooter shooter) {
+      Hopper hopper, Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new DriveTrajectory(chassis, trajectory),
-    new COLLECT(collector, hopper, feeder, shooter));
+    new COLLECT(collector, hopper, shooter));
   }
 }

@@ -15,10 +15,10 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AUTONTAXI extends SequentialCommandGroup {
   /** Creates a new AUTONTAXI. */
-  public AUTONTAXI(Chassis chassis, Shooter shooter, Hopper hopper, Feeder feeder) {
+  public AUTONTAXI(Chassis chassis, Shooter shooter, Hopper hopper) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SHOOT(shooter, hopper, feeder),
+    addCommands(new SHOOT(shooter, hopper),
 		new DrivePosition(chassis, 3.0)
 		);
   }

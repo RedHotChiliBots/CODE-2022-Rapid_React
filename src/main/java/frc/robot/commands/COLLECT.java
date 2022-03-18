@@ -17,10 +17,10 @@ import frc.robot.subsystems.Shooter;
 public class COLLECT extends ParallelCommandGroup {
   /** Creates a new INTAKE. */
 
-  public COLLECT(Collector collector, Hopper hopper, Feeder feeder, Shooter shooter) {
+  public COLLECT(Collector collector, Hopper hopper, Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     addCommands(new CollectorCollect(collector),
-      new HopperRun(hopper, feeder, collector),
-      new FeederRun(feeder, shooter));
+      new HopperRun(hopper, collector));
+      // new FeederRun(feeder, shooter));
   }
 }

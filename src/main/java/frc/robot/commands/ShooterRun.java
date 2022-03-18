@@ -18,14 +18,14 @@ public class ShooterRun extends CommandBase {
 
   private final Shooter shooter;
   private final Hopper hopper;
-  private final Feeder feeder;
+  // private final Feeder feeder;
   private Timer timer = new Timer();
 
-  public ShooterRun(Shooter shooter, Hopper hopper, Feeder feeder) {
+  public ShooterRun(Shooter shooter, Hopper hopper /*Feeder feeder*/) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     this.hopper = hopper;
-    this.feeder = feeder;
+    // this.feeder = feeder;
     addRequirements(shooter);
   }
 
@@ -40,7 +40,7 @@ public class ShooterRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(hopper.getHopperState() == HopperState.EMPTY && feeder.getFeederState() == FeederState.EMPTY) {
+    if(hopper.getHopperState() == HopperState.EMPTY) {
       timer.start();
     }
   }

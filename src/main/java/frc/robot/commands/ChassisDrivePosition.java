@@ -22,12 +22,14 @@ public class ChassisDrivePosition extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+		chassis.drivePosition(setPoint);
+	}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassis.drivePosition(setPoint);
+    
   }
 
   // Called once the command ends or is interrupted.

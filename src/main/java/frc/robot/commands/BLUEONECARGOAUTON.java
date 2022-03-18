@@ -18,15 +18,15 @@ import frc.robot.subsystems.Shooter;
 public class BLUEONECARGOAUTON extends SequentialCommandGroup {
 	/** Creates a new REDONECARGOAUTON. */
 	public BLUEONECARGOAUTON(Chassis chassis, Collector collector,
-			Hopper hopper, Feeder feeder, Shooter shooter) {
+			Hopper hopper, Shooter shooter) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new SHOOT(shooter, hopper, feeder),
+				new SHOOT(shooter, hopper),
 				// new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueTermSideOneCargo, collector, hopper, feeder, shooter),
 				new DriveTrajectory(chassis, RobotContainer.BlueTermSideOneCargo), 
-				new ShooterRun(shooter, hopper, feeder),
-				new FeederShoot(feeder, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				//new FeederShoot(feeder, hopper, shooter),
 				new ShooterStop(shooter));
 	}
 }
