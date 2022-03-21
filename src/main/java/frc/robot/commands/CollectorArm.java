@@ -13,21 +13,32 @@ public class CollectorArm extends CommandBase {
 
 	Collector collector;
 	ArmState armState;
+	boolean wait = true;
 
 	public CollectorArm(Collector collector, ArmState armState) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.collector = collector;
 		this.armState = armState;
+		this.wait = true;
 		addRequirements(collector);
 	}
+
+	public CollectorArm(Collector collector, ArmState armState, boolean wait) {
+		// Use addRequirements() here to declare subsystem dependencies.
+		this.collector = collector;
+		this.armState = armState;
+		this.wait = wait;
+		addRequirements(collector);
+	}
+
 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
 		if (armState == ArmState.DEPLOY) {
-			collector.armDeploy();
+			collector.armDeploy(wait);
 		} else {
-			collector.armStow();
+			collector.armStow(wait);
 		}
 	}
 

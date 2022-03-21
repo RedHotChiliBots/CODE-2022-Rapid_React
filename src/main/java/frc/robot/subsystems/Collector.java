@@ -257,13 +257,14 @@ public class Collector extends SubsystemBase {
 
 				collectorArm.set(Value.kReverse);
 
+				armState = ArmState.STOW;
+				
 				try {
 					TimeUnit.MILLISECONDS.sleep(CollectorConstants.kArmDelay);
 				} catch (InterruptedException e) {
 					DriverStation.reportError("ArmStow sleep exception", true);
 				}
 
-				armState = ArmState.STOW;
 			}
 		};
 		thread.start();

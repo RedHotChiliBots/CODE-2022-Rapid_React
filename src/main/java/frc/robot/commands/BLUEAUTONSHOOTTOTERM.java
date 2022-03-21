@@ -20,10 +20,9 @@ public class BLUEAUTONSHOOTTOTERM extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-			new ShooterRun(shooter, hopper),
-      // new FeederShoot(feeder, hopper, shooter),
-		new DriveTrajectory(chassis, RobotContainer.BlueTermSideCargoAndTerm),
-    new ShooterStop(shooter)
+			new SHOOT(shooter, hopper),
+		  new DriveTrajectory(chassis, RobotContainer.BlueTermSideCargoAndTerm),
+      new ShooterStop(shooter)
 		);
   }
 }

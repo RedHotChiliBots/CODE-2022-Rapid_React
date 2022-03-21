@@ -22,6 +22,8 @@ public class ChassisMonitorPitch extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		finish = false;
+		chassis.initMonitorPitch();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

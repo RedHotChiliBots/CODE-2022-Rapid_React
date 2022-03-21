@@ -22,14 +22,11 @@ public class BLUEFOURCARGOAUTON extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-			new ShooterRun(shooter, hopper),
-    	// new FeederShoot(feeder, hopper, shooter),
+			new SHOOT(shooter, hopper),
       new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueTermSideOneCargo, collector, hopper, shooter),
-      new ShooterRun(shooter, hopper),
-      // new FeederShoot(feeder, hopper, shooter),
+      new SHOOT(shooter, hopper),
       new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueTermSideCargoAndTerm, collector, hopper,  shooter),
-      new ShooterRun(shooter, hopper),
-      // new FeederShoot(feeder, hopper, shooter),
+      new SHOOT(shooter, hopper),
       new ShooterStop(shooter)
     );
   }

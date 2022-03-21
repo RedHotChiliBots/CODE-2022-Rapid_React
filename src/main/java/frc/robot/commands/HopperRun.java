@@ -9,6 +9,7 @@ import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Collector.ArmState;
 import frc.robot.subsystems.Collector.CollectorState;
 import frc.robot.subsystems.Feeder.FeederState;
 import frc.robot.subsystems.Hopper.HopperState;
@@ -17,14 +18,14 @@ public class HopperRun extends CommandBase {
   /** Creates a new HopperShoot. */
 
   private final Hopper hopper;
-	// private final Feeder feeder;
-	private final Collector collector;
+  // private final Feeder feeder;
+  private final Collector collector;
 
-  public HopperRun(Hopper hopper, /*Feeder feeder,*/ Collector collector) {
+  public HopperRun(Hopper hopper, /* Feeder feeder, */ Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hopper = hopper;
-		//this.feeder = feeder;
-		this.collector = collector;
+    // this.feeder = feeder;
+    this.collector = collector;
     addRequirements(hopper);
   }
 
@@ -39,37 +40,40 @@ public class HopperRun extends CommandBase {
   @Override
   public void execute() {
     // if(feeder.getFeederState() == FeederState.CONTROLLED) {
-    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
-    //     hopper.stopHopper();
-    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    //   } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
-    //     hopper.stopHopper();
-    //   }else if(collector.getCollectorState() == CollectorState.EXITING) {
-    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-    //     hopper.stopHopper();
-    //   }
+    // if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    // hopper.stopHopper();
+    // } else if(hopper.getHopperState() == HopperState.ENTERING ||
+    // hopper.getHopperState() == HopperState.EXITING) {
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // } else if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    // hopper.stopHopper();
+    // }else if(collector.getCollectorState() == CollectorState.EXITING) {
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // } else if(hopper.getHopperState() == HopperState.EMPTY ||
+    // hopper.getHopperState() == HopperState.NA) {
+    // hopper.stopHopper();
+    // }
     // } else {
-    //   if(hopper.getHopperState() == HopperState.CONTROLLED) {
-    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    //   } else if(hopper.getHopperState() == HopperState.ENTERING || hopper.getHopperState() == HopperState.EXITING) {
-    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    //   } else if(collector.getCollectorState() == CollectorState.EXITING) {
-    //     hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-    //   } else if(hopper.getHopperState() == HopperState.EMPTY || hopper.getHopperState() == HopperState.NA) {
-    //     hopper.stopHopper();
-    //   }
+    // if(hopper.getHopperState() == HopperState.CONTROLLED) {
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // } else if(hopper.getHopperState() == HopperState.ENTERING ||
+    // hopper.getHopperState() == HopperState.EXITING) {
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // } else if(collector.getCollectorState() == CollectorState.EXITING) {
+    // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    // } else if(hopper.getHopperState() == HopperState.EMPTY ||
+    // hopper.getHopperState() == HopperState.NA) {
+    // hopper.stopHopper();
+    // }
     // }
 
-		if(hopper.isExiting()) {
-			hopper.stopHopper();
-		} else if(collector.isExiting()) {
-			hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
-		} else if(hopper.isMid()) {
-			hopper.stopHopper();
-		} 
-	
+    if (hopper.isExiting()) {
+      hopper.stopHopper();
+    } else if (collector.isExiting() && collector.getArmState() == ArmState.DEPLOY) {
+      hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+    } else if (hopper.isMid()) {
+      hopper.stopHopper();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -77,11 +81,13 @@ public class HopperRun extends CommandBase {
   public void end(boolean interrupted) {
     hopper.stopHopper();
     hopper.setRunning(false);
+    collector.stopCollector();
+    collector.armStow();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return hopper.isExiting();
   }
 }

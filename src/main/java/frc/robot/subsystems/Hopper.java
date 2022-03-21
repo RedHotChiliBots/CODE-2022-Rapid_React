@@ -203,7 +203,7 @@ public class Hopper extends SubsystemBase {
 	}
 
 	public void setHopperVelocity(double rpm) {
-		this.hopperSetPoint = lib.Clip(-rpm, HopperConstants.kMaxRPM, HopperConstants.kMinRPM);
+		this.hopperSetPoint = lib.Clip(rpm, HopperConstants.kMaxRPM, HopperConstants.kMinRPM);
 		hopperPIDController.setReference(hopperSetPoint, ControlType.kVelocity);
 	}
 

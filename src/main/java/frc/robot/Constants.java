@@ -139,7 +139,7 @@ public final class Constants {
 		public static final double kMinOutput = -1.0;
 		public static final double kMaxOutput = 1.0;
 
-		public static final double kRopeDia = 0.0625; // inches add to Circ calc
+		public static final double kRopeDia = 0.125; // inches add to Circ calc
 		public static final double kPulleyCirc = Math.PI * ((20.2 / 25.4) + kRopeDia); // inches
 		public static final int kEncoderResolution = 1; // not used, NEO's native units are rotations
 		public static final int kGearBoxRatio = 12;
@@ -149,12 +149,14 @@ public final class Constants {
 
 		// all climber measurements are from floor to underside of hook and floor to top
 		// of rung
-		public static final double kFloor2Hook = 10.4 + 33.5; // inches from floor to top of outer climber tube
+		public static final double kFloor2Hook = 10.4 + 32.0; // inches from floor to top of outer climber tube
 		public static final double kClearUnder = 3.0; // inches below top of rung to clear
 		public static final double kEngageOver = 3.0; // inches avobe top of rung to engage
 
 		public static final double kLowRung = 48.75; // inches above floor per rules
-		public static final double kMidRung = 60.25; // inches aboave floor per rules
+		public static final double kMidRung = 60.25 - 2.75; // inches aboave floor per rules
+		public static final double kMaxExtend = -(60.25 - 2.75 - ClimberConstants.kFloor2Hook
+				+ ClimberConstants.kEngageOver); // inches aboave floor per rules
 
 		public static final double kClearLowRung = -(ClimberConstants.kLowRung - ClimberConstants.kFloor2Hook
 				- ClimberConstants.kClearUnder);
@@ -162,12 +164,10 @@ public final class Constants {
 				+ ClimberConstants.kEngageOver); // inches
 		public static final double kClearMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook
 				- ClimberConstants.kClearUnder); // inches
-		public static final double kEngageMidRung = -(ClimberConstants.kMidRung - ClimberConstants.kFloor2Hook
-				+ ClimberConstants.kEngageOver); // inches
-		public static final double kEngageHighTrav = -(67.0 - ClimberConstants.kFloor2Hook); // inches to position for
-																																													// engage
-		// high/traverse rungs
-		public static final double kHookHighTrav = -(61.0 - ClimberConstants.kFloor2Hook); // inches to position for latch
+		public static final double kEngageMidRung = kMaxExtend; // inches
+
+		public static final double kEngageHighTrav = kMaxExtend - 0.5; // inches to position for
+		public static final double kHookHighTrav = kMaxExtend + 3.0; // inches to position for latch
 																																												// high/traverse
 		// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
@@ -179,13 +179,13 @@ public final class Constants {
 
 		public static final double kDistanceTolerance = 0.125; // inches
 
-		public static final long kLatchDelay = 500; // milliseconds
-		public static final long kSwivelDelay = 1000; // milliseconds
+		public static final long kLatchDelay = 250; // milliseconds
+		public static final long kSwivelDelay = 750; // milliseconds
 		// public static final double kInitDelay = 0.25; // seconds
 		public static final double kInitSafety = 10.0; // seconds
 
 		public static final double kMaxAmps = 10.0;
-		public static final double kInitSpeed = 0.4;
+		public static final double kInitSpeed = 0.6;
 
 		public static final double kMaxPitch = 2.0; // degrees
 
@@ -224,7 +224,8 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kHopperRPMs = kMaxRPM * 0.45;
+		public static final double kHopperRPMs = kMaxRPM * 0.25;
+		public static final double kHopperShootRPMS = kMaxRPM * 0.5;
 
 		public static final double kVelocityTolerance = 50.0; // rpms
 	}

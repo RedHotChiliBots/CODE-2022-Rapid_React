@@ -9,15 +9,17 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Climber.LatchState;
 import frc.robot.subsystems.Climber.SwivelState;
+import frc.robot.subsystems.Collector.ArmState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimberHighTravClimb extends SequentialCommandGroup {
+public class ClimberTravClimb extends SequentialCommandGroup {
 	/** Creates a new ClimberHighTravClimb. */
-	public ClimberHighTravClimb(Climber climber, Chassis chassis) {
+	public ClimberTravClimb(Climber climber, Collector collector, Chassis chassis) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
@@ -27,15 +29,16 @@ public class ClimberHighTravClimb extends SequentialCommandGroup {
 				// add command to wait for chassis pitch to be optimal for rung catch
 				new ChassisMonitorPitch(chassis),
 				// Retract the Climber and Climb until Hooks are engaged
+				new CollectorArm(collector, ArmState.STOW, false),
 				new ClimberSwivel(climber, SwivelState.PERPENDICULAR),
 				new ClimberGoTo(climber, ClimberConstants.kHookHighTrav),
 				// Open Latch and Climb to Rung
 				new ClimberLatch(climber, LatchState.OPEN),
-				new WaitCommand(2.0),
+				new WaitCommand(0.5),
 				// add command to wait for chassis pitch to be optimal for rung catch
 				// new ChassisMonitorPitch(chassis),
 				new ClimberInit(climber),
-				new WaitCommand(1.0),
+//				new WaitCommand(1.0),
 				// Close the Latch and clear Climber Hooks
 				new ClimberLatch(climber, LatchState.CLOSE),
 				new ClimberGoTo(climber, ClimberConstants.kPullUpClear));

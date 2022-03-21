@@ -36,7 +36,7 @@ import frc.robot.commands.DoRumble;
 import frc.robot.commands.DrivePosition;
 import frc.robot.commands.DriveTrajectory;
 import frc.robot.commands.FeederRun;
-import frc.robot.commands.FeederShoot;
+import frc.robot.commands.HopperShoot;
 import frc.robot.commands.FeederStop;
 import frc.robot.commands.FeederSuckIn;
 import frc.robot.commands.HopperRun;
@@ -56,6 +56,7 @@ import frc.robot.commands.ChassisArcadeDrive;
 import frc.robot.commands.ChassisTankDrive;
 import frc.robot.commands.ClimbCancel;
 import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
+import frc.robot.commands.ClimberTravClimb;
 import frc.robot.commands.ClimberUnlatchAndPullUp;
 import frc.robot.commands.CollectorArm;
 import frc.robot.commands.CollectorCollect;
@@ -68,7 +69,7 @@ import frc.robot.commands.TAKEIN;
 import frc.robot.commands.CLIMB;
 import frc.robot.commands.ChassisMonitorPitch;
 import frc.robot.commands.ClimberGoTo;
-import frc.robot.commands.ClimberHighTravClimb;
+import frc.robot.commands.ClimberHighClimb;
 import frc.robot.commands.ClimberInit;
 import frc.robot.commands.ClimberLatch;
 import frc.robot.commands.ClimberLatchAndReadyForNext;
@@ -128,7 +129,7 @@ public class RobotContainer {
 
 	private final SHOOT SHOOT = new SHOOT(shooter, hopper);
 
-	private final CLIMB climb = new CLIMB(climber, chassis);
+	private final CLIMB climb = new CLIMB(climber, collector, chassis);
 	private final ClimberInit climberInit = new ClimberInit(climber);
 	private final ClimberGoTo toStow = new ClimberGoTo(climber, ClimberConstants.kStow);
 	private final ClimberSetup climbSetup = new ClimberSetup(climber, collector);
@@ -136,10 +137,13 @@ public class RobotContainer {
 	private final ClimberGoTo toHighTravEngage = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
 	private final ClimberGoTo toHighTravLatch = new ClimberGoTo(climber, ClimberConstants.kHookHighTrav);
 	private final ClimberMidRungClimb climbMidRung = new ClimberMidRungClimb(climber);
-	private final ClimberHighTravClimb climbHighRung = new ClimberHighTravClimb(climber, chassis);
+	private final ClimberHighClimb climbHighRung = new ClimberHighClimb(climber, chassis);
+	private final ClimberTravClimb climbTravRung = new ClimberTravClimb(climber, collector, chassis);
 
 	private final ChassisMonitorPitch chassisMonitorPitch = new ChassisMonitorPitch(chassis);
 
+	private final ClimberGoTo extend = new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav);
+	private final ClimberGoTo retract = new ClimberGoTo(climber, ClimberConstants.kStow);
 	private final ClimberSwivel swivel = new ClimberSwivel(climber, SwivelState.SWIVEL);
 	private final ClimberSwivel perpendicular = new ClimberSwivel(climber, SwivelState.PERPENDICULAR);
 	private final ClimberLatch climberOpen = new ClimberLatch(climber, LatchState.OPEN);
@@ -208,13 +212,12 @@ public class RobotContainer {
 
 		// =============================================================
 		// Configure default commands for each subsystem
-		chassis.setDefaultCommand(chassisArcadeDrive);
+		// chassis.setDefaultCommand(chassisArcadeDrive);
+		chassis.setDefaultCommand(chassisTankDrive);
 		// climber.setDefaultCommand(climberStop);
 		collector.setDefaultCommand(collectorStop);
 		// hopper.setDefaultCommand(hopperStop);
 		hopper.setDefaultCommand(hopperRun);
-		// feeder.setDefaultCommand(feederRun);
-		// feeder.setDefaultCommand(feederStop);
 		shooter.setDefaultCommand(shooterStop);
 
 		try {
@@ -304,56 +307,61 @@ public class RobotContainer {
 		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
 
-		// new JoystickButton(driver, Button.kStart.value).whenPressed(collectorDeploy);
-		// new JoystickButton(driver, Button.kBack.value).whenPressed(collectorStow);
-
 		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(climberOpen);
-		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
-		// new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(new
-		// FeederSuckIn(feeder, hopper, collector));
+//		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
+		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climb);
 
 		new JoystickButton(driver, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
+		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberInit(climber));
+		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimbCancel(climber));
 
-		// new JoystickButton(operator, Button.kX.value).whenPressed(climbMidRung);
+		new JoystickButton(driver, Button.kA.value).whenPressed(new HopperRun(hopper, collector));
+		new JoystickButton(driver, Button.kB.value).whenPressed(new HopperStop(hopper));
+
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
+		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
+
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
-		new JoystickButton(operator, Button.kB.value).whenPressed(climb);
-		// new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
-		new JoystickButton(operator, Button.kX.value).whenPressed(new SHOOT(shooter, hopper));
-		new JoystickButton(operator, Button.kA.value).whenPressed(new TAKEIN(shooter, hopper, collector));
+		new JoystickButton(operator, Button.kX.value).whenPressed(climbMidRung);
+		new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
+		new JoystickButton(operator, Button.kB.value).whenPressed(climbTravRung);
+
+		// new JoystickButton(operator, Button.kA.value).whenPressed(extend);
+		// new JoystickButton(operator, Button.kB.value).whenPressed(retract);
+
+		// new JoystickButton(operator, Button.kX.value).whenPressed(new SHOOT(shooter,
+		// hopper));
+		// new JoystickButton(operator, Button.kA.value).whenPressed(new TAKEIN(shooter,
+		// hopper, collector));
+		// new JoystickButton(operator, Button.kA.value).whenPressed(hopperRun);
 
 		// new JoystickButton(operator, Button.kX.value).whenPressed(shooterRun);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(new
 		// FeederShoot(feeder, hopper, shooter));
 
-		// new JoystickButton(operator, Button.kRightBumper.value).whenPressed(climbMidRung);
-		// new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(climbHighRung);
+		// new JoystickButton(operator,
+		// Button.kRightBumper.value).whenPressed(climbMidRung);
+		// new JoystickButton(operator,
+		// Button.kLeftBumper.value).whenPressed(climbHighRung);
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
-
-//		new JoystickButton(operator, Button.kStart.value).whenPressed(new DrivePosition(chassis, 1.0));
-//		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
-
-		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
-		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
+		// new JoystickButton(operator, Button.kStart.value).whenPressed(new
+		// DrivePosition(chassis, 1.0));
+		// new JoystickButton(operator, Button.kBack.value).whenPressed(new
+		// ClimbCancel(climber));
 
 		// new JoystickButton(operator, Button.kStart.value).whenPressed(new
 		// ShooterStop(shooter));
 		// new JoystickButton(operator, Button.kBack.value).whenPressed(new
 		// ClimberInit(climber));
 		// new JoystickButton(driver, Button.kY.value).whenPressed(climbMidRung);
-		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimbCancel(climber));
-		new JoystickButton(driver, Button.kB.value).whenPressed(climbHighRung);
+		// new JoystickButton(driver, Button.kB.value).whenPressed(climbHighRung);
 		// new JoystickButton(driver, Button.kX.value).whenPressed(new
 		// FeederStop(feeder));
 		// new JoystickButton(driver, Button.kB.value).whenPressed(new HopperRun(hopper,
 		// feeder, collector));
-		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberInit(climber));
-		new JoystickButton(driver, Button.kA.value).whenPressed(new HopperStop(hopper));
-
-		// new JoystickButton(driver, Button.kA.value).whenPressed(new
-		// ClimberInit(climber));
 
 		// new JoystickButton(operator, Button.kY.value).whenPressed(doRumble);
 		// new JoystickButton(operator, Button.kA.value).whenPressed(toOneRev);

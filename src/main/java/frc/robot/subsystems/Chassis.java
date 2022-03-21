@@ -187,7 +187,7 @@ public class Chassis extends SubsystemBase {
 		leftPIDController.setIZone(ChassisConstants.kIz);
 		leftPIDController.setFF(ChassisConstants.kFF);
 		leftPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
-		
+
 		rightPIDController.setP(ChassisConstants.kP);
 		rightPIDController.setI(ChassisConstants.kI);
 		rightPIDController.setD(ChassisConstants.kD);
@@ -195,17 +195,27 @@ public class Chassis extends SubsystemBase {
 		rightPIDController.setFF(ChassisConstants.kFF);
 		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
-		// leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
-		// leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
-		// leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
-		// leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
-//		leftPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, smartMotionSlotID);
+		// leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel,
+		// smartMotionSlotID);
+		// leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel,
+		// smartMotionSlotID);
+		// leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc,
+		// smartMotionSlotID);
+		// leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr,
+		// smartMotionSlotID);
+		// leftPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal,
+		// smartMotionSlotID);
 
-		// rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel, smartMotionSlotID);
-		// rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel, smartMotionSlotID);
-		// rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc, smartMotionSlotID);
-		// rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr, smartMotionSlotID);
-//		rightPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, smartMotionSlotID);
+		// rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel,
+		// smartMotionSlotID);
+		// rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel,
+		// smartMotionSlotID);
+		// rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc,
+		// smartMotionSlotID);
+		// rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr,
+		// smartMotionSlotID);
+		// rightPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal,
+		// smartMotionSlotID);
 
 		// ==============================================================
 		// Configure encoders
@@ -230,19 +240,19 @@ public class Chassis extends SubsystemBase {
 		// Create config for trajectory
 		config = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-				// Add kinematics to ensure max speed is actually obeyed
-				.setKinematics(kinematics)
-				// Apply the voltage constraint
-				.addConstraint(autoVoltageConstraint)
-				.setReversed(false);
+						// Add kinematics to ensure max speed is actually obeyed
+						.setKinematics(kinematics)
+						// Apply the voltage constraint
+						.addConstraint(autoVoltageConstraint)
+						.setReversed(false);
 
 		configReversed = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-				// Add kinematics to ensure max speed is actually obeyed
-				.setKinematics(kinematics)
-				// Apply the voltage constraint
-				.addConstraint(autoVoltageConstraint)
-				.setReversed(true);
+						// Add kinematics to ensure max speed is actually obeyed
+						.setKinematics(kinematics)
+						// Apply the voltage constraint
+						.addConstraint(autoVoltageConstraint)
+						.setReversed(true);
 
 		straight = TrajectoryGenerator.generateTrajectory(
 				new Pose2d(0, 0, new Rotation2d(0)),
@@ -365,7 +375,14 @@ public class Chassis extends SubsystemBase {
 	 * @return The current pitch value in degrees (-180 to 180).
 	 */
 	public double getPitch() {
-		return ahrs.getRoll() + 3.5;
+		// adjust for orientation of roborio - use roll
+		// adjust for pitch on floor
+		return ahrs.getRoll() + 2.3;
+	}
+
+	public void initMonitorPitch() {
+		maxPitch = 0.0;
+		minPitch = 0.0;
 	}
 
 	public void setIsPitchIncreasing() {
@@ -466,7 +483,7 @@ public class Chassis extends SubsystemBase {
 		leftError = Math.abs(setPoint - leftEncoder.getPosition());
 		rightError = Math.abs(setPoint - rightEncoder.getPosition());
 		return leftError <= ChassisConstants.kDistanceTolerance && rightError <= ChassisConstants.kDistanceTolerance;
-			
+
 	}
 
 	public double getLoPressure() {
