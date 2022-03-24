@@ -18,8 +18,7 @@ public class AUTONTAXI extends SequentialCommandGroup {
   public AUTONTAXI(Chassis chassis, Shooter shooter, Hopper hopper) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SHOOT(shooter, hopper),
-		new DrivePosition(chassis, 3.0)
-		);
+    addCommands(new ShooterShoot(shooter, hopper),
+        new DrivePosition(chassis, 3.0));
   }
 }

@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -81,13 +80,13 @@ public final class Constants {
 
 	public static final class ChassisConstants {
 		// Constants for Drive PIDs
-		public static final double kP = 0.2;	//5e-5;	//0.5;
-		public static final double kI = 1e-3;	//1e-6;	//0.0;
+		public static final double kP = 0.2; // 5e-5; //0.5;
+		public static final double kI = 1e-3; // 1e-6; //0.0;
 		public static final double kD = 0.0;
 		public static final double kIz = 0.0;
 		public static final double kFF = 0.000156;
-		public static final double kMinOutput = -1.0;	//-0.5;
-		public static final double kMaxOutput = 1.0;	//0.5;
+		public static final double kMinOutput = -1.0; // -0.5;
+		public static final double kMaxOutput = 1.0; // 0.5;
 		public static final double maxRPM = 5700;
 		public static final double maxVel = 2000;
 		public static final double minVel = 1000;
@@ -120,7 +119,7 @@ public final class Constants {
 		public static final double kDistI = 0.0;
 		public static final double kDistD = 0.0;
 
-		public static final double kDistanceTolerance = 0.05;// meters
+		public static final double kDistanceTolerance = 0.025;// meters
 
 		public static final double kAngleRungAttached = 15.0;// degrees
 
@@ -168,7 +167,7 @@ public final class Constants {
 
 		public static final double kEngageHighTrav = kMaxExtend - 0.5; // inches to position for
 		public static final double kHookHighTrav = kMaxExtend + 3.0; // inches to position for latch
-																																												// high/traverse
+																		// high/traverse
 		// rungs
 		// public static final double kFullExtendPerpendicular = 66.0; // inches
 		// public static final double kFullExtendSwivel = 72.92;// inches
@@ -224,8 +223,8 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kHopperRPMs = kMaxRPM * 0.25;
-		public static final double kHopperShootRPMS = kMaxRPM * 0.5;
+		public static final double kHopperRPMs = kMaxRPM * 0.5;
+		public static final double kHopperShootRPMS = kMaxRPM * 0.75;
 
 		public static final double kVelocityTolerance = 50.0; // rpms
 	}
@@ -260,10 +259,10 @@ public final class Constants {
 		public static final double kMinShootRPM = -4540.0;
 		public static final double kMaxShootRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kShooterRPMs = kMaxShootRPM * 0.8;
+		public static final double kShooterRPMs = kMaxShootRPM * 0.8; // 0.8;
 		public static final double kShooterSuckRPMS = kMaxShootRPM * 0.3;
 
-		public static final double kShootVelocityTolerance = 100.0; // rpms
+		public static final double kShootVelocityTolerance = 50.0; // rpms
 
 		public static final double kTimeShootAfterEmpty = 3.0;
 	}

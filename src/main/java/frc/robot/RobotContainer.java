@@ -59,14 +59,17 @@ import frc.robot.commands.ClimberSwivelAndEngageHighTrav;
 import frc.robot.commands.ClimberTravClimb;
 import frc.robot.commands.ClimberUnlatchAndPullUp;
 import frc.robot.commands.CollectorArm;
-import frc.robot.commands.CollectorCollect;
+import frc.robot.commands.CollectorRun;
 import frc.robot.commands.CollectorStop;
-import frc.robot.commands.SHOOT;
+// import frc.robot.commands.SHOOT;
 import frc.robot.commands.ShooterRun;
+import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.ShooterStop;
 import frc.robot.commands.ShooterSuckIn;
 import frc.robot.commands.TAKEIN;
 import frc.robot.commands.CLIMB;
+import frc.robot.commands.COLLECT;
+import frc.robot.commands.COLLECTORSTOWSTOP;
 import frc.robot.commands.ChassisMonitorPitch;
 import frc.robot.commands.ClimberGoTo;
 import frc.robot.commands.ClimberHighClimb;
@@ -127,7 +130,8 @@ public class RobotContainer {
 	private final ShooterRun shooterRun = new ShooterRun(shooter, hopper);
 	private final ShooterStop shooterStop = new ShooterStop(shooter);
 
-	private final SHOOT SHOOT = new SHOOT(shooter, hopper);
+	// private final SHOOT SHOOT = new SHOOT(shooter, hopper);
+	private final ShooterShoot shooterShoot = new ShooterShoot(shooter, hopper);
 
 	private final CLIMB climb = new CLIMB(climber, collector, chassis);
 	private final ClimberInit climberInit = new ClimberInit(climber);
@@ -156,7 +160,9 @@ public class RobotContainer {
 	private final CollectorArm collectorDeploy = new CollectorArm(collector, ArmState.DEPLOY);
 	private final CollectorArm collectorStow = new CollectorArm(collector, ArmState.STOW);
 	private final CollectorStop collectorStop = new CollectorStop(collector);
-	private final CollectorCollect collectorCollect = new CollectorCollect(collector);
+	private final COLLECTORSTOWSTOP collectorStowStop = new COLLECTORSTOWSTOP(collector);
+	private final CollectorRun collectorCollect = new CollectorRun(collector);
+	private final COLLECT collect = new COLLECT(collector, hopper);
 
 	private final DoRumble doRumble = new DoRumble(this);
 
@@ -212,12 +218,12 @@ public class RobotContainer {
 
 		// =============================================================
 		// Configure default commands for each subsystem
-		// chassis.setDefaultCommand(chassisArcadeDrive);
-		chassis.setDefaultCommand(chassisTankDrive);
+		chassis.setDefaultCommand(chassisArcadeDrive);
+		// chassis.setDefaultCommand(chassisTankDrive);
 		// climber.setDefaultCommand(climberStop);
 		collector.setDefaultCommand(collectorStop);
 		// hopper.setDefaultCommand(hopperStop);
-		hopper.setDefaultCommand(hopperRun);
+		hopper.setDefaultCommand(hopperStop);
 		shooter.setDefaultCommand(shooterStop);
 
 		try {
@@ -271,17 +277,17 @@ public class RobotContainer {
 
 		// =============================================================
 		// Build chooser for autonomous commands
-		chooser.addOption("Red One Cargo", redOneCargoAuton);
-		chooser.addOption("Blue One Cargo", redFourCargoAuton);
-		chooser.addOption("Red Four Cargo", blueOneCargoAuton);
-		chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
-		chooser.addOption("Red One Cargo Not In Middle", redOneCargoMidAuton);
-		chooser.addOption("Blue One Cargo Not In Middle", blueOneCargoMidAuton);
-		chooser.addOption("Blue Shoot To Term", blueAutonShootToTerm);
-		chooser.addOption("Red Shoot To Term", redAutonShootToTerm);
-		chooser.addOption("Blue Not Center To Term", blueNotCenterToTerm);
-		chooser.addOption("Red Not Center To Term", redNotCenterToTerm);
-		chooser.addOption("Shoot", SHOOT);
+		chooser.addOption("One Cargo", redOneCargoAuton);
+		// chooser.addOption("Blue One Cargo", blueOneCargoAuton);
+		chooser.addOption("Four Cargo", redFourCargoAuton);
+		// chooser.addOption("Blue Four Cargo", blueFourCargoAuton);
+		chooser.addOption("One Cargo Not In Middle", redOneCargoMidAuton);
+		// chooser.addOption("Blue One Cargo Not In Middle", blueOneCargoMidAuton);
+		// chooser.addOption("Blue Shoot To Term", blueAutonShootToTerm);
+		chooser.addOption("Shoot To Term", redAutonShootToTerm);
+		// chooser.addOption("Blue Not Center To Term", blueNotCenterToTerm);
+		// chooser.addOption("Red Not Center To Term", redNotCenterToTerm);
+		chooser.addOption("Shoot", shooterShoot);
 		chooser.addOption("Shoot and Taxi", new AUTONTAXI(chassis, shooter, hopper));
 		chooser.addOption("Taxi", new DrivePosition(chassis, 3.0));
 
@@ -307,27 +313,23 @@ public class RobotContainer {
 		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
 
-		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(climberOpen);
-//		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climberClose);
-		new JoystickButton(driver, Button.kLeftBumper.value).whenPressed(climb);
-
 		new JoystickButton(driver, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
 		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberInit(climber));
-		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimbCancel(climber));
-
-		new JoystickButton(driver, Button.kA.value).whenPressed(new HopperRun(hopper, collector));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new HopperStop(hopper));
 
-		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collectorDeploy);
-		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStow);
-		new JoystickButton(operator, Button.kStart.value).whenPressed(collectorCollect);
-		new JoystickButton(operator, Button.kBack.value).whenPressed(collectorStop);
-
+		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collect);
+		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStowStop);
+		new JoystickButton(operator, Button.kStart.value).whenPressed(shooterShoot);
+		new JoystickButton(operator, Button.kBack.value).whenPressed(new ClimbCancel(climber));
 		new JoystickButton(operator, Button.kY.value).whenPressed(climbSetup);
-		new JoystickButton(operator, Button.kX.value).whenPressed(climbMidRung);
-		new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
-		new JoystickButton(operator, Button.kB.value).whenPressed(climbTravRung);
+		new JoystickButton(operator, Button.kB.value).whenPressed(climb);
+		new JoystickButton(operator, Button.kA.value).whenPressed(climberOpen);
+		new JoystickButton(operator, Button.kX.value).whenPressed(climberClose);
+		// new JoystickButton(operator, Button.kX.value).whenPressed(climbMidRung);
+
+		// new JoystickButton(operator, Button.kA.value).whenPressed(climbHighRung);
+		// new JoystickButton(operator, Button.kB.value).whenPressed(climbTravRung);
 
 		// new JoystickButton(operator, Button.kA.value).whenPressed(extend);
 		// new JoystickButton(operator, Button.kB.value).whenPressed(retract);

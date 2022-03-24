@@ -5,22 +5,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.Collector.ArmState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SHOOT extends ParallelRaceGroup {
-	/** Creates a new SHOOT. */
-
-	public SHOOT(Shooter shooter, Hopper hopper) {
-		// Add your commands in the addCommands() call, e.g.
-		// addCommands(new FooCommand(), new BarCommand());
-		addCommands(new ShooterRun(shooter, hopper),
-			new HopperShoot(hopper, shooter));
-	}
-
+public class COLLECTORSTOWSTOP extends ParallelRaceGroup {
+  /** Creates a new COLLECTORSTOWSTOP. */
+  public COLLECTORSTOWSTOP(Collector collector) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(new CollectorStop(collector),
+    new CollectorArm(collector, ArmState.STOW));
+  }
 }

@@ -21,11 +21,11 @@ public class REDFOURCARGOAUTON extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-			new SHOOT(shooter, hopper),
-			new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, shooter),
-			new SHOOT(shooter, hopper),
-			new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideCargoAndTerm, collector, hopper, shooter),
-			new SHOOT(shooter, hopper),
-			new ShooterStop(shooter));
+				// new ShooterShoot(shooter, hopper),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideOneCargo, collector, hopper, shooter),
+				new ShooterShoot(shooter, hopper),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedTermSideCargoAndTerm, collector, hopper, shooter),
+				new ShooterShoot(shooter, hopper),
+				new ShooterStop(shooter));
 	}
 }

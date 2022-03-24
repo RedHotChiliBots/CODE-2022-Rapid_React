@@ -5,22 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Collector.ArmState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-
-public class COLLECT extends SequentialCommandGroup {
-  /** Creates a new INTAKE. */
-
-  public COLLECT(Collector collector, Hopper hopper) {
+public class COLLECTORDEPLOYRUN extends ParallelRaceGroup {
+  /** Creates a new COLLECTORDEPLOYRUN. */
+  public COLLECTORDEPLOYRUN(Collector collector, Hopper hopper) {
     // Add your commands in the addCommands() call, e.g.
-    addCommands(new COLLECTORDEPLOYRUN(collector, hopper),
-    new COLLECTORSTOWSTOP(collector));
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(//new CollectorArm(collector, ArmState.DEPLOY),
+    new CollectorRun(collector),
+    new HopperRun(hopper, collector));
   }
 }

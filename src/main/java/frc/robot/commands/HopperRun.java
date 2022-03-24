@@ -81,8 +81,8 @@ public class HopperRun extends CommandBase {
   public void end(boolean interrupted) {
     hopper.stopHopper();
     hopper.setRunning(false);
-    collector.stopCollector();
-    collector.armStow();
+    // collector.stopCollector();
+    // collector.armStow();
   }
 
   // Returns true when the command should end.

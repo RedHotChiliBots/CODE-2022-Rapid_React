@@ -6,8 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.FeederConstants;
-import frc.robot.Constants.HopperConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
@@ -15,54 +13,40 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Feeder.FeederState;
 import frc.robot.subsystems.Hopper.HopperState;
 
-public class HopperShoot extends CommandBase {
-  /** Creates a new FeederShoot. */
-  private Hopper hopper = null;
-  private Shooter shooter = null;
-  private Timer shootTimer = new Timer();
-  private Timer clearTimer = new Timer();
+public class ShooterSpin extends CommandBase {
+  /** Creates a new ShooterShoot. */
 
-  private boolean clearing = false;
+  private final Shooter shooter;
+  
+  // private final Feeder feeder;
+  private Timer timer = new Timer();
 
-  public HopperShoot(Hopper hopper, Shooter shooter) {
+  public ShooterSpin(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.hopper = hopper;
     this.shooter = shooter;
-    addRequirements(hopper);
+    // this.feeder = feeder;
+    addRequirements(shooter);
   }
 
-  // Caed when the command is initially schedullled.
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // shooter.setShootNow(true);
-    clearTimer.start();
-    clearTimer.reset();
+    shooter.setShootVelocity(ShooterConstants.kShooterRPMs);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.atShootTarget()) {
-      hopper.setHopperVelocity(HopperConstants.kHopperShootRPMS);
-    }
-
-    if (shootTimer.hasElapsed(3.0) && hopper.getHopperState() == HopperState.EMPTY && !clearing) {
-      clearing = true;
-      clearTimer.start();
-      clearTimer.reset();
-    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShoot();
-    hopper.stopHopper();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return clearTimer.hasElapsed(3.0);
+    return true;
   }
 }

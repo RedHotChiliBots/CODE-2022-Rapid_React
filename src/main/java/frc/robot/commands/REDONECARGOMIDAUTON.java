@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Collector;
@@ -22,9 +24,12 @@ public class REDONECARGOMIDAUTON extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new SHOOT(shooter, hopper),
-				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, shooter),
-				new SHOOT(shooter, hopper),
+				// new SHOOT(shooter, hopper),
+				new ParallelRaceGroup(
+						new DRIVETRAJANDCOLLECT(chassis, RobotContainer.RedRungSideMid, collector, hopper, shooter),
+						new WaitCommand(7.0)),
+				new ShooterShoot(shooter, hopper),
+				new DrivePosition(chassis, 4.0),
 				new ShooterStop(shooter));
 	}
 }

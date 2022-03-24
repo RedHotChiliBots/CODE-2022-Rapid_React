@@ -139,8 +139,14 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void setShootVelocity(double rpm) {
-		this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxShootRPM, ShooterConstants.kMinShootRPM);
+		this.shootSetPoint = lib.Clip(-rpm, ShooterConstants.kMaxShootRPM,
+				ShooterConstants.kMinShootRPM);
 		shootPIDController.setReference(shootSetPoint, ControlType.kVelocity);
+		// shootMotor.setVoltage(0.8);
+	}
+
+	public void setShootVoltage() {
+		shootMotor.set(0.3);
 	}
 
 	public void stopShoot() {

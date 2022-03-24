@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.CollectorConstants;
 import frc.robot.subsystems.Collector;
 
-public class CollectorCollect extends CommandBase {
+public class CollectorRun extends CommandBase {
 	/** Creates a new CollectorCollect. */
 
 	Collector collector;
 
-	public CollectorCollect(Collector collector) {
+	public CollectorRun(Collector collector) {
 		// Use addRequirements() here to declare subsystem dependencies.
 		this.collector = collector;
 		addRequirements(collector);
@@ -22,8 +22,9 @@ public class CollectorCollect extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
+		collector.armDeploy();
 		collector.setCollectorVelocity(CollectorConstants.kCollectorRPMs);
-		collector.setRunning(true);
+//		collector.setRunning(true);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -35,13 +36,14 @@ public class CollectorCollect extends CommandBase {
 	// Called once the command ends or is interrupted.
 	@Override
 	public void end(boolean interrupted) {
-		collector.stopCollector();
-		collector.setRunning(false);
+//		collector.stopCollector();
+//		collector.setRunning(false);
 	}
 
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		return !collector.isRunning();
+//		return !collector.isRunning();
+		return false;
 	}
 }

@@ -20,7 +20,7 @@ public class REDAUTONSHOOTTOTERM extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-				new SHOOT(shooter, hopper),
+				new ShooterShoot(shooter, hopper),
 				new DriveTrajectory(chassis, RobotContainer.RedTermSideCargoAndTerm),
 				new ShooterStop(shooter));
 	}

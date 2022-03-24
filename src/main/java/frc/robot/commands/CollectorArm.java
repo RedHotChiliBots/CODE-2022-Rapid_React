@@ -20,7 +20,7 @@ public class CollectorArm extends CommandBase {
 		this.collector = collector;
 		this.armState = armState;
 		this.wait = true;
-		addRequirements(collector);
+		// addRequirements(collector);
 	}
 
 	public CollectorArm(Collector collector, ArmState armState, boolean wait) {

@@ -32,7 +32,8 @@ public class ShooterRun extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setShootVelocity(ShooterConstants.kShooterRPMs);
+    // shooter.setShootVelocity(ShooterConstants.kShooterRPMs);
+    // shooter.setShootVoltage();
     shooter.setRunning(true);
     timer.reset();
   }
@@ -40,6 +41,7 @@ public class ShooterRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooter.setShootVoltage();
     if(hopper.getHopperState() == HopperState.EMPTY) {
       timer.start();
     }

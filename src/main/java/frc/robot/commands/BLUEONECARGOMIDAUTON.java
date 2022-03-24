@@ -21,11 +21,13 @@ public class BLUEONECARGOMIDAUTON extends SequentialCommandGroup {
 			Hopper hopper, Shooter shooter) {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
+
+		//USE RED
 		addCommands(
-			new SHOOT(shooter, hopper),
-			new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueRungSideMid, collector, hopper, shooter),
-			new ShooterRun(shooter, hopper),
-			new SHOOT(shooter, hopper),
-			new ShooterStop(shooter));
+				// new ShooterShoot(shooter, hopper),
+				new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueRungSideMid, collector, hopper, shooter),
+				new ShooterRun(shooter, hopper),
+				new ShooterShoot(shooter, hopper),
+				new ShooterStop(shooter));
 	}
 }

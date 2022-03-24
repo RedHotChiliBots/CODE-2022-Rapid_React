@@ -22,10 +22,10 @@ public class BLUEONECARGOAUTON extends SequentialCommandGroup {
 		// Add your commands in the addCommands() call, e.g.
 		// addCommands(new FooCommand(), new BarCommand());
 		addCommands(
-			new SHOOT(shooter, hopper),
+			//new ShooterShoot(shooter, hopper),
 			// new DRIVETRAJANDCOLLECT(chassis, RobotContainer.BlueTermSideOneCargo, collector, hopper, feeder, shooter),
 			new DriveTrajectory(chassis, RobotContainer.BlueTermSideOneCargo), 
-			new SHOOT(shooter, hopper),
+			new ShooterShoot(shooter, hopper),
 			new ShooterStop(shooter));
 	}
 }
