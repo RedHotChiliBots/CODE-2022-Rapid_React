@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.Collector;
@@ -20,6 +21,8 @@ public class HopperRun extends CommandBase {
   private final Hopper hopper;
   // private final Feeder feeder;
   private final Collector collector;
+  private Timer timer = new Timer();
+  private int timing = 0;
 
   public HopperRun(Hopper hopper, /* Feeder feeder, */ Collector collector) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,6 +37,7 @@ public class HopperRun extends CommandBase {
   public void initialize() {
     // hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
     // hopper.setRunning(true);
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -70,6 +74,20 @@ public class HopperRun extends CommandBase {
     if (hopper.isExiting()) {
       hopper.stopHopper();
     } else if (collector.isExiting() && collector.getArmState() == ArmState.DEPLOY) {
+      // if(timing < 2) {
+      //   timer.reset();
+      //   timing++;
+      // }
+
+      // if (timing == 1) {
+      //   hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+      // }
+      
+      // if(timer.get() > 2.0 && timing == 2) {
+      //   hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
+      // } else {
+      //   hopper.stopHopper();
+      // }
       hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
     } else if (hopper.isMid()) {
       hopper.stopHopper();

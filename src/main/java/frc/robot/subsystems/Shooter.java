@@ -146,7 +146,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void setShootVoltage() {
-		shootMotor.set(0.3);
+		shootMotor.set(0.20);
 	}
 
 	public void stopShoot() {

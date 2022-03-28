@@ -29,7 +29,7 @@ public class ChassisMonitorPitch extends CommandBase {
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		if (chassis.getMaxPitch() - chassis.getMinPitch() < 4.0) {
+		if (chassis.getMaxPitch() - chassis.getMinPitch() < 20.0) {
 			finish = true;
 		} else if (chassis.getIsPitchIncreasing() & chassis.getPitch() > 0.0) {
 			finish = true;

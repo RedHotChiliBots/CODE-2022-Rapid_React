@@ -223,7 +223,7 @@ public final class Constants {
 		public static final double kMinRPM = -4540.0;
 		public static final double kMaxRPM = 4540.8; // 2800 rpm when prototype tested 1-18-22
 
-		public static final double kHopperRPMs = kMaxRPM * 0.5;
+		public static final double kHopperRPMs = kMaxRPM * 0.4;
 		public static final double kHopperShootRPMS = kMaxRPM * 0.75;
 
 		public static final double kVelocityTolerance = 50.0; // rpms

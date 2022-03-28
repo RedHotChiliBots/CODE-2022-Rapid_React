@@ -31,7 +31,7 @@ public class ClimberHighClimb extends SequentialCommandGroup {
 				new ClimberGoTo(climber, ClimberConstants.kHookHighTrav),
 				// Open Latch and Climb to Rung
 				new ClimberLatch(climber, LatchState.OPEN),
-				new WaitCommand(0.5),
+				new WaitCommand(1.5),
 				// add command to wait for chassis pitch to be optimal for rung catch
 				// new ChassisMonitorPitch(chassis),
 				new ClimberInit(climber),

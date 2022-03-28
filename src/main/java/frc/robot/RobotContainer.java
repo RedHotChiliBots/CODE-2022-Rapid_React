@@ -317,6 +317,9 @@ public class RobotContainer {
 		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
 		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberInit(climber));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new HopperStop(hopper));
+		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav));
+		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kHookHighTrav));
+		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kClearMidRung));
 
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collect);
 		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStowStop);

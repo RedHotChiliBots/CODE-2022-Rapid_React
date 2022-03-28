@@ -6,6 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Feeder;
@@ -17,11 +20,14 @@ import frc.robot.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DRIVETRAJANDCOLLECT extends ParallelCommandGroup {
   /** Creates a new DRIVETRAJANDCOLLECT. */
-  public DRIVETRAJANDCOLLECT(Chassis chassis, Trajectory trajectory, Collector collector, 
+  public DRIVETRAJANDCOLLECT(Chassis chassis, Trajectory trajectory, Collector collector,
       Hopper hopper, Shooter shooter) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new DriveTrajectory(chassis, trajectory),
-    new COLLECT(collector, hopper));
+        new SequentialCommandGroup(
+            new ParallelRaceGroup(new COLLECT(collector, hopper),
+                new WaitCommand(4.0)),
+            new COLLECTORSTOWSTOP(collector)));
   }
 }
