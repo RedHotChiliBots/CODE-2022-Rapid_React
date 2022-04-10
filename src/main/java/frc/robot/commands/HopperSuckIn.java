@@ -5,13 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Collector.CollectorState;
-import frc.robot.subsystems.Feeder.FeederState;
-import frc.robot.subsystems.Hopper.HopperState;
 
 public class HopperSuckIn extends CommandBase {
   /** Creates a new HopperSuckIn. */

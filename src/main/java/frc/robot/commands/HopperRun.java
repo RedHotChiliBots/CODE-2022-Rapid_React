@@ -4,16 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.HopperConstants;
 import frc.robot.subsystems.Collector;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Collector.ArmState;
-import frc.robot.subsystems.Collector.CollectorState;
-import frc.robot.subsystems.Feeder.FeederState;
-import frc.robot.subsystems.Hopper.HopperState;
 
 public class HopperRun extends CommandBase {
 	/** Creates a new HopperShoot. */
@@ -21,8 +16,6 @@ public class HopperRun extends CommandBase {
 	private final Hopper hopper;
 	// private final Feeder feeder;
 	private final Collector collector;
-	private Timer timer = new Timer();
-	private int timing = 0;
 
 	public HopperRun(Hopper hopper, /* Feeder feeder, */ Collector collector) {
 		// Use addRequirements() here to declare subsystem dependencies.
@@ -37,7 +30,6 @@ public class HopperRun extends CommandBase {
 	public void initialize() {
 		// hopper.setHopperVelocity(HopperConstants.kHopperRPMs);
 		// hopper.setRunning(true);
-		timer.start();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.

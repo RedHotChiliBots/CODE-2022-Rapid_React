@@ -56,9 +56,6 @@ public class Shooter extends SubsystemBase {
 	private final NetworkTableEntry sbRShootVel = shooterTab.addPersistent("ShootVelocityR", 0).getEntry();
 	private final NetworkTableEntry sbSetPoint = shooterTab.addPersistent("Shoot SetPoint", 0).getEntry();
 	private final NetworkTableEntry sbAtTarget = shooterTab.addPersistent("At Target", false).getEntry();
-	private final NetworkTableEntry sbShooterState = shooterTab.addPersistent("Shooter State", "").getEntry();
-	private final NetworkTableEntry sbEntering = shooterTab.addPersistent("Entering", false).getEntry();
-	private final NetworkTableEntry sbExiting = shooterTab.addPersistent("Exiting", false).getEntry();
 
 	private final NetworkTableEntry sbP = shooterTab.addPersistent("P Gain", ShooterConstants.kShootP).getEntry();
 	private final NetworkTableEntry sbI = shooterTab.addPersistent("I Gain", ShooterConstants.kShootI).getEntry();
@@ -67,7 +64,6 @@ public class Shooter extends SubsystemBase {
 	private final NetworkTableEntry sbFF = shooterTab.addPersistent("Feed Forward", ShooterConstants.kShootFF).getEntry();
 	private final NetworkTableEntry sbMaxOut = shooterTab.addPersistent("Max Output", ShooterConstants.kShootMaxOutput).getEntry();
 	private final NetworkTableEntry sbMinOut = shooterTab.addPersistent("Min Output", ShooterConstants.kShootMinOutput).getEntry();
-	private final NetworkTableEntry sbRot = shooterTab.addPersistent("Set Rotations", 0).getEntry();
 
 	// ==============================================================
 	// Define local variables

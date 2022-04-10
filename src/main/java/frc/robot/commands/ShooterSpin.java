@@ -4,23 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Feeder.FeederState;
-import frc.robot.subsystems.Hopper.HopperState;
 
 public class ShooterSpin extends CommandBase {
   /** Creates a new ShooterShoot. */
 
   private final Shooter shooter;
   
-  // private final Feeder feeder;
-  private Timer timer = new Timer();
-
   public ShooterSpin(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
