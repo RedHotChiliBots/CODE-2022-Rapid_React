@@ -10,7 +10,6 @@ import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Feeder.FeederState;
-import frc.robot.subsystems.Hopper.HopperState;
 
 public class FeederSuckIn extends CommandBase {
   /** Creates a new FeederSuckIn. */
