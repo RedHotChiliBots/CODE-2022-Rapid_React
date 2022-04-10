@@ -46,7 +46,10 @@ import frc.robot.commands.REDFOURCARGOAUTON;
 import frc.robot.commands.REDNOTCENTERRUNGSIDETOTERM;
 import frc.robot.commands.REDONECARGOAUTON;
 import frc.robot.commands.REDONECARGOMIDAUTON;
+import frc.robot.commands.AUTONFOURORTENCARGOOUTANDBACK;
+import frc.robot.commands.AUTONONEORSEVENCARGOOUTANDBACK;
 import frc.robot.commands.AUTONTAXI;
+import frc.robot.commands.AUTONTWOOREIGHTCARGOOUTANDBACK;
 import frc.robot.commands.BLUEAUTONSHOOTTOTERM;
 import frc.robot.commands.BLUEFOURCARGOAUTON;
 import frc.robot.commands.BLUENOTCENTERTOTERM;
@@ -104,8 +107,6 @@ public class RobotContainer {
 	// Define Joysticks
 	public final XboxController driver = new XboxController(OIConstants.kDriverControllerPort);
 	public final XboxController operator = new XboxController(OIConstants.kOperatorControllerPort);
-
-	private static final double DEADZONE = 0.1;
 
 	// Define a chooser for autonomous commands
 	private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -201,6 +202,12 @@ public class RobotContainer {
 	public final REDAUTONSHOOTTOTERM redAutonShootToTerm;
 	public final BLUENOTCENTERTOTERM blueNotCenterToTerm;
 	public final REDNOTCENTERRUNGSIDETOTERM redNotCenterToTerm;
+	public final AUTONFOURORTENCARGOOUTANDBACK fourOrTenOutAndBack = new AUTONFOURORTENCARGOOUTANDBACK(chassis, collector,
+			hopper, shooter);
+	public final AUTONONEORSEVENCARGOOUTANDBACK oneOrSevenOutAndBack = new AUTONONEORSEVENCARGOOUTANDBACK(chassis,
+			collector, hopper, shooter);
+	public final AUTONTWOOREIGHTCARGOOUTANDBACK twoOrEightOutAndBack = new AUTONTWOOREIGHTCARGOOUTANDBACK(chassis,
+			collector, hopper, shooter);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -222,7 +229,6 @@ public class RobotContainer {
 		// chassis.setDefaultCommand(chassisTankDrive);
 		// climber.setDefaultCommand(climberStop);
 		collector.setDefaultCommand(collectorStop);
-		// hopper.setDefaultCommand(hopperStop);
 		hopper.setDefaultCommand(hopperStop);
 		shooter.setDefaultCommand(shooterStop);
 
@@ -277,6 +283,9 @@ public class RobotContainer {
 
 		// =============================================================
 		// Build chooser for autonomous commands
+		chooser.addOption("Out and Back Rung Side", fourOrTenOutAndBack);
+		chooser.addOption("Out and Back by Wall", oneOrSevenOutAndBack);
+		chooser.addOption("Out and Back by Term", twoOrEightOutAndBack);
 		chooser.addOption("One Cargo", redOneCargoAuton);
 		// chooser.addOption("Blue One Cargo", blueOneCargoAuton);
 		chooser.addOption("Four Cargo", redFourCargoAuton);
@@ -290,6 +299,7 @@ public class RobotContainer {
 		chooser.addOption("Shoot", shooterShoot);
 		chooser.addOption("Shoot and Taxi", new AUTONTAXI(chassis, shooter, hopper));
 		chooser.addOption("Taxi", new DrivePosition(chassis, 3.0));
+		//chooser.addOption("Spin", new DriveTrajectory(chassis, chassis.straight));
 
 		// Put the chooser on the dashboard
 		SmartDashboard.putData(chooser);
@@ -313,13 +323,15 @@ public class RobotContainer {
 		// new JoystickButton(driver, Button.kA.value).whenPressed(chassisTankDrive);
 		// new JoystickButton(driver, Button.kB.value).whenPressed(chassisArcadeDrive);
 
+	//	new JoystickButton(driver, Button.kBack.value).whenPressed(new CollectorArm(collector, ArmState.STOW));
 		new JoystickButton(driver, Button.kStart.value).whenPressed(swivel);
 		new JoystickButton(driver, Button.kBack.value).whenPressed(perpendicular);
 		new JoystickButton(driver, Button.kX.value).whenPressed(new ClimberInit(climber));
 		new JoystickButton(driver, Button.kB.value).whenPressed(new HopperStop(hopper));
 		new JoystickButton(driver, Button.kY.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kEngageHighTrav));
 		new JoystickButton(driver, Button.kA.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kHookHighTrav));
-		new JoystickButton(driver, Button.kRightBumper.value).whenPressed(new ClimberGoTo(climber, ClimberConstants.kClearMidRung));
+		new JoystickButton(driver, Button.kRightBumper.value)
+				.whenPressed(new ClimberGoTo(climber, ClimberConstants.kClearMidRung));
 
 		new JoystickButton(operator, Button.kRightBumper.value).whenPressed(collect);
 		new JoystickButton(operator, Button.kLeftBumper.value).whenPressed(collectorStowStop);
@@ -383,12 +395,24 @@ public class RobotContainer {
 		return climber;
 	}
 
+	private static final double DEADZONE = 0.01;
+	private static final double MAXACCEL = 0.001; // joystick units per 20ms
+	private double lastValue = 0.0;
+
 	public double getJoystick(double js) {
+		double val = 0.0;
 		if (js > 0) {
-			return Math.pow(Math.abs(js) < DEADZONE ? 0.0 : js, 2);
+			val = Math.pow(Math.abs(js) < DEADZONE ? 0.0 : js, 2);
 		} else {
-			return -1 * Math.pow(Math.abs(js) < DEADZONE ? 0.0 : js, 2);
+			val = -1 * Math.pow(Math.abs(js) < DEADZONE ? 0.0 : js, 2);
 		}
+
+		// if (Math.abs(val - lastValue) > MAXACCEL) {
+		// lastValue += MAXACCEL;
+		// val = lastValue;
+		// }
+
+		return val;
 	}
 
 	public void setDriverRumble(GenericHID.RumbleType t) {

@@ -12,7 +12,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -88,8 +87,10 @@ public class Chassis extends SubsystemBase {
 
 	// An example trajectory to follow. All units in meters.
 	public Trajectory straight;
-	private Trajectory BlueSideRung;
-	public Trajectory bouncePath1;
+	public Trajectory twoCargoOut;
+	public Trajectory cargo1or7OutAndBack;
+	public Trajectory cargo2or8OutAndBack;
+	public Trajectory cargo4or10OutAndBack;
 
 	// ==============================================================
 	// Initialize NavX AHRS board
@@ -114,7 +115,6 @@ public class Chassis extends SubsystemBase {
 	private double minPitch = Integer.MAX_VALUE;
 	private boolean isPitchIncreasing = false;
 	private double setPoint = 0.0;
-	private int smartMotionSlotID = 0;
 	private double leftError = 0.0;
 	private double rightError = 0.0;
 
@@ -195,28 +195,6 @@ public class Chassis extends SubsystemBase {
 		rightPIDController.setFF(ChassisConstants.kFF);
 		rightPIDController.setOutputRange(ChassisConstants.kMinOutput, ChassisConstants.kMaxOutput);
 
-		// leftPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel,
-		// smartMotionSlotID);
-		// leftPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel,
-		// smartMotionSlotID);
-		// leftPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc,
-		// smartMotionSlotID);
-		// leftPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr,
-		// smartMotionSlotID);
-		// leftPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal,
-		// smartMotionSlotID);
-
-		// rightPIDController.setSmartMotionMaxVelocity(ChassisConstants.maxVel,
-		// smartMotionSlotID);
-		// rightPIDController.setSmartMotionMinOutputVelocity(ChassisConstants.minVel,
-		// smartMotionSlotID);
-		// rightPIDController.setSmartMotionMaxAccel(ChassisConstants.maxAcc,
-		// smartMotionSlotID);
-		// rightPIDController.setSmartMotionAllowedClosedLoopError(ChassisConstants.allowedErr,
-		// smartMotionSlotID);
-		// rightPIDController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal,
-		// smartMotionSlotID);
-
 		// ==============================================================
 		// Configure encoders
 		leftEncoder.setPositionConversionFactor(ChassisConstants.kPosFactorMPC);
@@ -240,39 +218,66 @@ public class Chassis extends SubsystemBase {
 		// Create config for trajectory
 		config = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(kinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint)
-						.setReversed(false);
+				// Add kinematics to ensure max speed is actually obeyed
+				.setKinematics(kinematics)
+				// Apply the voltage constraint
+				.addConstraint(autoVoltageConstraint)
+				.setReversed(false);
 
 		configReversed = new TrajectoryConfig(ChassisConstants.kMaxSpeedMetersPerSecond,
 				ChassisConstants.kMaxAccelerationMetersPerSecondSquared)
-						// Add kinematics to ensure max speed is actually obeyed
-						.setKinematics(kinematics)
-						// Apply the voltage constraint
-						.addConstraint(autoVoltageConstraint)
-						.setReversed(true);
+				// Add kinematics to ensure max speed is actually obeyed
+				.setKinematics(kinematics)
+				// Apply the voltage constraint
+				.addConstraint(autoVoltageConstraint)
+				.setReversed(true);
 
-		straight = TrajectoryGenerator.generateTrajectory(
-				new Pose2d(0, 0, new Rotation2d(0)),
-				List.of(new Translation2d(1, 0)),
-				new Pose2d(2, 0, new Rotation2d(0)),
-				// Pass config
-				config);
+		// straight = TrajectoryGenerator.generateTrajectory(
+		// 		new Pose2d(0, 0, new Rotation2d(0)),
+		// 		List.of(),
+		// 		new Pose2d(0, 0, new Rotation2d(180)),
+		// 		// Pass config
+		// 		config);
 
-		bouncePath1 = TrajectoryGenerator.generateTrajectory(
+		twoCargoOut = TrajectoryGenerator.generateTrajectory(
 				// Start at the origin facing the +X direction
 				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
-				// Pass through these two interior waypoints, making an 's' curve path
-				// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-				List.of(new Translation2d(Units.inchesToMeters(21.0), Units.inchesToMeters(5.0)),
-						new Translation2d(Units.inchesToMeters(34.0), Units.inchesToMeters(15.0)),
-						new Translation2d(Units.inchesToMeters(41.0), Units.inchesToMeters(25.0))),
-				// End 3 meters straight ahead of where we started, facing forward
-				new Pose2d(Units.inchesToMeters(47.5), Units.inchesToMeters(42.5), new Rotation2d(90)),
+				List.of(),
+				new Pose2d(Units.inchesToMeters(110.0), Units.inchesToMeters(0), new Rotation2d(0)),
 				// Pass config
 				config);
+
+		cargo1or7OutAndBack = TrajectoryGenerator.generateTrajectory(
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(110.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				List.of(),
+				new Pose2d(Units.inchesToMeters(-130.0), Units.inchesToMeters(-5.0), new Rotation2d(179)),
+				// Pass config
+				config);
+
+		cargo2or8OutAndBack = TrajectoryGenerator.generateTrajectory(
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				List.of(new Translation2d(Units.inchesToMeters(75.0), Units.inchesToMeters(0.0))),
+				new Pose2d(Units.inchesToMeters(-73.0), Units.inchesToMeters(-85.0), new Rotation2d(180)),
+				// Pass config
+				config);
+
+		cargo4or10OutAndBack = TrajectoryGenerator.generateTrajectory(
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				List.of(new Translation2d(Units.inchesToMeters(75.0), Units.inchesToMeters(0.0))),
+				new Pose2d(Units.inchesToMeters(102.0), Units.inchesToMeters(30.0), new Rotation2d(180)),
+				// Pass config
+				config);
+
+		straight = TrajectoryGenerator.generateTrajectory(
+				// Start at the origin facing the +X direction
+				new Pose2d(Units.inchesToMeters(-130.0), Units.inchesToMeters(-5.0), new Rotation2d(179)),
+				List.of(),
+				new Pose2d(Units.inchesToMeters(0.0), Units.inchesToMeters(0.0), new Rotation2d(0)),
+				// Pass config
+				configReversed);
 
 		// ==============================================================
 		// Add static variables to Shuffleboard
@@ -485,6 +490,24 @@ public class Chassis extends SubsystemBase {
 		return leftError <= ChassisConstants.kDistanceTolerance && rightError <= ChassisConstants.kDistanceTolerance;
 
 	}
+
+	// public void turn(double angle) {
+	// driveWithHeading(0, angle);
+	// }
+
+	// public PIDController getRotPID() {
+	// return m_rotPIDController;
+	// }
+
+	// public void driveWithHeading(double speed, double angle) {
+	// getRotPID();
+	// setSetpoint(angle);
+	// PIDSpeed = speed;
+	// }
+
+	// public boolean angleOnTarget() {
+	// return getPIDController().onTarget();
+	// }
 
 	public double getLoPressure() {
 		return 250.0 * (loPressureSensor.getVoltage() / AnalogIOConstants.kInputVoltage) - 25.0;

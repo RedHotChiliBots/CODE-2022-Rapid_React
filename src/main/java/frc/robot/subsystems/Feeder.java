@@ -24,7 +24,7 @@ import frc.robot.Constants.FeederConstants;
 public class Feeder extends SubsystemBase {
   
 	private final CANSparkMax feederMotor = new CANSparkMax(
-			CANidConstants.kFeederMotor,
+			CANidConstants.kShooterLMotor,
 			MotorType.kBrushless);
 
 	private final SparkMaxPIDController feederPIDController = feederMotor.getPIDController();

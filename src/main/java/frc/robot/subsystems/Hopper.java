@@ -41,7 +41,7 @@ public class Hopper extends SubsystemBase {
 
 	// ==============================================================
 	// Define Digital Inputs
-	private final DigitalInput hopperMid = new DigitalInput(DIOChannelConstants.kHopperEntering);
+	private final DigitalInput hopperEntering = new DigitalInput(DIOChannelConstants.kHopperEntering);
 	private final DigitalInput hopperExiting = new DigitalInput(DIOChannelConstants.kHopperExiting);
 
 	// ==============================================================
@@ -55,7 +55,7 @@ public class Hopper extends SubsystemBase {
 	private final NetworkTableEntry sbSetPoint = hopperTab.addPersistent("Hopper SetPoint", 0).getEntry();
 	private final NetworkTableEntry sbAtTarget = hopperTab.addPersistent("At Target", false).getEntry();
 	private final NetworkTableEntry sbHopperState = hopperTab.addPersistent("Hopper State", "").getEntry();
-	private final NetworkTableEntry sbEntering = hopperTab.addPersistent("Mid", false).getEntry();
+	private final NetworkTableEntry sbEntering = hopperTab.addPersistent("Entering", false).getEntry();
 	private final NetworkTableEntry sbExiting = hopperTab.addPersistent("Exiting", false).getEntry();
 
 	// ==============================================================
@@ -153,12 +153,12 @@ public class Hopper extends SubsystemBase {
 		sbSetPoint.setDouble(hopperSetPoint);
 		sbAtTarget.setBoolean(atTarget());
 		sbHopperState.setString(hopperState.toString());
-		sbEntering.setBoolean(isMid());
+		sbEntering.setBoolean(isEntering());
 		sbExiting.setBoolean(isExiting());
 	}
 
-	public boolean isMid() {
-		return !hopperMid.get();
+	public boolean isEntering() {
+		return !hopperEntering.get();
 	}
 
 	public boolean isExiting() {
@@ -170,24 +170,24 @@ public class Hopper extends SubsystemBase {
 	}
 
 	public void hopperSensorState() {
-		// if (isMid() == false && isExiting() == false) {
+		// if (isEntering() == false && isExiting() == false) {
 		// setHopperState(HopperState.EMPTY);
-		// } else if (isMid() == true && isExiting() == false) {
+		// } else if (isEntering() == true && isExiting() == false) {
 		// setHopperState(HopperState.ENTERING);
-		// } else if (isMid() == false && isExiting() == true) {
+		// } else if (isEntering() == false && isExiting() == true) {
 		// setHopperState(HopperState.EXITING);
-		// } else if (isMid() == true && isExiting() == true) {
+		// } else if (isEntering() == true && isExiting() == true) {
 		// setHopperState(HopperState.CONTROLLED);
 		// } else {
 		// setHopperState(HopperState.NA);
 		// }
-		if (isMid() == false && isExiting() == false) {
+		if (!isEntering() && !isExiting()) {
 			setHopperState(HopperState.EMPTY);
-		} else if (isMid() == true && isExiting() == false) {
+		} else if (isEntering() && !isExiting()) {
 			setHopperState(HopperState.ENTERING);
-		} else if (isMid() == false && isExiting() == true) {
+		} else if (!isEntering() && isExiting()) {
 			setHopperState(HopperState.ONECONTROLLED);
-		} else if (isMid() == true && isExiting() == true) {
+		} else if (isEntering() && isExiting()) {
 			setHopperState(HopperState.TWOCONTROLLED);
 		} else {
 			setHopperState(HopperState.NA);

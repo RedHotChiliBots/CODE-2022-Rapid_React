@@ -25,9 +25,10 @@ public class DRIVETRAJANDCOLLECT extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new DriveTrajectory(chassis, trajectory),
-        new SequentialCommandGroup(
-            new ParallelRaceGroup(new COLLECT(collector, hopper),
-                new WaitCommand(4.0)),
-            new COLLECTORSTOWSTOP(collector)));
+			new COLLECT(collector, hopper));
+        // new SequentialCommandGroup(
+        //     new ParallelRaceGroup(new COLLECT(collector, hopper),
+        //         new WaitCommand(4.0)),
+        //     new COLLECTORSTOWSTOP(collector)));
   }
 }

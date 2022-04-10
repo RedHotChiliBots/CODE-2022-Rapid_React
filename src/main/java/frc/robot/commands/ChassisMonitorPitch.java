@@ -31,7 +31,7 @@ public class ChassisMonitorPitch extends CommandBase {
 	public void execute() {
 		if (chassis.getMaxPitch() - chassis.getMinPitch() < 20.0) {
 			finish = true;
-		} else if (chassis.getIsPitchIncreasing() & chassis.getPitch() > 0.0) {
+		} else if (chassis.getIsPitchIncreasing() && chassis.getPitch() > 0.0) {
 			finish = true;
 		}
 	}

@@ -45,6 +45,9 @@ public class HopperShoot extends CommandBase {
     if (shooter.atShootTarget()) {
       hopper.setHopperVelocity(HopperConstants.kHopperShootRPMS);
     }
+		//  else {
+		// 	hopper.setHopperVelocity(0.0);
+		// }
 
     if (shootTimer.hasElapsed(3.0) && hopper.getHopperState() == HopperState.EMPTY && !clearing) {
       clearing = true;
